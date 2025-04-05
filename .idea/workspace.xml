@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Backend" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend" afterDir="false" />
-    </list>
+    <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -100,7 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1743872529579</updated>
       <workItem from="1743872530704" duration="1779000" />
-      <workItem from="1743874326368" duration="136000" />
+      <workItem from="1743874326368" duration="558000" />
     </task>
     <servers />
   </component>
