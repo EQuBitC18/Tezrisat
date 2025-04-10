@@ -10,7 +10,7 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { useDarkModeContext } from "./DarkModeContext.tsx";
 
 /**
@@ -65,6 +65,7 @@ const NavItem = ({ icon, label, onClick, isOpen }: { icon: React.ReactNode; labe
 const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolean; setIsSidebarOpen: (open: boolean) => void; }): JSX.Element => {
   //const [isDarkMode, setIsDarkMode] = useState(false);
   const { isDarkMode, toggleDarkMode } = useDarkModeContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -85,19 +86,23 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
       <div className="flex justify-between items-center mb-6">
         <AnimatePresence>
           {isSidebarOpen && (
-            <motion.h2
-              className="text-2xl font-bold"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              Home
-            </motion.h2>
+              <motion.h2
+                  className="text-2xl font-bold"
+                  initial={{opacity: 0, x: -20}}
+                  animate={{opacity: 1, x: 0}}
+                  exit={{opacity: 0, x: -20}}
+                  transition={{duration: 0.2}}
+              >
+                <button
+                    onClick={() => navigate("/home")}
+                    className="p-2 rounded-full hover:bg-white/10 dark:hover:bg-gray-700">
+                    <img src="../../public/Tezrisat_Logo_Transparent.png" alt="Tezrisat Logo" className="h-13"/>
+                </button>
+              </motion.h2>
           )}
         </AnimatePresence>
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="p-2 rounded-full hover:bg-white/10 dark:hover:bg-gray-700"
         >
           <Menu className="w-6 h-6" />

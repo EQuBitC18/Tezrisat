@@ -30,7 +30,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from serpapi import GoogleSearch
 
 from .generate_microcourse import generate_microcourse_section
-from .models import Microcourse, MicrocourseSection, GlossaryTerm, QuizQuestion, RecallNote
+from .models import Microcourse, MicrocourseSection, GlossaryTerm, QuizQuestion, RecallNote, UserProfile
 from .serializers import UserSerializer, MicrocourseSerializer, MicrocourseSectionSerializer
 
 logger = logging.getLogger(__name__)
@@ -130,168 +130,174 @@ def get_microcourse(request, pk):
 
 @api_view(['POST'])
 def go_in_depth(request):
-    if request.method == 'POST':
-        microcourse_id = request.data.get('microcourseId')
-        try:
-            microcourse = Microcourse.objects.get(id=microcourse_id, user=request.user)
-        except Microcourse.DoesNotExist:
-            return JsonResponse({"error": "Microcourse not found"}, status=404)
-
-        previous_section = request.data.get('previousSection')
-        topic = microcourse.topic
-
-        try:
-            microcourse_section_data = generate_microcourse_section(
-                topic,
-                is_next_section=True,
-                previous_section=previous_section
+    user = request.user
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    profile.reset_usage()
+    try:
+        microcourse = Microcourse.objects.get(id=request.data.get('microcourseId'), user=user)
+    except Microcourse.DoesNotExist:
+        return JsonResponse({"error": "Microcourse not found"}, status=404)
+    previous_section = request.data.get('previousSection')
+    topic = microcourse.topic
+    # Enforce Token Limit for Free-Plan Users: max. 1000 Tokens per month
+    TOKEN_LIMIT = 1000
+    estimated_tokens_needed = 2000
+    if profile.plan == "free" and profile.tokens_used  > TOKEN_LIMIT:
+        return JsonResponse(
+            {"error": "Free plan users have reached the monthly token limit of 1000 tokens. Please upgrade for more usage."},
+            status=403
+        )
+    try:
+        microcourse_section_data = generate_microcourse_section(
+            topic,
+            is_next_section=True,
+            previous_section=previous_section
+        )
+    except Exception as e:
+        logger.error("Error generating microcourse section: %s", e)
+        return JsonResponse({"error": "Failed to generate microcourse section."}, status=500)
+    try:
+        new_section = MicrocourseSection.objects.create(
+            microcourse=microcourse,
+            section_title=microcourse_section_data.get("section_title"),
+            content=microcourse_section_data.get("content"),
+            code_examples=microcourse_section_data.get("code_examples"),
+            math_expressions=microcourse_section_data.get("math_expressions"),
+        )
+        glossary_json = microcourse_section_data.get("vocabulary")
+        if glossary_json:
+            glossary = json.loads(glossary_json)
+            for term, definition in glossary.items():
+                GlossaryTerm.objects.create(section=new_section, term=term, definition=definition)
+        quiz_json = microcourse_section_data.get("quiz")
+        if quiz_json:
+            quiz = json.loads(quiz_json)
+            QuizQuestion.objects.create(
+                section=new_section,
+                question=quiz.get("question"),
+                options=quiz.get("options"),
+                correct_answer=quiz.get("correct_answer")
             )
-        except Exception as e:
-            logging.error("Error generating microcourse section: %s", e)
-            return JsonResponse({"error": "Failed to generate microcourse section."}, status=500)
-
-        try:
-            new_section = MicrocourseSection.objects.create(
-                microcourse=microcourse,
-                section_title=microcourse_section_data.get("section_title"),
-                content=microcourse_section_data.get("content"),
-                code_examples=microcourse_section_data.get("code_examples"),
-                math_expressions=microcourse_section_data.get("math_expressions"),
-            )
-            # Create nested glossary terms, quiz, and recall notes if present
-            glossary_json = microcourse_section_data.get("vocabulary")
-            if glossary_json:
-                glossary = json.loads(glossary_json)
-                for term, definition in glossary.items():
-                    GlossaryTerm.objects.create(section=new_section, term=term, definition=definition)
-
-            quiz_json = microcourse_section_data.get("quiz")
-            if quiz_json:
-                quiz = json.loads(quiz_json)
-                QuizQuestion.objects.create(
-                    section=new_section,
-                    question=quiz.get("question"),
-                    options=quiz.get("options"),
-                    correct_answer=quiz.get("correct_answer")
-                )
-
-            recall_json = microcourse_section_data.get("recall_notes")
-            if recall_json:
-                recall_notes = json.loads(recall_json)
-                for note_content in recall_notes:
-                    RecallNote.objects.create(section=new_section, content=note_content)
-        except Exception as e:
-            logging.error("Error creating new MicrocourseSection and related items: %s", e)
-            return JsonResponse({"error": "Failed to create new microcourse section."}, status=500)
-
-        serializer = MicrocourseSectionSerializer(new_section)
-        return JsonResponse(serializer.data)
+        recall_json = microcourse_section_data.get("recall_notes")
+        if recall_json:
+            recall_notes = json.loads(recall_json)
+            for note_content in recall_notes:
+                RecallNote.objects.create(section=new_section, content=note_content)
+    except Exception as e:
+        logger.error("Error creating new MicrocourseSection and related items: %s", e)
+        return JsonResponse({"error": "Failed to create new microcourse section."}, status=500)
+    # Falls die API-Antwort die Token-Nutzung enthält (zum Beispiel token_usage), diese aktualisieren:
+    token_usage_from_response = microcourse_section_data.get("token_usage", estimated_tokens_needed)
+    if profile.plan == "free":
+        profile.tokens_used += token_usage_from_response
+        profile.save()
+    serializer = MicrocourseSectionSerializer(new_section)
+    return JsonResponse(serializer.data)
 
 
 
 @api_view(['POST'])
 @parser_classes([MultiPartParser, FormParser])
 def add_microcourse(request):
-    import json
-    from django.core.files.storage import FileSystemStorage
     logger.info("Received request to add microcourse")
-    if request.method == 'POST':
-        title = request.data.get('title')
-        topic = request.data.get('topic')
-        complexity = request.data.get('complexity')
-        target_audience = request.data.get('target_audience')
-        # Get all website URLs as a list and store as JSON
-        urls = request.data.getlist('url')
-        urls_json = json.dumps(urls) if urls else None
-
-        # Process multiple PDF files
-        pdf_files = request.FILES.getlist('pdf')
-        saved_pdf_filenames = []
-        if pdf_files:
-            fs = FileSystemStorage(location='media/pdfs')
-            for pdf in pdf_files:
-                try:
-                    filename = fs.save(pdf.name, pdf)
-                    saved_pdf_filenames.append(filename)
-                    logger.info("PDF file saved successfully: %s", filename)
-                except Exception as e:
-                    logger.error("Error saving PDF file: %s", e)
-        else:
-            logger.info("No PDF file provided")
-
-        try:
-            # Update the call to generate_microcourse_section to accept multiple PDF paths and URLs.
-            microcourse_section_data = generate_microcourse_section(
-                topic,
-                pdf_paths=saved_pdf_filenames,  # pass list of saved PDF filenames
-                website_urls=urls_json,           # pass JSON string of URLs
-                is_next_section=False
+    user = request.user
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    # Reset usage if it is a new month
+    profile.reset_usage()
+    limit = 1
+    # Enforce Free-Plan Limit: maximal 2 Microcourses pro Monat
+    if profile.plan == "free" and profile.microcourses_created >= limit:
+        return JsonResponse(
+            {"error": "Free plan users are limited to 2 microcourses per month. Please upgrade for more."},
+            status=403
+        )
+    import json
+    title = request.data.get('title')
+    topic = request.data.get('topic')
+    complexity = request.data.get('complexity')
+    target_audience = request.data.get('target_audience')
+    urls = request.data.getlist('url')
+    urls_json = json.dumps(urls) if urls else None
+    pdf_files = request.FILES.getlist('pdf')
+    saved_pdf_filenames = []
+    if pdf_files:
+        fs = FileSystemStorage(location='media/pdfs')
+        for pdf in pdf_files:
+            try:
+                filename = fs.save(pdf.name, pdf)
+                saved_pdf_filenames.append(filename)
+                logger.info("PDF file saved successfully: %s", filename)
+            except Exception as e:
+                logger.error("Error saving PDF file: %s", e)
+    else:
+        logger.info("No PDF file provided")
+    try:
+        microcourse_section_data = generate_microcourse_section(
+            topic,
+            pdf_path=saved_pdf_filenames,
+            website_url=urls_json,
+            is_next_section=False
+        )
+        logger.info("Generated section: %s", json.dumps(microcourse_section_data, indent=2))
+    except Exception as e:
+        logger.error("Error generating microcourse section: %s", e)
+        return JsonResponse({"error": "Failed to generate microcourse section."}, status=500)
+    try:
+        pdf_files_field = json.dumps(saved_pdf_filenames) if saved_pdf_filenames else None
+        microcourse = Microcourse.objects.create(
+            title=title,
+            topic=topic,
+            complexity=complexity,
+            target_audience=target_audience,
+            url=urls_json,
+            pdf=pdf_files_field,
+            user=user
+        )
+    except Exception as e:
+        logger.error("Error creating Microcourse: %s", e)
+        return JsonResponse({"error": "Failed to create microcourse."}, status=500)
+    try:
+        section = MicrocourseSection.objects.create(
+            microcourse=microcourse,
+            section_title=microcourse_section_data.get("section_title"),
+            content=microcourse_section_data.get("content"),
+            code_examples=microcourse_section_data.get("code_examples"),
+            math_expressions=microcourse_section_data.get("math_expressions"),
+        )
+        glossary_json = microcourse_section_data.get("vocabulary")
+        if glossary_json:
+            glossary = json.loads(glossary_json)
+            for term, definition in glossary.items():
+                GlossaryTerm.objects.create(section=section, term=term, definition=definition)
+        quiz_json = microcourse_section_data.get("quiz")
+        if quiz_json:
+            quiz = json.loads(quiz_json)
+            QuizQuestion.objects.create(
+                section=section,
+                question=quiz.get("question"),
+                options=quiz.get("options"),
+                correct_answer=quiz.get("correct_answer")
             )
-            logger.info("Generated section: %s", json.dumps(microcourse_section_data, indent=2))
-        except Exception as e:
-            logger.error("Error generating microcourse section: %s", e)
-            return JsonResponse({"error": "Failed to generate microcourse section."}, status=500)
+        recall_json = microcourse_section_data.get("recall_notes")
+        if recall_json:
+            recall_notes = json.loads(recall_json)
+            for note_content in recall_notes:
+                RecallNote.objects.create(section=section, content=note_content)
+    except Exception as e:
+        logger.error("Error creating MicrocourseSection and related items: %s", e)
+        return JsonResponse({"error": "Failed to create microcourse section and related items."}, status=500)
+    # Update usage for free users: erhöhe Zähler für Microcourses
+    if profile.plan == "free":
+        profile.microcourses_created += 1
+        profile.save()
+    serializer = MicrocourseSerializer(microcourse)
+    if serializer.is_valid:
+        logger.info("Microcourse added successfully")
+        return JsonResponse(serializer.data)
+    else:
+        logger.error("Error serializing microcourse: %s", serializer.errors)
+        return JsonResponse(serializer.errors, status=400)
 
-        try:
-            # Store the PDF filenames as JSON (assuming your Microcourse model can handle it)
-            pdf_files_field = json.dumps(saved_pdf_filenames) if saved_pdf_filenames else None
-            microcourse = Microcourse.objects.create(
-                title=title,
-                topic=topic,
-                complexity=complexity,
-                target_audience=target_audience,
-                url=urls_json,            # store URLs as JSON
-                pdf=pdf_files_field,      # store multiple PDF filenames
-                user=request.user
-            )
-        except Exception as e:
-            logger.error("Error creating Microcourse: %s", e)
-            return JsonResponse({"error": "Failed to create microcourse."}, status=500)
-
-        try:
-            # Create the first section
-            section = MicrocourseSection.objects.create(
-                microcourse=microcourse,
-                section_title=microcourse_section_data.get("section_title"),
-                content=microcourse_section_data.get("content"),
-                code_examples=microcourse_section_data.get("code_examples"),
-                math_expressions=microcourse_section_data.get("math_expressions"),
-            )
-            # Process glossary data
-            glossary_json = microcourse_section_data.get("vocabulary")
-            if glossary_json:
-                glossary = json.loads(glossary_json)
-                for term, definition in glossary.items():
-                    GlossaryTerm.objects.create(section=section, term=term, definition=definition)
-
-            # Process quiz data
-            quiz_json = microcourse_section_data.get("quiz")
-            if quiz_json:
-                quiz = json.loads(quiz_json)
-                QuizQuestion.objects.create(
-                    section=section,
-                    question=quiz.get("question"),
-                    options=quiz.get("options"),
-                    correct_answer=quiz.get("correct_answer")
-                )
-
-            # Process recall notes
-            recall_json = microcourse_section_data.get("recall_notes")
-            if recall_json:
-                recall_notes = json.loads(recall_json)
-                for note_content in recall_notes:
-                    RecallNote.objects.create(section=section, content=note_content)
-        except Exception as e:
-            logger.error("Error creating MicrocourseSection and related items: %s", e)
-            return JsonResponse({"error": "Failed to create microcourse section and related items."}, status=500)
-
-        serializer = MicrocourseSerializer(microcourse)
-        if serializer.is_valid:
-            logger.info("Microcourse added successfully")
-            return JsonResponse(serializer.data)
-        else:
-            logger.error("Error serializing microcourse: %s", serializer.errors)
-            return JsonResponse(serializer.errors, status=400)
 
 
 

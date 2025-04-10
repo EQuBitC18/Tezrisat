@@ -4,8 +4,9 @@ import logging
 import time
 from uuid import uuid4
 from tqdm import tqdm
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Union
 
+from langchain.cache import InMemoryCache
 from langchain.llms import OpenAI
 from langchain.document_loaders import PyPDFLoader
 from langchain.docstore.document import Document
@@ -14,6 +15,12 @@ from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTex
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from dotenv import load_dotenv
+try:
+    from langchain.cache.base import BaseCache
+except ModuleNotFoundError:
+    # Define a dummy BaseCache so that Pydantic can resolve the annotation.
+    class BaseCache:
+        pass
 
 # ------------------------------
 # Configuration & Logging
@@ -25,18 +32,54 @@ os.environ["WOLFRAM_ALPHA_APPID"] = os.getenv("WOLFRAM_ALPHA_APPID")
 os.environ["SERPAPI_API_KEY"] = os.getenv("SERPAPI_API_KEY")
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
+OpenAI.cache = InMemoryCache()
+OpenAI.model_rebuild()
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 # ------------------------------
 # Fine-Tuning Context Extraction
 # ------------------------------
-def load_finetuning_docs(pdf_path: Optional[str], website_url: str) -> List[Document]:
+from typing import Optional, Union, List
+from langchain.document_loaders import PyPDFLoader
+from langchain.docstore.document import Document
+import os
+import trafilatura
+
+
+def load_finetuning_docs(
+        pdf_path: Optional[Union[str, List[str]]],
+        website_url: str
+) -> List[Document]:
+    """Loads documents from PDFs and a website.
+
+    Parameters:
+      pdf_path: A single path as a string or a list of PDF file paths.
+      website_url: A URL to fetch and extract text from.
+
+    Returns:
+      A list of Document objects.
+    """
     docs = []
-    if pdf_path is not None and os.path.isfile(pdf_path):
-        loader = PyPDFLoader(pdf_path)
-        pdf_docs = loader.load()
-        docs.extend(pdf_docs)
+    if pdf_path:
+        if isinstance(pdf_path, list):
+            for path in pdf_path:
+                if os.path.isfile(path):
+                    loader = PyPDFLoader(path)
+                    pdf_docs = loader.load()
+                    docs.extend(pdf_docs)
+                else:
+                    # Log or handle the error if the file does not exist.
+                    print(f"File not found: {path}")
+        else:
+            if os.path.isfile(pdf_path):
+                loader = PyPDFLoader(pdf_path)
+                pdf_docs = loader.load()
+                docs.extend(pdf_docs)
+            else:
+                print(f"File not found: {pdf_path}")
+
     if website_url:
         downloaded = trafilatura.fetch_url(website_url)
         if downloaded:
@@ -79,7 +122,7 @@ def filter_relevant_docs(topic: str, docs: List[Document], threshold: float = 0.
     return relevant_docs
 
 
-def get_finetuning_context(topic: str, pdf_path: Optional[str], website_url: str) -> str:
+def get_finetuning_context(topic: str, pdf_path: Optional[Union[str, List[str]]], website_url: str) -> str:
     docs = load_finetuning_docs(pdf_path, website_url)
     if not docs:
         return ""
@@ -336,7 +379,7 @@ def perform_web_search(query: str) -> str:
 
 
 def generate_microcourse_section(topic: str,
-                                 pdf_path: Optional[str] = None,
+                                 pdf_path: list = None,
                                  website_url: str = "",
                                  is_next_section: bool = False,
                                  previous_section: Optional[Dict[str, Any]] = None
@@ -450,13 +493,6 @@ def generate_microcourse_section(topic: str,
     main_section, error_main = retry_generate(_generate_main_section, prompt_main)
     if error_main:
         raise Exception(error_main)
-
-    # Use the booleans output by the LLM to decide whether to generate code and math examples.
-    print("test 1", main_section)
-    print("test 2", main_section.get("generate_code", True))
-    print("test 3", main_section.get("generate_code", False))
-    print("test 4", main_section.get("generate_code"))
-    print(type(main_section.get("generate_code")))
 
     if main_section.get("generate_code"):
         code_examples = generate_code_examples_section(topic)

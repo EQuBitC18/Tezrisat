@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, SetStateAction } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import {ArrowRight, MessageCircle, X} from "lucide-react"
+import { ArrowRight, Loader2, MessageCircle, X } from "lucide-react"
 // @ts-ignore
 import { Button } from "@/components/ui/button"
 // @ts-ignore
@@ -22,7 +22,7 @@ import GlossaryModal from "./GlossaryModal.tsx"
 import api from "../api"
 
 import ChapterTextField from "../components/ChapterTextField.tsx"
-import ChatMessages from "../components/ChatMessages.tsx";
+import ChatMessages from "../components/ChatMessages.tsx"
 import Confetti from "react-confetti"
 
 // -----------------------------------------------------------------------------
@@ -47,7 +47,6 @@ export interface GlossaryTerm {
   term: string
   definition: string
 }
-
 
 /**
  * Parses a string of recall notes into an array of RecallNote objects.
@@ -83,7 +82,6 @@ export const parseRecallNotes = (recallNotesString: string): RecallNote[] => {
   })
 }
 
-
 /**
  * Parses a quiz string into an array of QuizQuestion objects.
  *
@@ -92,25 +90,17 @@ export const parseRecallNotes = (recallNotesString: string): RecallNote[] => {
  */
 export const parseQuiz = (quizString: string): QuizQuestion[] => {
   try {
-    // Parse the JSON string from the backend (like '{"question":"...","options":{"A":"...","B":"..."},"correct_answer":"A"}')
+    // Parse the JSON string from the backend
     const quizObj = JSON.parse(quizString)
-
     const { question, options, correct_answer } = quizObj
-
-    // Convert the single-letter correct answer (e.g. "A") to an array index
     const letter = (correct_answer || "A").toUpperCase()
     const correctIndex = letter.charCodeAt(0) - "A".charCodeAt(0)
-
-    // Convert the options object ({"A":"James","B":"Larry",...}) into an array
-    // e.g. ["James Gosling", "Larry Ellison", "Bill Gates", "Steve Jobs"]
     const optionsArray = [
       options["A"] || "Option A",
       options["B"] || "Option B",
       options["C"] || "Option C",
       options["D"] || "Option D",
     ]
-
-    // Return a single-element array with the quiz question
     return [
       {
         id: uuidv4(),
@@ -121,7 +111,6 @@ export const parseQuiz = (quizString: string): QuizQuestion[] => {
     ]
   } catch (error) {
     console.error("Error parsing quiz JSON:", error)
-    // If parsing fails, return an empty array or fallback
     return []
   }
 }
@@ -134,41 +123,30 @@ export const parseQuiz = (quizString: string): QuizQuestion[] => {
  */
 export const parseGlossary = (glossaryString: string): GlossaryTerm[] => {
   try {
-    // Parse the glossary JSON string from the backend
     const glossaryObj = JSON.parse(glossaryString)
-    // Convert each key/value into a GlossaryTerm object
     return Object.entries(glossaryObj).map(([key, value]) => ({
       id: uuidv4(),
       term: key,
-      // If value is a string, use it directly; otherwise convert to string
       definition: typeof value === "string" ? value : String(value),
     }))
   } catch (error) {
     console.error("Error parsing glossary JSON:", error)
-    // If parsing fails, return an empty array or fallback
     return []
   }
 }
-
-
-
-
 
 export default function Microcourse() {
   const location = useLocation()
   const { id } = location.state || {}
 
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [fadeConfetti, setFadeConfetti] = useState(false);
-  const [confettiRun, setConfettiRun] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false)
+  const [fadeConfetti, setFadeConfetti] = useState(false)
+  const [confettiRun, setConfettiRun] = useState(true)
 
   // Microcourse-level data
   const [microcourseTitle, setMicrocourseTitle] = useState("Loading...")
   //@ts-ignore
   const [data, setData] = useState<any>(null)
-
-  // This will hold an array of "sections" for the microcourse
-  // each "section" object can have fields: { section_title, content, code_examples, math_expressions, ... }
   const [chapters, setChapters] = useState<any[]>([])
 
   // Modal states (vocabulary, quiz, recall notes)
@@ -181,42 +159,39 @@ export default function Microcourse() {
   //@ts-ignore
   const [modalContent, setModalContent] = useState({ title: "", content: "" })
 
-  // Other states for chat, etc.
+  // State for chat
   const [messages, setMessages] = useState([{ sender: "bot", text: "Hello! How can I assist you with the course?" }])
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [question, setQuestion] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  //const [activeChapter, setActiveChapter] = useState(0)
   const contentRef = useRef(null)
+  //@ts-ignore
+  const [inDepthLoading, setInDepthLoading] = useState(false)
+
+  // New state for token limit warning modal
+  const [showTokenLimitModal, setShowTokenLimitModal] = useState(false)
 
   useEffect(() => {
-    const hasShownConfetti = localStorage.getItem("hasShownConfettiForMicrocourse");
+    const hasShownConfetti = localStorage.getItem("hasShownConfettiForMicrocourse")
     if (!hasShownConfetti) {
-      setShowConfetti(true);
-      localStorage.setItem("hasShownConfettiForMicrocourse", "true");
-
-      // After 10 seconds, stop the confetti animation (stop generating new pieces)
+      setShowConfetti(true)
+      localStorage.setItem("hasShownConfettiForMicrocourse", "true")
       const stopAnimationTimeout = setTimeout(() => {
-        setConfettiRun(false); // Stop the animation
-      }, 10000);
-
-      // After 10 seconds, start fade out of container over 5 seconds
+        setConfettiRun(false)
+      }, 10000)
       const fadeTimeout = setTimeout(() => {
-        setFadeConfetti(true);
-      }, 10000);
-
-      // After 15 seconds total, unmount the confetti component
+        setFadeConfetti(true)
+      }, 10000)
       const hideTimeout = setTimeout(() => {
-        setShowConfetti(false);
-      }, 15000);
-
+        setShowConfetti(false)
+      }, 15000)
       return () => {
-        clearTimeout(stopAnimationTimeout);
-        clearTimeout(fadeTimeout);
-        clearTimeout(hideTimeout);
-      };
+        clearTimeout(stopAnimationTimeout)
+        clearTimeout(fadeTimeout)
+        clearTimeout(hideTimeout)
+      }
     }
-  }, []);
+  }, [])
 
   // ---------------------------
   // FETCH Microcourse on mount
@@ -227,102 +202,84 @@ export default function Microcourse() {
         const response = await api.get(`/api/microcourses/${id}/`)
         const mcData = response.data
         console.log("Raw microcourse data from backend:", mcData)
-
-        // Top-level info
         setMicrocourseTitle(mcData.title || "Untitled Microcourse")
         setData(mcData)
-
-        // Map sections, now including nested arrays from related models:
         const sectionsArray = mcData.sections.map((sec: any) => ({
           id: sec.id,
           title: sec.section_title || "Untitled Section",
           content: sec.content || "No content provided.",
-          // These fields are still stored as text and parsed as before:
           codeExamples: sec.code_examples ? JSON.parse(sec.code_examples) : [],
           mathExpressions: sec.math_expressions ? JSON.parse(sec.math_expressions) : [],
-          // New normalized fields: use the nested arrays returned by the serializer
           glossary_terms: sec.glossary_terms || [],
           quiz_questions: sec.quiz_questions || [],
           recall_notes: sec.recall_notes || [],
-        }));
-
-        setChapters(sectionsArray);
-
-        // Aggregate glossary, quiz, and recall notes from all sections
+        }))
+        setChapters(sectionsArray)
         if (mcData.sections.length > 0) {
-          let aggregatedGlossaryTerms: GlossaryTerm[] = [];
-          let aggregatedQuizQuestions: QuizQuestion[] = [];
-          let aggregatedRecallNotes: RecallNote[] = [];
-
+          let aggregatedGlossaryTerms: GlossaryTerm[] = []
+          let aggregatedQuizQuestions: QuizQuestion[] = []
+          let aggregatedRecallNotes: RecallNote[] = []
           mcData.sections.forEach((section: any) => {
             if (section.glossary_terms) {
-              aggregatedGlossaryTerms = aggregatedGlossaryTerms.concat(section.glossary_terms);
+              aggregatedGlossaryTerms = aggregatedGlossaryTerms.concat(section.glossary_terms)
             }
             if (section.quiz_questions) {
               const convertedQuizQuestions = section.quiz_questions.map((q: any) => {
-                let opts = [];
-                // If options is already an array, use it.
+                let opts = []
                 if (Array.isArray(q.options)) {
-                  opts = q.options;
+                  opts = q.options
                 } else if (typeof q.options === 'object' && q.options !== null) {
-                  // If it's an object, assume keys "A", "B", "C", "D"
                   opts = [
                     q.options.A || "Option A",
                     q.options.B || "Option B",
                     q.options.C || "Option C",
                     q.options.D || "Option D",
-                  ];
+                  ]
                 } else if (typeof q.options === 'string') {
                   try {
-                    const parsed = JSON.parse(q.options);
+                    const parsed = JSON.parse(q.options)
                     if (Array.isArray(parsed)) {
-                      opts = parsed;
+                      opts = parsed
                     } else if (typeof parsed === 'object' && parsed !== null) {
                       opts = [
                         parsed.A || "Option A",
                         parsed.B || "Option B",
                         parsed.C || "Option C",
                         parsed.D || "Option D",
-                      ];
+                      ]
                     }
                   } catch (e) {
-                    opts = [];
+                    opts = []
                   }
                 }
                 return {
                   id: q.id,
-                  text: q.question, // renaming "question" to "text"
+                  text: q.question,
                   options: opts,
-                  correctAnswer: q.correct_answer, // renaming to correctAnswer
-                };
-              });
-              aggregatedQuizQuestions = aggregatedQuizQuestions.concat(convertedQuizQuestions);
+                  correctAnswer: q.correct_answer,
+                }
+              })
+              aggregatedQuizQuestions = aggregatedQuizQuestions.concat(convertedQuizQuestions)
             }
             if (section.recall_notes) {
-              aggregatedRecallNotes = aggregatedRecallNotes.concat(section.recall_notes);
+              aggregatedRecallNotes = aggregatedRecallNotes.concat(section.recall_notes)
             }
-          });
-
-          setGlossaryTerms(aggregatedGlossaryTerms);
-          setQuizQuestions(aggregatedQuizQuestions);
-          setRecallNotes(aggregatedRecallNotes);
+          })
+          setGlossaryTerms(aggregatedGlossaryTerms)
+          setQuizQuestions(aggregatedQuizQuestions)
+          setRecallNotes(aggregatedRecallNotes)
         }
-
-
-        // For modalChapters, use the first section's nested arrays (stringify them)
         setModalChapters([
           { title: "Glossary", content: JSON.stringify(mcData.sections[0]?.glossary_terms || []) },
           { title: "Quiz", content: JSON.stringify(mcData.sections[0]?.quiz_questions || []) },
           { title: "Recall Notes", content: JSON.stringify(mcData.sections[0]?.recall_notes || []) },
-        ]);
-
+        ])
       } catch (error) {
         console.error("Error fetching microcourse data:", error)
       }
     }
     fetchData()
   }, [id])
-
 
   const handleAddNote = (content: string) => {
     const newNote = {
@@ -352,55 +309,53 @@ export default function Microcourse() {
   }
 
   const sendText = async () => {
-    if (question.trim() === "") return;
-    const currentQuestion = question;
-    setQuestion(""); // Clear the input immediately
-    setMessages([...messages, { sender: "user", text: currentQuestion }]);
+    if (question.trim() === "") return
+    const currentQuestion = question
+    setQuestion("")
+    setMessages([...messages, { sender: "user", text: currentQuestion }])
     try {
-      const response = await api.post("/api/agent_response/", { question: currentQuestion, id });
-      const botResponse = response.data.answer;
-      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: botResponse }]);
+      const response = await api.post("/api/agent_response/", { question: currentQuestion, id })
+      const botResponse = response.data.answer
+      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: botResponse }])
     } catch (error) {
-      console.error("Error creating microcourse:", error);
+      console.error("Error creating microcourse:", error)
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "bot", text: "Sorry, something went wrong. Please try again." },
-      ]);
+      ])
     }
   }
 
   const scrollToChapter = (index: number) => {
-    // e.g. scroll to a heading
     //@ts-ignore
     const chapterElements = contentRef.current?.querySelectorAll("h3")
     if (chapterElements && chapterElements[index]) {
-      ;(chapterElements[index] as HTMLElement).scrollIntoView({ behavior: "smooth" })
+      (chapterElements[index] as HTMLElement).scrollIntoView({ behavior: "smooth" })
     }
   }
 
   const handleGoInDepth = async (chapterIndex: number) => {
     try {
-      // Get the chapter you want to extend
+      // Get the chapter content to extend
       const chapterToExtendContent = chapters[chapterIndex].content
-
-      // Call your API to generate the next section; adjust the endpoint and payload as needed
+      // Call your API for generating the next section
       const response = await api.post('/api/generate_next_section/', { previousSection: chapterToExtendContent, microcourseId: id })
-      // Assume the API returns a new section object with keys: section_title, content, codeExamples, mathExpressions, etc.
       const newSection = response.data
       console.log("newSection ", newSection)
-      // Append the new section to the chapters list
-      //setChapters((prevChapters) => [...prevChapters, newSection])
-
-      window.location.reload();
-    } catch (error) {
-      console.error("Error generating next section:", error)
+      window.location.reload()
+    } catch (error: any) {
+      // Check if error response indicates token limit reached
+      if (error.response && error.response.data && error.response.data.error && error.response.data.error.includes("token limit")) {
+        setShowTokenLimitModal(true)
+      } else {
+        console.error("Error generating next section:", error)
+      }
     }
   }
 
   // @ts-ignore
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-300 to-teal-500 dark:from-gray-800 dark:to-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
-      {/* 4) Conditionally render confetti */}
       {showConfetti && (
         <div
           style={{
@@ -411,7 +366,7 @@ export default function Microcourse() {
           <Confetti
             numberOfPieces={500}
             run={confettiRun}
-            recycle={false} // Disable recycling so no new pieces are added once run is false
+            recycle={false}
           />
         </div>
       )}
@@ -426,7 +381,6 @@ export default function Microcourse() {
         >
           <Header />
           <div className="flex-1 flex overflow-hidden">
-            {/* Main Content */}
             <div className="flex-1 overflow-y-auto p-6">
               <div className="max-w-3xl mx-auto">
                 <h2 className="text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white">
@@ -441,13 +395,17 @@ export default function Microcourse() {
                         codeExamples={chapter.codeExamples}
                         mathExpressions={chapter.mathExpressions}
                       />
-                      {/* Only render the "Go in-depth" button if this is the LAST chapter */}
                       {index === chapters.length - 1 && (
                         <button
                           className="mt-2 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 relative z-50"
                           onClick={() => handleGoInDepth(index)}
+                          disabled={inDepthLoading}
                         >
-                          Go in-depth
+                          {inDepthLoading ? (
+                            <Loader2 className="animate-spin w-5 h-5" />
+                          ) : (
+                            "Go in-depth"
+                          )}
                         </button>
                       )}
                     </div>
@@ -455,8 +413,6 @@ export default function Microcourse() {
                 </div>
               </div>
             </div>
-
-            {/* Right Sidebar */}
             <div className="w-64 bg-white/10 dark:bg-gray-800/50 backdrop-blur-md p-4 overflow-y-auto">
               <div className="space-y-4">
                 {modalChapters.map((chapter, index) => (
@@ -488,7 +444,6 @@ export default function Microcourse() {
           </div>
         </motion.main>
       </div>
-      {/* Chatbot Interface */}
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -496,11 +451,9 @@ export default function Microcourse() {
             animate={{ height: "auto" }}
             exit={{ height: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-0 right-0 w-96 bg-white/10 dark:bg-gray-800/90
-                       backdrop-blur-md rounded-tl-lg overflow-hidden z-30"
+            className="fixed bottom-0 right-0 w-96 bg-white/10 dark:bg-gray-800/90 backdrop-blur-md rounded-tl-lg overflow-hidden z-30"
           >
             <div className="p-4">
-              {/* Header with Close Button */}
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white">
                   Course Assistant
@@ -509,19 +462,12 @@ export default function Microcourse() {
                   <X className="w-6 h-6 text-gray-800 dark:text-white" />
                 </button>
               </div>
-
-              {/* -- Use the ChatMessages component -- */}
               <ChatMessages messages={messages} />
-
-              {/* Input + Arrow Button */}
               <div className="relative">
                 <Input
                   type="text"
                   placeholder="Type your message..."
-                  className="w-full pr-10 bg-white/20 dark:bg-gray-700/50
-                             focus:outline-none focus:ring-2 focus:ring-teal-500
-                             text-gray-800 dark:text-white placeholder-gray-500
-                             dark:placeholder-gray-400"
+                  className="w-full pr-10 bg-white/20 dark:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   value={question}
                   onChange={(e: { target: { value: SetStateAction<string> } }) => setQuestion(e.target.value)}
                   onKeyDown={(e: { key: string; preventDefault: () => void }) => {
@@ -533,9 +479,7 @@ export default function Microcourse() {
                 />
                 <button
                   onClick={sendText}
-                  className="absolute right-2 top-1/2 -translate-y-1/2
-                             text-gray-600 hover:text-gray-800 dark:text-gray-300
-                             dark:hover:text-gray-100"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
                 >
                   <ArrowRight className="h-5 w-5" />
                 </button>
@@ -544,24 +488,46 @@ export default function Microcourse() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Chat Toggle Button */}
       {!isChatOpen && (
           <button
               onClick={() => setIsChatOpen(true)}
-              className="fixed bottom-4 right-4 bg-teal-600 dark:bg-gray-600 hover:bg-teal-700
-                     dark:hover:bg-gray-700 text-white p-3 rounded-full shadow-lg z-40"
+              className="fixed bottom-4 right-4 bg-teal-600 dark:bg-gray-600 hover:bg-teal-700 dark:hover:bg-gray-700 text-white p-3 rounded-full shadow-lg z-40"
         >
           <MessageCircle />
         </button>
       )}
       <Footer isSidebarOpen={isSidebarOpen} />
+
       {/* Modal Components */}
+      {/* Quiz Modal */}
       {/* @ts-ignore */}
       <QuizModal isOpen={isModalOpen && modalType === 'Quiz'} onClose={() => setIsModalOpen(false)} questions={quizQuestions} />
+      {/* Recall Notes Modal */}
       {/* @ts-ignore */}
       <RecallNotesModal isOpen={isModalOpen && modalType === 'Recall Notes'} onClose={() => setIsModalOpen(false)} sectionId={chapters.length > 0 ? chapters[chapters.length - 1].id : ""} notes={recallNotes} onAddNote={handleAddNote} onDeleteNote={handleDeleteNote} />
+      {/* Glossary Modal */}
       {/* @ts-ignore */}
       <GlossaryModal isOpen={isModalOpen && modalType === 'Glossary'} onClose={() => setIsModalOpen(false)} terms={glossaryTerms} onAddTerm={handleAddTerm} onDeleteTerm={handleDeleteTerm} />
+
+      {/* Token Limit Warning Modal */}
+      {showTokenLimitModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+              Token Limit Reached
+            </h3>
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              Free plan users have a monthly limit of 2000 tokens for generating content. Please upgrade to generate more.
+            </p>
+            <button
+              onClick={() => setShowTokenLimitModal(false)}
+              className="w-full bg-teal-600 dark:bg-gray-600 text-white py-2 rounded hover:bg-teal-700 dark:hover:bg-gray-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

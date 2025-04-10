@@ -3,25 +3,15 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
-import Footer from "../components/Footer.tsx";
-import Header from "../components/Header.tsx";
-import ScrollProgressBar from "../components/ScrollProgressBar.tsx";
-import Background from "../components/Background.tsx";
-import Navigation from "../components/Navigation.tsx";
-import {useNavigate} from "react-router-dom";
+import Footer from "../components/Footer.tsx"
+import Header from "../components/Header.tsx"
+import ScrollProgressBar from "../components/ScrollProgressBar.tsx"
+import Background from "../components/Background.tsx"
+import Navigation from "../components/Navigation.tsx"
+import { useNavigate } from "react-router-dom"
 // @ts-ignore
-import api from "../api";
+import api from "../api"
 import { Trash2 } from "lucide-react"
-
-
-
-// TODO Design the "Settings" Page 🟡
-// TODO Design the "Profile" Page ✅
-// TODO Add a payment page ✅
-// TODO Improve the sidebar-main collapse ✅
-// TODO Add user-specific greeting in the header ✅
-// TODO Improve Dark Mode ✅
-
 
 /**
  * CardDeck Component
@@ -49,39 +39,37 @@ const CardDeck = ({
   onDelete?: (card: any) => void;
 }): JSX.Element => {
   // Provide default no-op callbacks if none are passed
-  const handleCardClick = onCardClick || (() => {});
-  //const handleEdit = onEdit || (() => {});
-  const handleDelete = onDelete || (() => {});
+  const handleCardClick = onCardClick || (() => {})
+  //const handleEdit = onEdit || (() => {})
+  const handleDelete = onDelete || (() => {})
 
   return (
       <motion.div
-          initial={{opacity: 0, y: 20}}
-          animate={{opacity: 1, y: 0}}
-          transition={{duration: 0.5}}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="bg-white/10 dark:bg-gray-600 dark:hover:bg-gray-700 backdrop-blur-md p-6 rounded-2xl shadow-lg mb-8"
       >
         <div className="flex flex-wrap gap-4">
           {cards.map((card, index) => (
               <motion.div
                   key={index}
-                  whileHover={{scale: 1.05}}
+                  whileHover={{ scale: 1.05 }}
                   className="group relative bg-white/30 dark:bg-gray-600 dark:hover:bg-gray-700 p-6 rounded-2xl cursor-pointer flex-1"
                   onClick={() => handleCardClick(card)}
               >
-                <div
-                    className="flex items-center justify-center group-hover:justify-between w-full transition-all duration-300">
+                <div className="flex items-center justify-center group-hover:justify-between w-full transition-all duration-300">
                   <h3 className="text-2xl font-semibold">{card.title}</h3>
-                  <div
-                      className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-4">
+                  <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-4">
                     <motion.button
-                        whileHover={{scale: 1.2}}
+                        whileHover={{ scale: 1.2 }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDelete(card);
                         }}
                         className="text-gray-800 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400"
                     >
-                      <Trash2 className="w-5 h-5"/>
+                      <Trash2 className="w-5 h-5" />
                     </motion.button>
                   </div>
                 </div>
@@ -89,8 +77,8 @@ const CardDeck = ({
           ))}
         </div>
       </motion.div>
-  );
-};
+  )
+}
 
 /**
  * Dashboard Component
@@ -101,10 +89,13 @@ const CardDeck = ({
  * @returns {JSX.Element} The rendered Dashboard component.
  */
 export default function Dashboard(): JSX.Element {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  //const [isDarkMode] = useState(false);
-  const [decks, setDecks] = useState([]);
-  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  // State for microcourse decks
+  const [decks, setDecks] = useState([])
+  const navigate = useNavigate()
+
+  // New state to control the limit warning modal
+  const [showLimitModal, setShowLimitModal] = useState(false)
 
   /**
    * Transforms fetched data into a deck structure.
@@ -118,9 +109,9 @@ export default function Dashboard(): JSX.Element {
     // @ts-ignore
     return data.map((course: { id: any; title: any; content: any }) => ({
       title: course.title,
-      cards: [{id: course.id, title: course.title, content: course.content}],
-    }));
-  };
+      cards: [{ id: course.id, title: course.title, content: course.content }],
+    }))
+  }
 
   // Fetch microcourse data on mount
   useEffect(() => {
@@ -128,31 +119,28 @@ export default function Dashboard(): JSX.Element {
       try {
         const response: { data: React.SetStateAction<null> } = await api.get(
             "/api/microcourses/"
-        );
-        const transformedDecks = transformData(response.data);
-        setDecks(transformedDecks);
+        )
+        const transformedDecks = transformData(response.data)
+        setDecks(transformedDecks)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error)
       }
-    };
-    fetchData();
-  }, []);
-
-  // Toggle dark mode class on document root
-  //useEffect(() => {
-  //  if (isDarkMode) {
-  //    document.documentElement.classList.add("dark");
-  //  } else {
-  //    document.documentElement.classList.remove("dark");
-  //  }
-  //}, [isDarkMode]);
+    }
+    fetchData()
+  }, [])
 
   /**
-   * Navigates to the microcourse builder welcome page.
+   * Navigates to the microcourse builder welcome page if limit not reached.
+   * Shows a modal warning if the free plan limit is reached.
    */
-  const navigate_to_microcourse_builder_welcome = () => {
-    navigate("/mc-builder-welcome");
-  };
+  const handleAddNewMicrocourse = () => {
+    // Check if the user already has 2 microcourses
+    if (decks.length >= 2) {
+      setShowLimitModal(true)
+    } else {
+      navigate("/mc-builder-welcome")
+    }
+  }
 
   /**
    * Navigates to a specific microcourse based on the selected deck.
@@ -160,40 +148,40 @@ export default function Dashboard(): JSX.Element {
    * @param {Object} deck - The deck object.
    */
   const navigate_to_microcourse = (deck: any) => {
-    const id = deck.cards[0].id;
-    navigate(`/microcourse/${id}`, { state: { id } });
-  };
+    const id = deck.cards[0].id
+    navigate(`/microcourse/${id}`, { state: { id } })
+  }
 
   const handleDeleteMicrocourse = async (deck: any) => {
-    const microcourseId = deck.cards[0].id; // assuming the deck's card id is the microcourse id
+    const microcourseId = deck.cards[0].id // assuming the deck's card id is the microcourse id
     try {
-      await api.delete(`/api/delete_microcourse/${microcourseId}/`);
-      window.location.reload();
+      await api.delete(`/api/delete_microcourse/${microcourseId}/`)
+      window.location.reload()
     } catch (error: any) {
-      console.error("Error deleting microcourse:", error.message || error);
+      console.error("Error deleting microcourse:", error.message || error)
     }
-  };
+  }
 
   return (
       <div className={`min-h-screen flex flex-col bg-gradient-to-br from-teal-300 to-teal-500 dark:from-gray-800 dark:to-gray-900 text-gray-800 dark:text-white transition-colors duration-300`}>
         {/* Scroll Progress Bar */}
-        <ScrollProgressBar/>
+        <ScrollProgressBar />
 
         {/* Animated Blob Background */}
-        <Background/>
+        <Background />
 
         {/* Main Content */}
         <div className="relative z-10 flex flex-1">
           {/* Sidebar Navigation */}
-          <Navigation isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}/>
+          <Navigation isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
           {/* Main Content Area */}
           <motion.main
               className="flex-1 p-6 transition-all duration-300 ease-in-out"
               initial={false}
-              animate={{marginLeft: isSidebarOpen ? 256 : 80}}
+              animate={{ marginLeft: isSidebarOpen ? 256 : 80 }}
           >
-            <Header/>
+            <Header />
 
             {/* Render Card Decks */}
             <div className="flex flex-wrap gap-4">
@@ -207,37 +195,35 @@ export default function Dashboard(): JSX.Element {
                       //@ts-ignore
                       onCardClick={(card) => {
                         // Navigate to microcourse
-                        navigate_to_microcourse(deck);
+                        navigate_to_microcourse(deck)
                       }}
                       onEdit={(card) => {
                         // Example edit logic
-                        console.log("Edit card:", card);
-                        // e.g. navigate("/microcourse-edit/" + card.id);
+                        console.log("Edit card:", card)
                       }}
                       onDelete={(card) => {
-                        console.log("Delete card:", card);
-                        handleDeleteMicrocourse(deck);
+                        console.log("Delete card:", card)
+                        handleDeleteMicrocourse(deck)
                       }}
                   />
               ))}
             </div>
 
-
             {/* "Add New Microcourse" Deck */}
             <motion.div
-                initial={{opacity: 0, y: 20}}
-                animate={{opacity: 1, y: 0}}
-                transition={{duration: 0.5}}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
                 className="bg-white/10 dark:bg-gray-800/90 backdrop-blur-md p-6 rounded-lg shadow-lg mb-8 cursor-pointer"
-                whileHover={{scale: 1.02}}
+                whileHover={{ scale: 1.02 }}
             >
               <div className="flex items-center justify-center h-40">
                 <button
-                    onClick={navigate_to_microcourse_builder_welcome}
+                    onClick={handleAddNewMicrocourse}
                     type="submit"
                     className="w-full bg-teal-600 dark:bg-gray-600 dark:hover:bg-gray-700 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center justify-center"
                 >
-                  <Plus className="w-12 h-12"/>
+                  <Plus className="w-12 h-12" />
                   <h2 className="text-2xl font-semibold ml-4">Add New Microcourse</h2>
                 </button>
               </div>
@@ -246,7 +232,27 @@ export default function Dashboard(): JSX.Element {
         </div>
 
         {/* Footer */}
-        <Footer isSidebarOpen={isSidebarOpen}/>
+        <Footer isSidebarOpen={isSidebarOpen} />
+
+        {/* Warning Modal for Free Plan Limit */}
+        {showLimitModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+                Limit Reached
+              </h3>
+              <p className="mb-4 text-gray-700 dark:text-gray-300">
+                Free plan users can create a maximum of 1 microcourse per month. Please upgrade for additional microcourses.
+              </p>
+              <button
+                onClick={() => setShowLimitModal(false)}
+                className="w-full bg-teal-600 dark:bg-gray-600 text-white py-2 rounded hover:bg-teal-700 dark:hover:bg-gray-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
   )
 }
