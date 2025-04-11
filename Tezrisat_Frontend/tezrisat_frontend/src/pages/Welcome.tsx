@@ -1,64 +1,56 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom" // Using React Router for navigation
-import { motion, useScroll, useTransform } from "framer-motion"
-import { ArrowRight, BookOpen, Layers, Lightbulb } from "lucide-react"
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, BookOpen, Layers, Lightbulb } from "lucide-react";
+// @ts-ignore
+import { Button } from "@/components/ui/button";
+import {ScrollProgressBar} from "../components/scroll-progress-bar";
+import {FloatingShapes} from "../components/floating-shapes";
+import {AnimatedBlob} from "../components/animated-blob";
+import {FeatureCard} from "../components/feature-card";
 
-// @ts-ignore
-import { Button } from "@/components/ui/button"
-// @ts-ignore
-import { ScrollProgressBar } from "../components/scroll-progress-bar"
-// @ts-ignore
-import { FloatingShapes } from "../components/floating-shapes"
-// @ts-ignore
-import { AnimatedBlob } from "../components/animated-blob"
-// @ts-ignore
-import { FeatureCard } from "../components/feature-card"
-import { useNavigate } from "react-router-dom";
-
-export default function Home() {
-  const { scrollYProgress } = useScroll()
-  const [isScrolled, setIsScrolled] = useState(false)
+const Home: React.FC = () => {
+  // Hook for scroll progress used for parallax effect
+  const { scrollYProgress } = useScroll();
+  // State for sticky header
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  // React Router navigation hook
   const navigate = useNavigate();
 
-  // Check if page is scrolled for sticky header styling
+  // Update 'isScrolled' based on window scroll value
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
-      }
-    }
+      setIsScrolled(window.scrollY > 10);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  // Parallax effect for hero section
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"])
+  // Parallax transformation: maps scroll progress to a vertical translation percentage
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
 
+  // Navigate to signup/register page
   const navigateToSignup = () => {
-    navigate('/register');
+    navigate("/register");
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-teal-900 via-teal-700 to-teal-400">
-      {/* Animated blob background */}
+      {/* Animated Background Elements */}
       <div className="fixed inset-0 -z-10 opacity-30">
         <AnimatedBlob />
       </div>
-
-      {/* Floating shapes */}
       <div className="fixed inset-0 -z-10 opacity-20">
         <FloatingShapes />
       </div>
 
-      {/* Scroll progress bar */}
+      {/* Scroll Progress Bar */}
       <ScrollProgressBar scrollYProgress={scrollYProgress} />
 
-      {/* Sticky header */}
+      {/* Sticky Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? "bg-teal-900/80 backdrop-blur-md shadow-sm" : "bg-transparent"
@@ -67,28 +59,28 @@ export default function Home() {
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <Link to="/" className="flex items-center gap-2">
             <img
-                src="../../public/Tezrisat_Logo_Transparent.png"
-                alt="Tezrisating Platform Interface"
-                style={{width: "6%", height: "5%", objectFit: "contain"}}
-                className="hidden md:block"
+              src="/Tezrisat_Logo_Transparent.png"
+              alt="Tezrisat Platform Interface"
+              style={{ width: "6%", height: "5%", objectFit: "contain" }}
+              className="hidden md:block"
             />
             <span className="text-xl font-bold text-white">Tezrisat</span>
           </Link>
           <nav className="hidden md:flex gap-6">
-            {/*<Link to="#features" className="text-sm font-medium text-white hover:text-teal-200 transition-colors">
-              Features
-            </Link>*/}
-            {/*<Link to="#testimonials" className="text-sm font-medium text-white hover:text-teal-200 transition-colors">
-              Testimonials
-            </Link>*/}
+            {/* Additional nav items can be added here */}
           </nav>
           <div className="flex gap-4">
-            <Button className="bg-teal-200 text-teal-900 hover:bg-teal-100" onClick={navigateToSignup}>Get Started</Button>
+            <Button
+              className="bg-teal-200 text-teal-900 hover:bg-teal-100"
+              onClick={navigateToSignup}
+            >
+              Get Started
+            </Button>
           </div>
         </div>
       </header>
 
-      {/* Hero section */}
+      {/* Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
@@ -105,7 +97,10 @@ export default function Home() {
                 Generate personalized learning experiences tailored to your needs. Master new skills in minutes, not hours.
               </p>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button onClick={navigateToSignup} className="bg-teal-200 text-teal-900 hover:bg-teal-100 h-12 px-6">
+                <Button
+                  onClick={navigateToSignup}
+                  className="bg-teal-200 text-teal-900 hover:bg-teal-100 h-12 px-6"
+                >
                   Start Learning
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -117,13 +112,13 @@ export default function Home() {
               </div>
             </motion.div>
             <motion.div
-                style={{y}}
-                className="relative h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden"
+              style={{ y }}
+              className="relative h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-200/20 to-teal-400/20  rounded-2xl border border-teal-200/30"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-200/20 to-teal-400/20 rounded-2xl border border-teal-200/30"></div>
               <img
-                src="../../public/Tezrisat_Logo_White_Background.png"
-                alt="Tezrisating Platform Interface"
+                src="/Tezrisat_Logo_White_Background.png"
+                alt="Tezrisat Platform Interface"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 className="rounded-2xl"
               />
@@ -132,7 +127,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features section */}
+      {/* Features Section */}
       <section id="features" className="py-20 md:py-32 bg-gradient-to-b from-teal-400 to-teal-300">
         <div className="container px-4 md:px-6">
           <motion.div
@@ -170,7 +165,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it works section */}
+      {/* How It Works Section */}
       <section id="how-it-works" className="py-20 md:py-32 bg-gradient-to-b from-teal-300 to-teal-200">
         <div className="container px-4 md:px-6">
           <motion.div
@@ -180,23 +175,26 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-12 md:mb-16"
           >
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-teal-900">How It Works</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-teal-900">
+              How It Works
+            </h2>
             <p className="mt-4 text-teal-700 md:text-xl/relaxed max-w-3xl mx-auto">
               Three simple steps to start your personalized learning journey.
             </p>
           </motion.div>
-
           <div className="grid gap-10 md:grid-cols-3">
             {[
               {
                 step: "01",
                 title: "Define Your Goal",
-                description: "Give us some basic information about how the microcourse should be and eventually some URLs and PDFs to tailor your microcourse to your specific needs.",
+                description:
+                  "Provide your learning objective along with any relevant URLs or PDFs to tailor your microcourse.",
               },
               {
                 step: "02",
                 title: "Get Your Microcourse",
-                description: "Our AI generates a customized learning path with bite-sized content.",
+                description:
+                  "Our AI generates a customized learning path with bite-sized content.",
               },
               {
                 step: "03",
@@ -214,7 +212,9 @@ export default function Home() {
               >
                 <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6 border border-teal-200/50 h-full shadow-lg">
                   <div className="text-5xl font-bold text-teal-200 mb-4">{item.step}</div>
-                  <h3 className="text-xl font-bold text-teal-900 mb-2">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-teal-900 mb-2">
+                    {item.title}
+                  </h3>
                   <p className="text-teal-700">{item.description}</p>
                 </div>
               </motion.div>
@@ -223,7 +223,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA section */}
+      {/* Call-To-Action (CTA) Section */}
       <section className="py-20 md:py-32 bg-gradient-to-b from-teal-200 to-teal-100">
         <div className="container px-4 md:px-6">
           <motion.div
@@ -241,7 +241,12 @@ export default function Home() {
                 Ready to Transform Your Learning Experience?
               </h2>
               <div className="mt-8">
-                <Button className="bg-white text-teal-600 hover:bg-teal-50 h-12 px-8" onClick={navigateToSignup}>Get Started for Free</Button>
+                <Button
+                  className="bg-white text-teal-600 hover:bg-teal-50 h-12 px-8"
+                  onClick={navigateToSignup}
+                >
+                  Get Started for Free
+                </Button>
               </div>
             </div>
           </motion.div>
@@ -255,72 +260,81 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <img
-                    src="../../public/Tezrisat_Logo_Transparent.png"
-                    alt="Tezrisat Platform Interface"
-                    style={{width: "18%", height: "18%", objectFit: "contain"}}
-                    className="hidden md:block"
+                  src="/Tezrisat_Logo_Transparent.png"
+                  alt="Tezrisat Platform Interface"
+                  style={{ width: "18%", height: "18%", objectFit: "contain" }}
+                  className="hidden md:block"
                 />
-                <span className="text-xl font-bold text-teal-900">Tezrisat</span>
+                <span className="text-xl font-bold text-teal-900">
+                  Tezrisat
+                </span>
               </div>
-              <p className="text-teal-700 text-sm">
-                Conquer the unknown!
-              </p>
+              <p className="text-teal-700 text-sm">Conquer the unknown!</p>
             </div>
             <div>
-            <h3 className="text-sm font-medium text-teal-900 mb-4">Platform</h3>
+              <h3 className="text-sm font-medium text-teal-900 mb-4">
+                Platform
+              </h3>
               <ul className="space-y-2 text-sm">
-                {/*<li>
-                  <Link to="#" className="text-teal-700 hover:text-teal-500 transition-colors">
-                    Features
-                  </Link>
-                </li>*/}
                 <li>
-                  <Link to="#how-it-works" className="text-teal-700 hover:text-teal-500 transition-colors">
+                  <Link
+                    to="#how-it-works"
+                    className="text-teal-700 hover:text-teal-500 transition-colors"
+                  >
                     How It Works
                   </Link>
                 </li>
                 <li>
-                  <Link to="/pricing" className="text-teal-700 hover:text-teal-500 transition-colors">
+                  <Link
+                    to="/pricing"
+                    className="text-teal-700 hover:text-teal-500 transition-colors"
+                  >
                     Pricing
                   </Link>
                 </li>
-                {/*<li>
-                  <Link to="#" className="text-teal-700 hover:text-teal-500 transition-colors">
-                    Testimonials
-                  </Link>
-                </li>*/}
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-teal-900 mb-4">Company</h3>
+              <h3 className="text-sm font-medium text-teal-900 mb-4">
+                Company
+              </h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link to="/about" className="text-teal-700 hover:text-teal-500 transition-colors">
+                  <Link
+                    to="/about"
+                    className="text-teal-700 hover:text-teal-500 transition-colors"
+                  >
                     About Us
                   </Link>
                 </li>
-                {/*<li>
-                  <Link to="#" onClick={navigateToPricing} className="text-teal-700 hover:text-teal-500 transition-colors">
-                    Contact
-                  </Link>
-                </li>*/}
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-teal-900 mb-4">Legal</h3>
+              <h3 className="text-sm font-medium text-teal-900 mb-4">
+                Legal
+              </h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link to="#" className="text-teal-700 hover:text-teal-500 transition-colors">
+                  <Link
+                    to="#"
+                    className="text-teal-700 hover:text-teal-500 transition-colors"
+                  >
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="text-teal-700 hover:text-teal-500 transition-colors">
+                  <Link
+                    to="#"
+                    className="text-teal-700 hover:text-teal-500 transition-colors"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="text-teal-700 hover:text-teal-500 transition-colors">
+                  <Link
+                    to="#"
+                    className="text-teal-700 hover:text-teal-500 transition-colors"
+                  >
                     Cookie Policy
                   </Link>
                 </li>
@@ -328,9 +342,14 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-teal-100 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-teal-700">© {new Date().getFullYear()} Tezrisat. All rights reserved.</p>
+            <p className="text-sm text-teal-700">
+              © {new Date().getFullYear()} Tezrisat. All rights reserved.
+            </p>
             <div className="flex gap-4">
-              <Link to="#" className="text-teal-700 hover:text-teal-500 transition-colors">
+              <Link
+                to="#"
+                className="text-teal-700 hover:text-teal-500 transition-colors"
+              >
                 <span className="sr-only">LinkedIn</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -354,5 +373,7 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  )
-}
+  );
+};
+
+export default Home;

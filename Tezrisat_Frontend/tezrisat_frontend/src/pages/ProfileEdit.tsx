@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FC, ChangeEvent } from "react";
 import { Save } from "lucide-react";
 // @ts-ignore
 import { Button } from "@/components/ui/button";
@@ -29,21 +29,21 @@ import api from "../api";
  * Displays a profile settings form where users can update their personal information,
  * change their avatar, and update their password.
  */
-export default function ProfileEdit() {
-  // State to manage user details and UI elements.
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+const ProfileEdit: FC = () => {
+  // User profile states
+  const [firstname, setFirstname] = useState<string>("");
+  const [lastname, setLastname] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
-  // Track loading and error states
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+  // UI state for sidebar, loading and messages
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [successMsg, setSuccessMsg] = useState<string>("");
 
-  // Fetch the current user's data on mount
+  // Fetch current user's data on mount
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -51,9 +51,9 @@ export default function ProfileEdit() {
         setErrorMsg("");
         const response = await api.get(`/api/profile/`);
         const data = response.data;
-        console.log("data", data);
+        console.log("User Data:", data);
 
-        // Update states with the user info
+        // Set user profile values from the API response
         setFirstname(data.first_name || "");
         setLastname(data.last_name || "");
         setUsername(data.username || "");
@@ -64,11 +64,12 @@ export default function ProfileEdit() {
         setLoading(false);
       }
     };
+
     fetchCurrentUser();
   }, []);
 
   /**
-   * Handle form submission to update the user profile.
+   * Handle profile update
    */
   const handleSave = async () => {
     try {
@@ -76,39 +77,37 @@ export default function ProfileEdit() {
       setErrorMsg("");
       setSuccessMsg("");
 
+      // Validate required fields
       if (!firstname.trim() || !lastname.trim() || !username.trim() || !email.trim()) {
         throw new Error("Please fill in all required fields.");
       }
 
-      // Simple email pattern check
+      // Validate email format
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(email)) {
         throw new Error("Please enter a valid email address.");
       }
 
+      // Validate new password rules if provided
       if (password) {
-        // Minimum length
         if (password.length < 8) {
           throw new Error("Password must be at least 8 characters.");
         }
-        // At least one uppercase letter
         if (!/[A-Z]/.test(password)) {
           throw new Error("Password must contain at least one uppercase letter.");
         }
-        // At least one digit
         if (!/\d/.test(password)) {
           throw new Error("Password must contain at least one digit.");
         }
-        // At least one special character
         if (!/[^A-Za-z0-9]/.test(password)) {
           throw new Error("Password must contain at least one special character.");
         }
-        // Forbid whitespace (optional)
         if (/\s/.test(password)) {
           throw new Error("Password must not contain whitespace.");
         }
       }
 
+      // Send update request to API
       await api.post(`/api/updateprofile/`, {
         body: {
           firstname,
@@ -119,6 +118,7 @@ export default function ProfileEdit() {
         },
       });
 
+      // Clear the password input after successful update
       setPassword("");
       setSuccessMsg("Profile updated successfully!");
     } catch (error: any) {
@@ -128,22 +128,21 @@ export default function ProfileEdit() {
     }
   };
 
+  // Input change handler type
+  const handleChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+    };
+
   return (
     <>
       {/* Background and Navigation Components */}
       <Background />
-
-      {/*
-        We use a full-height flex container. The top area holds the Navigation,
-        and the main area (flex-1) centers the card both vertically and horizontally.
-      */}
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-300 to-teal-500 dark:from-gray-800 dark:to-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
-        <Navigation
-          isSidebarOpen={isSidebarOpen}
-          setIsSidebarOpen={setIsSidebarOpen}
-        />
+        <Navigation isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-        {/* Main content area that centers the card */}
+        {/* Center the form card */}
         <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
           <Card className="w-full max-w-2xl bg-white/10 dark:bg-gray-800/90 backdrop-blur-md shadow-xl">
             <CardHeader className="px-4 sm:px-6 py-4">
@@ -164,7 +163,7 @@ export default function ProfileEdit() {
                     id="firstname"
                     type="text"
                     value={firstname}
-                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFirstname(e.target.value)}
+                    onChange={handleChange(setFirstname)}
                     className="bg-white/20 dark:bg-gray-700/50 w-full"
                   />
                 </div>
@@ -176,7 +175,7 @@ export default function ProfileEdit() {
                     id="lastname"
                     type="text"
                     value={lastname}
-                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setLastname(e.target.value)}
+                    onChange={handleChange(setLastname)}
                     className="bg-white/20 dark:bg-gray-700/50 w-full"
                   />
                 </div>
@@ -188,7 +187,7 @@ export default function ProfileEdit() {
                     id="username"
                     type="text"
                     value={username}
-                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setUsername(e.target.value)}
+                    onChange={handleChange(setUsername)}
                     className="bg-white/20 dark:bg-gray-700/50 w-full"
                   />
                 </div>
@@ -200,7 +199,7 @@ export default function ProfileEdit() {
                     id="email"
                     type="email"
                     value={email}
-                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setEmail(e.target.value)}
+                    onChange={handleChange(setEmail)}
                     className="bg-white/20 dark:bg-gray-700/50 w-full"
                   />
                 </div>
@@ -213,7 +212,7 @@ export default function ProfileEdit() {
                     type="password"
                     placeholder="Enter new password"
                     value={password}
-                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setPassword(e.target.value)}
+                    onChange={handleChange(setPassword)}
                     className="bg-white/20 dark:bg-gray-700/50 w-full"
                   />
                 </div>
@@ -230,7 +229,7 @@ export default function ProfileEdit() {
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
 
-              {/* Display success or error message */}
+              {/* Display success and error messages */}
               {successMsg && (
                 <p className="text-green-600 font-semibold text-sm sm:text-base">
                   {successMsg}
@@ -247,4 +246,6 @@ export default function ProfileEdit() {
       </div>
     </>
   );
-}
+};
+
+export default ProfileEdit;

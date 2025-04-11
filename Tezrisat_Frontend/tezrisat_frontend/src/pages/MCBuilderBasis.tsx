@@ -1,63 +1,58 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import ScrollProgressBar from "../components/ScrollProgressBar.tsx";
-import Background from "../components/Background.tsx";
-import Navigation from "../components/Navigation.tsx";
-import Header from "../components/Header.tsx";
-import Footer from "../components/Footer.tsx";
-// @ts-ignore
-import api from "../api";
+import ScrollProgressBar from "../components/ScrollProgressBar";
+import Background from "../components/Background";
+import Navigation from "../components/Navigation";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+//import api from "../api";
 
-/**
- * NavItem Component
- *
- * Renders a navigation item with an icon and label.
- *
- * @param {Object} props - Component properties.
- * @param {React.ReactNode} props.icon - The icon component.
- * @param {string} props.label - The label text.
- */
+/** Interface for the new microcourse data */
+interface NewMicrocourse {
+  title: string;
+  topic: string;
+  complexity: string;
+  targetAudience: string;
+}
 
-/**
- * MicrocourseSetup Component
- *
- * Provides a form for users to enter basic microcourse information.
- * Upon submission, the new microcourse data is passed to the next step in the builder.
- *
- * @returns {JSX.Element} The rendered MicrocourseSetup component.
- */
-export default function MicrocourseSetup() {
+const MicrocourseSetup: FC = () => {
   // Sidebar state
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+
   // Form input states
-  const [title, setTitle] = useState("");
-  const [topic, setTopic] = useState("");
-  const [complexity, setComplexity] = useState("");
-  const [target_audience, setTargetAudience] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [topic, setTopic] = useState<string>("");
+  const [complexity, setComplexity] = useState<string>("");
+  const [targetAudience, setTargetAudience] = useState<string>("");
+
   const navigate = useNavigate();
 
   /**
    * Handles form submission by building a new microcourse object
    * and navigating to the next step with the new microcourse data.
    *
-   * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+   * @param e - React form submission event.
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newMicrocourse = {
+
+    const newMicrocourse: NewMicrocourse = {
       title,
       topic,
       complexity,
-      target_audience,
+      targetAudience,
     };
+
     try {
-      // Optionally, you can send the data to an API endpoint here
+      // Optionally post the new microcourse data to an API endpoint:
       // const response = await api.post('/api/add_microcourse/', newMicrocourse);
-      // console.log(response.data);
+      // console.log("API response:", response.data);
+
+      // Navigate to the next step, passing new microcourse data in state
       navigate("/mc-builder-basis-two", { state: { newMicrocourse } });
     } catch (error) {
       console.error("Error creating microcourse:", error);
@@ -66,20 +61,17 @@ export default function MicrocourseSetup() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-300 to-teal-500 dark:from-gray-800 dark:to-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
-      {/* Scroll Progress Bar */}
+      {/* Progress Indicator and Background */}
       <ScrollProgressBar />
-
-      {/* Animated Blob Background */}
       <Background />
 
-      {/* Main Content */}
       <div className="relative z-10 flex flex-1">
         {/* Sidebar Navigation */}
         <Navigation isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* Main Content Area */}
         <main className="flex-1 p-6 ml-64">
-          {/* Header */}
+          {/* Page Header */}
           <Header />
 
           {/* Microcourse Setup Form */}
@@ -117,7 +109,7 @@ export default function MicrocourseSetup() {
                   id="topic"
                   name="topic"
                   required
-                  placeholder="e.g., Introduction to React Hooks"
+                  placeholder="e.g., Functional Components and Hooks"
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   className="w-full px-3 py-2 bg-white/20 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -141,16 +133,16 @@ export default function MicrocourseSetup() {
               </div>
               {/* Target Audience */}
               <div>
-                <label htmlFor="target_audience" className="block text-sm font-medium mb-2">
+                <label htmlFor="targetAudience" className="block text-sm font-medium mb-2">
                   Target Audience
                 </label>
                 <input
                   type="text"
-                  id="target_audience"
-                  name="target_audience"
+                  id="targetAudience"
+                  name="targetAudience"
                   required
                   placeholder="e.g., Junior developers, UX designers"
-                  value={target_audience}
+                  value={targetAudience}
                   onChange={(e) => setTargetAudience(e.target.value)}
                   className="w-full px-3 py-2 bg-white/20 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
@@ -174,4 +166,6 @@ export default function MicrocourseSetup() {
       <Footer isSidebarOpen={isSidebarOpen} />
     </div>
   );
-}
+};
+
+export default MicrocourseSetup;

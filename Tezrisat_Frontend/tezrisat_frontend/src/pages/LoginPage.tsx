@@ -1,16 +1,24 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { useState, ChangeEvent, FormEvent, FC } from "react";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 // @ts-ignore
 import { Button } from "@/components/ui/button";
 // @ts-ignore
 import { Input } from "@/components/ui/input";
 // @ts-ignore
 import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+}
 // @ts-ignore
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 // @ts-ignore
 import LoadingIndicator from "../components/LoadingIndicator";
@@ -19,41 +27,27 @@ import api from "../api";
 // @ts-ignore
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 
-/**
- * Props for the LoginPage component.
- */
+// Define props for LoginPage
 interface FormProps {
   route?: string;
   method?: string;
 }
 
-/**
- * LoginPage Component
- *
- * Renders a login form with animated UI elements. Users can input their username
- * (email) and password. The component handles form submission by sending a POST
- * request to the given route and navigates based on the method prop.
- *
- * @param {FormProps} props - Component properties.
- * @returns {JSX.Element} The rendered LoginPage component.
- */
-export default function LoginPage({ route, method }: FormProps) {
-  // State hooks for form inputs and UI flags.
-  const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+const LoginPage: FC<FormProps> = ({ route = "/api/login/", method = "login" }) => {
+  // State for UI and form fields
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   /**
-   * Handles form submission for logging in.
-   * Sends a POST request with the username and password.
-   * On successful login, stores tokens and navigates to "/home".
-   *
-   * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+   * Handles the form submission event.
+   * Sends username and password to the provided route,
+   * stores tokens on success, and navigates to the home page.
    */
-  // @ts-ignore
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -66,8 +60,8 @@ export default function LoginPage({ route, method }: FormProps) {
       } else {
         navigate("/login");
       }
-    } catch (error) {
-      alert(error);
+    } catch (error: any) {
+      alert(error.message || error);
     } finally {
       setLoading(false);
     }
@@ -111,14 +105,18 @@ export default function LoginPage({ route, method }: FormProps) {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Username Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="username" className="text-black">Email</Label>
+                    <Label htmlFor="username" className="text-black">
+                      Email
+                    </Label>
                     <div className="relative">
                       <Input
                         id="username"
-                        type="username"
+                        type="text"
                         placeholder="Enter your username"
                         value={username}
-                        onChange={(e: { target: { value: React.SetStateAction<string> } }) => setUsername(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                          setUsername(e.target.value)
+                        }
                         className="pl-10 bg-white/20 border-white/30 text-black placeholder-black/50 dark:bg-gray-600"
                         required
                       />
@@ -127,14 +125,18 @@ export default function LoginPage({ route, method }: FormProps) {
                   </div>
                   {/* Password Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-black">Password</Label>
+                    <Label htmlFor="password" className="text-black">
+                      Password
+                    </Label>
                     <div className="relative">
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         value={password}
-                        onChange={(e: { target: { value: React.SetStateAction<string> } }) => setPassword(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                          setPassword(e.target.value)
+                        }
                         className="pl-10 pr-10 bg-white/20 border-white/30 text-black placeholder-white/50 dark:bg-gray-600"
                         required
                       />
@@ -180,4 +182,6 @@ export default function LoginPage({ route, method }: FormProps) {
       </motion.div>
     </div>
   );
-}
+};
+
+export default LoginPage;

@@ -1,18 +1,24 @@
 "use client";
 
-import { useState, useMemo, SetStateAction } from 'react';
+import { useState, useMemo, FC, ChangeEvent } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+}
 // @ts-ignore
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+from "@/components/ui/dialog";
 // @ts-ignore
 import { Input } from "@/components/ui/input";
 // @ts-ignore
 import { Button } from "@/components/ui/button";
 // @ts-ignore
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Book, Plus, Trash2 } from 'lucide-react';
+import { Search, Book, Plus, Trash2 } from "lucide-react";
 // @ts-ignore
-import api from "../api"
-import {useLocation} from "react-router-dom";
+import api from "../api";
+import { useLocation } from "react-router-dom";
 
 export interface GlossaryTerm {
   id: string;
@@ -29,37 +35,33 @@ export interface GlossaryModalProps {
   onDeleteTerm: (id: string) => void;
 }
 
-/**
- * GlossaryModal Component
- *
- * Displays a modal for managing glossary terms. Users can search for existing terms,
- * add a new term with its definition, and delete terms.
- *
- * @param {GlossaryModalProps} props - Component properties.
- * @returns {JSX.Element} The rendered GlossaryModal component.
- */
-// @ts-ignore
-export default function GlossaryModal({ isOpen, onClose, sectionId, terms, onAddTerm, onDeleteTerm }: GlossaryModalProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [newTerm, setNewTerm] = useState('');
-  const [newDefinition, setNewDefinition] = useState('');
+const GlossaryModal: FC<GlossaryModalProps> = ({
+  isOpen,
+  onClose,
+  terms,
+  onDeleteTerm,
+}) => {
+  // Local state for search term and new term inputs
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [newTerm, setNewTerm] = useState<string>("");
+  const [newDefinition, setNewDefinition] = useState<string>("");
 
-  const location = useLocation()
-  const { id } = location.state || {}
+  const location = useLocation();
+  // Extract an ID from location state if needed.
+  const { id } = location.state || {};
 
-  /**
-   * Filters glossary terms based on the search term.
-   */
+  // Memoized filtered terms based on search input.
   const filteredTerms = useMemo(() => {
     return terms.filter(
-      item =>
+      (item) =>
         item.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.definition.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [terms, searchTerm]);
 
   /**
-   * Handles adding a new term if both term and definition are provided.
+   * Handles adding a new glossary term.
+   * If both term and definition inputs are provided, posts the data to the API.
    */
   const handleAddTerm = async () => {
     if (newTerm.trim() && newDefinition.trim()) {
@@ -69,32 +71,43 @@ export default function GlossaryModal({ isOpen, onClose, sectionId, terms, onAdd
         microcourse_id: id,
       };
       try {
-        await api.post(`/api/add_glossary_term/`, {
-          termData
-        });
-        setNewTerm('');
-        setNewDefinition('');
+        await api.post(`/api/add_glossary_term/`, { termData });
+        setNewTerm("");
+        setNewDefinition("");
+        // Optionally, trigger a state update callback:
+        // onAddTerm({ id: "new-id", term: termData.term, definition: termData.definition });
         window.location.reload();
       } catch (error: any) {
-        console.error('Error adding glossary term:', error.message || error);
+        console.error("Error adding glossary term:", error.message || error);
       }
     }
   };
 
-  const handleDeleteTerm = async (term_id: string) => {
+  /**
+   * Handles deleting a glossary term by its ID.
+   * On success, calls the onDeleteTerm callback and reloads the page.
+   */
+  const handleDeleteTerm = async (termId: string) => {
     try {
-      const response = await api.delete(`/api/delete_glossary_term/${term_id}/`);
+      const response = await api.delete(`/api/delete_glossary_term/${termId}/`);
       if (response.status !== 200) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to delete glossary term.');
+        throw new Error(errorData.detail || "Failed to delete glossary term.");
       }
-      // On success, update the UI using the parent callback.
-      onDeleteTerm(id);
+      onDeleteTerm(termId);
       window.location.reload();
     } catch (error: any) {
-      console.error('Error deleting glossary term:', error.message || error);
+      console.error("Error deleting glossary term:", error.message || error);
     }
   };
+
+  // Type-safe onChange handlers for inputs.
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setSearchTerm(e.target.value);
+  const handleNewTermChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setNewTerm(e.target.value);
+  const handleNewDefinitionChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setNewDefinition(e.target.value);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -112,7 +125,7 @@ export default function GlossaryModal({ isOpen, onClose, sectionId, terms, onAdd
           <Input
             placeholder="Search terms..."
             value={searchTerm}
-            onChange={(e: { target: { value: SetStateAction<string> } }) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
             className="pl-8"
           />
         </div>
@@ -122,14 +135,17 @@ export default function GlossaryModal({ isOpen, onClose, sectionId, terms, onAdd
           <Input
             placeholder="New term"
             value={newTerm}
-            onChange={(e: { target: { value: SetStateAction<string> } }) => setNewTerm(e.target.value)}
+            onChange={handleNewTermChange}
           />
           <Input
             placeholder="Definition"
             value={newDefinition}
-            onChange={(e: { target: { value: SetStateAction<string> } }) => setNewDefinition(e.target.value)}
+            onChange={handleNewDefinitionChange}
           />
-          <Button onClick={handleAddTerm} disabled={!newTerm.trim() || !newDefinition.trim()}>
+          <Button
+            onClick={handleAddTerm}
+            disabled={!newTerm.trim() || !newDefinition.trim()}
+          >
             <Plus className="h-4 w-4" />
           </Button>
         </div>
@@ -139,7 +155,10 @@ export default function GlossaryModal({ isOpen, onClose, sectionId, terms, onAdd
           {filteredTerms.length > 0 ? (
             <div className="space-y-4">
               {filteredTerms.map((item) => (
-                <div key={item.id} className="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0">
+                <div
+                  key={item.id}
+                  className="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0"
+                >
                   <div className="flex justify-between items-start">
                     <h3 className="text-lg font-semibold mb-2">{item.term}</h3>
                     <Button
@@ -151,7 +170,9 @@ export default function GlossaryModal({ isOpen, onClose, sectionId, terms, onAdd
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{item.definition}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {item.definition}
+                  </p>
                 </div>
               ))}
             </div>
@@ -164,4 +185,6 @@ export default function GlossaryModal({ isOpen, onClose, sectionId, terms, onAdd
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default GlossaryModal;

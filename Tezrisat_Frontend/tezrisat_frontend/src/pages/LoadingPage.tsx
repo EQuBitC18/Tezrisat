@@ -1,40 +1,37 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-// @ts-ignore
-import { AnimatedBlob } from "../components/animated-blob"
-// @ts-ignore
-import { FloatingShapes } from "../components/floating-shapes"
+import { useEffect, useState, FC } from "react";
+import {AnimatedBlob} from "../components/animated-blob";
+import {FloatingShapes} from "../components/floating-shapes";
 
-export default function LoadingPage() {
-  const [loadingText, setLoadingText] = useState("Loading")
-  const [progress, setProgress] = useState(0)
+const LoadingPage: FC = () => {
+  // State for loading text and progress percentage.
+  const [loadingText, setLoadingText] = useState<string>("Loading");
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
-    // Simulate loading progress
-    const interval = setInterval(() => {
+    // Interval to simulate loading progress.
+    const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(interval)
-          return 100
+          clearInterval(progressInterval);
+          return 100;
         }
-        return prev + 1
-      })
-    }, 50)
+        return prev + 1;
+      });
+    }, 50);
 
-    // Animate loading text dots
+    // Interval to animate the loading text dots.
     const textInterval = setInterval(() => {
-      setLoadingText((prev) => {
-        if (prev === "Loading...") return "Loading"
-        return prev + "."
-      })
-    }, 500)
+      setLoadingText((prev) => (prev === "Loading..." ? "Loading" : prev + "."));
+    }, 500);
 
+    // Cleanup intervals on component unmount.
     return () => {
-      clearInterval(interval)
-      clearInterval(textInterval)
-    }
-  }, [])
+      clearInterval(progressInterval);
+      clearInterval(textInterval);
+    };
+  }, []);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -46,6 +43,7 @@ export default function LoadingPage() {
       <AnimatedBlob className="absolute bottom-40 right-10 opacity-20 -z-5" />
       <FloatingShapes className="absolute inset-0 -z-5" />
 
+      {/* Main Container */}
       <div className="container relative px-4 py-24 mx-auto max-w-7xl flex flex-col items-center">
         {/* Logo with breathing animation */}
         <div className="relative mb-12 animate-breathe">
@@ -57,21 +55,24 @@ export default function LoadingPage() {
           <div className="absolute inset-0 bg-teal-500/20 blur-xl rounded-full -z-10"></div>
         </div>
 
-        {/* Loading text */}
+        {/* Loading Text */}
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">{loadingText}</h2>
 
-        {/* Progress bar */}
+        {/* Progress Bar */}
         <div className="w-full max-w-md bg-white/20 backdrop-blur-sm rounded-full h-4 mb-8 overflow-hidden">
           <div
             className="h-full bg-teal-400 rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progress}%` }}
-          ></div>
+          />
         </div>
 
-        {/* Loading message */}
-        <p className="text-white/80 text-center max-w-md">Preparing your personalized learning experience...</p>
+        {/* Additional Loading Message */}
+        <p className="text-white/80 text-center max-w-md">
+          Preparing your personalized learning experience...
+        </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
+export default LoadingPage;
