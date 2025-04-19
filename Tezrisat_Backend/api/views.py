@@ -68,6 +68,7 @@ def get_current_user(request):
         "last_name": user.last_name,
         "username": user.username,
         "email": user.email,
+        "microcourses_created": user.profile.microcourses_created,
     }
     return JsonResponse(data)
 
@@ -169,13 +170,12 @@ def go_in_depth(request):
     previous_section = request.data.get("previousSection")
     topic = microcourse.topic
 
-    # Free plan token limit enforcement.
-    TOKEN_LIMIT = 1000
+    TOKEN_LIMIT = 2000
     estimated_tokens_needed = 2000
-    if profile.plan == "free" and profile.tokens_used > TOKEN_LIMIT:
+    if profile.plan == "free" and profile.tokens_used >= TOKEN_LIMIT:
         return JsonResponse(
             {
-                "error": "Free plan users have reached the monthly token limit of 1000 tokens. Please upgrade for more usage."},
+                "error": "Free plan users have reached the monthly token limit of 2000 tokens. Please upgrade for more usage."},
             status=403,
         )
 
@@ -246,7 +246,7 @@ def add_microcourse(request):
     limit = 1
     if profile.plan == "free" and profile.microcourses_created >= limit:
         return JsonResponse(
-            {"error": "Free plan users are limited to 2 microcourses per month. Please upgrade for more."},
+            {"error": "Free plan users are limited to 1 microcourse per month. Please upgrade for more."},
             status=403,
         )
 

@@ -89,9 +89,24 @@ def load_finetuning_docs(
     return docs
 
 
-def call_llm(prompt: str) -> str:
-    llm = OpenAI(temperature=0.7, max_tokens=1024)
-    return llm(prompt)
+from langchain.callbacks.base import BaseCallbackHandler
+from langchain.callbacks.manager import CallbackManager
+
+class TokenUsageCallbackHandler(BaseCallbackHandler):
+    def __init__(self):
+        self.token_usage = 0
+
+    def on_llm_end(self, response, **kwargs):
+        # The response should include a "usage" key with token counts.
+        if "usage" in response:
+            self.token_usage = response["usage"].get("total_tokens", 0)
+
+def call_llm(prompt: str) -> (str, int):
+    token_handler = TokenUsageCallbackHandler()
+    callback_manager = CallbackManager([token_handler])
+    llm = OpenAI(temperature=0.7, max_tokens=1024, callback_manager=callback_manager)
+    output = llm(prompt)
+    return output, token_handler.token_usage
 
 
 def document_relevancy_check(topic: str, text: str, max_length: int = 1000) -> Dict[str, Any]:
@@ -145,12 +160,14 @@ def get_finetuning_context(topic: str, pdf_path: Optional[Union[str, List[str]]]
 # Generation Retry Mechanism
 # ------------------------------
 def _generate_main_section(prompt: str):
-    output = call_llm(prompt)
+    output, token_usage = call_llm(prompt)
     try:
         data = json.loads(output)
+        data["token_usage"] = token_usage
         return data, None
     except Exception as e:
         return None, f"Error parsing main section JSON. Raw output:\n{output}\nException: {e}"
+
 
 
 def _generate_code_examples(prompt: str):

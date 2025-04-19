@@ -20,7 +20,7 @@ import {
 from "@/components/ui/card";
 // @ts-ignore
 import { Checkbox } from "@/components/ui/checkbox";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 // @ts-ignore
 import api from "../api";
 // @ts-ignore
@@ -127,6 +127,23 @@ const RegisterPage: FC<FormProps> = ({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-400 to-teal-600 dark:from-gray-800 dark:to-gray-900 p-4 overflow-hidden">
+      {/* Sticky Header */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300`}
+      >
+        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+          <Link to="/" className="flex items-center gap-2">
+            <img
+              src="/Tezrisat_Logo_Transparent.png"
+              alt="Tezrisat Platform Interface"
+              style={{ width: "6%", height: "5%", objectFit: "contain" }}
+              className="hidden md:block"
+            />
+            <span className="text-xl font-bold text-white">Tezrisat</span>
+          </Link>
+        </div>
+      </header>
+
       {/* Animated SVG Background */}
       <div className="absolute inset-0 z-0">
         <svg className="w-full h-full opacity-30" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">

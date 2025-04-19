@@ -2,7 +2,7 @@
 
 // @ts-ignore
 import api from "../api";
-import React, { useState, useCallback, FC } from "react";
+import React, {useState, useCallback, FC, useEffect} from "react";
 import { motion } from "framer-motion";
 import { Upload, Link as LinkIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
@@ -13,6 +13,7 @@ import Navigation from "../components/Navigation";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LoadingPage from "./LoadingPage";
+import {Button} from "../../components/ui/button.tsx";
 
 /**
  * Interface for the microcourse data passed through navigation state.
@@ -34,9 +35,27 @@ const ResourceUpload: FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   // Loading indicator state
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // State for microcourse count
+  const [microcourseCount, setMicrocourseCount] = useState<number>(0);
+  // State for limit modal
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
+
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const fetchMicrocourses = async () => {
+      try {
+        const response = await api.get("/api/get_currentuser/");
+        setMicrocourseCount(response.data.microcourses_created);
+      } catch (error) {
+        console.error("Error fetching microcourses:", error);
+      }
+    };
+
+    fetchMicrocourses();
+  }, []);
 
   // Assert and extract newMicrocourse from navigation state
   const newMicrocourse = (location.state as { newMicrocourse: NewMicrocourse } | undefined)?.newMicrocourse;
@@ -85,7 +104,11 @@ const ResourceUpload: FC = () => {
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    // Check if the user has reached the microcourse limit
+    if (microcourseCount >= 1) {
+      setShowLimitModal(true);
+      return;
+    }
     const formData = new FormData();
 
     // Map camelCase keys to API-expected snake_case keys:
@@ -119,6 +142,7 @@ const ResourceUpload: FC = () => {
 
     try {
       setIsLoading(true);
+      console.log("hier 2");
       const response = await api.post("/api/add_microcourse/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -236,6 +260,24 @@ const ResourceUpload: FC = () => {
           </motion.div>
         </main>
       </div>
+      {showLimitModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+              Limit Reached
+            </h3>
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              Free plan users can only create one microcourse per month. Please upgrade to create additional microcourses.
+            </p>
+            <Button
+              onClick={() => setShowLimitModal(false)}
+              className="w-full bg-teal-600 dark:bg-gray-600 hover:bg-teal-700 text-white py-2 rounded"
+            >
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Footer isSidebarOpen={isSidebarOpen} />
     </div>
