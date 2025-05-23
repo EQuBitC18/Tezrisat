@@ -5,25 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="minor changes, Profile limit reached warning added, ...">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/PaymentForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/PaymentSummary.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/StripeSuccessPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/About.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/About.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/GlossaryModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/GlossaryModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/LoadingPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/LoadingPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/LoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderBasis.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderBasis.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderBasisTwo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderBasisTwo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderWelcome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderWelcome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Microcourse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Microcourse.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/ProfileEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/ProfileEdit.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/QuizModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/QuizModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/RecallNotesModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/RecallNotesModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/RegisterPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/RegisterPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Welcome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Welcome.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +65,7 @@
     &quot;Django Server.Tezrisat.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/equbi/PycharmProjects/Tezrisat/Tezrisat_Frontend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -140,6 +136,25 @@
       <workItem from="1744220621767" duration="7000" />
       <workItem from="1744307825426" duration="3521000" />
       <workItem from="1744394619484" duration="5048000" />
+      <workItem from="1745144319748" duration="7000" />
+      <workItem from="1745237229284" duration="1307000" />
+      <workItem from="1745409060645" duration="1595000" />
+      <workItem from="1745480711214" duration="5000" />
+      <workItem from="1745606447710" duration="2495000" />
+      <workItem from="1746181776045" duration="6000" />
+      <workItem from="1747153702269" duration="1023000" />
+      <workItem from="1747169413556" duration="2456000" />
+      <workItem from="1747216925114" duration="2385000" />
+      <workItem from="1747333212225" duration="4290000" />
+      <workItem from="1747420957097" duration="6344000" />
+      <workItem from="1747530473887" duration="5121000" />
+      <workItem from="1747599146663" duration="635000" />
+      <workItem from="1747680549385" duration="1967000" />
+      <workItem from="1747742469242" duration="2000" />
+      <workItem from="1747774420570" duration="2355000" />
+      <workItem from="1747870101120" duration="3000" />
+      <workItem from="1747916359658" duration="6000" />
+      <workItem from="1747939085428" duration="169000" />
     </task>
     <task id="LOCAL-00001" summary="minor changes, Profile limit reached warning added, ...">
       <option name="closed" value="true" />
@@ -169,6 +184,7 @@
       <path value="$PROJECT_DIR$/Tezrisat_Frontend" />
     </ignored-roots>
     <MESSAGE value="minor changes, Profile limit reached warning added, ..." />
-    <option name="LAST_COMMIT_MESSAGE" value="minor changes, Profile limit reached warning added, ..." />
+    <MESSAGE value="added modal warning when microcourse limit has been reached, added the header with logo to login and register pages" />
+    <option name="LAST_COMMIT_MESSAGE" value="added modal warning when microcourse limit has been reached, added the header with logo to login and register pages" />
   </component>
 </project>

@@ -16,6 +16,8 @@ import ProfileEdit from "./pages/ProfileEdit.tsx";
 import Plans from "./pages/Plans.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import AboutPage from "./pages/About.tsx";
+import PaymentPage from "./pages/PaymentPage.tsx";
+import StripeSuccessPage from "./pages/StripeSuccessPage.tsx";
 
 // @ts-ignore
 function Logout() {
@@ -55,6 +57,16 @@ function App() {
                     <Route path="/plans" element={
                         <ProtectedRoute>
                             <Plans/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path="/payment" element={
+                        <ProtectedRoute>
+                            <PaymentPage/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path="/success" element={
+                        <ProtectedRoute>
+                            <StripeSuccessPage/>
                         </ProtectedRoute>
                     }/>
                     <Route path="/mc-builder-welcome" element={

@@ -2,6 +2,7 @@ from django.urls import path, re_path
 
 
 from . import views
+from .views import PaymentListView, CreatePaymentIntentView
 
 # URLConfiguration
 urlpatterns = [
@@ -21,5 +22,9 @@ urlpatterns = [
     path("delete_note/<int:note_id>/", views.delete_note, name="delete_note"),
 
     path("updateprofile/", views.update_profile, name="update_profile"),
+
+    path("payment/", PaymentListView.as_view(), name="payment-list"),
+    path("create-payment-intent/", CreatePaymentIntentView.as_view(), name="create-payment-intent"),
+
 ]
 

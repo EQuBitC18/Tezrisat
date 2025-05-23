@@ -4,6 +4,14 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+class Payment(models.Model):
+    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField()
+    currency = models.CharField(max_length=10, default="usd")
+    stripe_payment_id = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    email = models.EmailField()
+
 class UserProfile(models.Model):
     PLAN_CHOICES = (
         ('free', 'Free'),

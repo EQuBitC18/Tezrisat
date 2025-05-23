@@ -1,22 +1,72 @@
 "use client";
 
-import { useState, FC } from "react";
-import { Check, HelpCircle } from "lucide-react";
+import {useState, FC, useEffect, SetStateAction} from "react";
+import {Check, HelpCircle} from "lucide-react";
 // @ts-ignore
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 // @ts-ignore
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Background from "../components/Background";
 import Navigation from "../components/Navigation";
 // @ts-ignore
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PricingFaq } from "../components/pricing-faq";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {PricingFaq} from "../components/pricing-faq";
 // @ts-ignore
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {useNavigate} from "react-router-dom";
+// @ts-ignore
+import api from "../api";
 
-const PaymentPage: FC = () => {
+const PlansPage: FC = () => {
   // State to manage sidebar visibility.
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  // @ts-ignore
+  const [loading, setLoading] = useState(false);
+  // @ts-ignore
+  const [currency, setCurrency] = useState("USD");
+  // @ts-ignore
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const amount = 500; // in cents
+
+  useEffect(() => {
+    api
+        .get("/api/profile/")
+        .then((res: { data: { email: SetStateAction<string>; }; }) => {
+        setEmail(res.data.email);
+      })
+      .catch((err: any) => {
+        console.error("Failed to fetch current user:", err);
+      });
+  }, []);
+
+
+
+  const handlePayClick = async () => {
+    setLoading(true);
+
+    try {
+      const response = await api.post(`/api/create-payment-intent/`, {
+        amount,
+        currency,
+        email,
+      });
+
+      const data = await response.data;
+      console.log("stripe data: ", data)
+
+      if (data.clientSecret) {
+        navigate("/payment", { state: { clientSecret: data.clientSecret } });
+      } else {
+        alert("Error creating payment intent.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error creating payment intent.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -82,8 +132,9 @@ const PaymentPage: FC = () => {
                     </ul>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full bg-teal-600 hover:bg-teal-700 text-white">
-                      Get Started
+                    <Button className="w-full bg-teal-600 hover:bg-teal-700 text-white"
+                    onClick={() => handlePayClick()}>
+                      {loading ? "Processing…" : "Get Started"}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -128,8 +179,9 @@ const PaymentPage: FC = () => {
                     </ul>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white">
-                      Get Started
+                    <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white"
+                    onClick={() => handlePayClick()}>
+                      {loading ? "Processing…" : "Get Started"}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -261,4 +313,4 @@ const PaymentPage: FC = () => {
   );
 };
 
-export default PaymentPage;
+export default PlansPage;

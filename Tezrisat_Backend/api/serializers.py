@@ -2,9 +2,15 @@ import logging
 from django.contrib.auth.models import User
 from rest_framework import serializers, generics
 from rest_framework.permissions import IsAuthenticated
-from api.models import Microcourse, MicrocourseSection, GlossaryTerm, QuizQuestion, RecallNote
+from api.models import Microcourse, MicrocourseSection, GlossaryTerm, QuizQuestion, RecallNote, Payment
+
 
 # serializers.py
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['id', 'amount', 'currency', 'stripe_payment_id', 'created_at', 'email']
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
