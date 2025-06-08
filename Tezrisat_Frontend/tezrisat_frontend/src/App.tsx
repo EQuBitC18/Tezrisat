@@ -18,7 +18,7 @@ import Pricing from "./pages/Pricing.tsx";
 import AboutPage from "./pages/About.tsx";
 import PaymentPage from "./pages/PaymentPage.tsx";
 import StripeSuccessPage from "./pages/StripeSuccessPage.tsx";
-import SubscriptionManagement from "./pages/SubscriptionManagement.tsx";
+import Billing from "./pages/Billing.tsx";
 
 // @ts-ignore
 function Logout() {
@@ -60,9 +60,9 @@ function App() {
                             <Plans/>
                         </ProtectedRoute>
                     }/>
-                    <Route path="/subscription" element={
+                    <Route path="/billing" element={
                         <ProtectedRoute>
-                            <SubscriptionManagement/>
+                            <Billing/>
                         </ProtectedRoute>
                     }/>
                     <Route path="/payment" element={
