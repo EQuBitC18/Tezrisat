@@ -128,10 +128,10 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
         />
       </Link>
 
-      <Link to="/subscription">
+      <Link to="/billing">
         <NavItem
           icon={<RefreshCw className="w-5 h-5" />}
-          label="Subscription"
+          label="Billing"
           onClick={() => {}}
           isOpen={isSidebarOpen}
         />
