@@ -12,6 +12,18 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
 
+
+class Subscription(models.Model):
+    """Record details of a Stripe subscription."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="subscriptions")
+    stripe_subscription_id = models.CharField(max_length=255)
+    status = models.CharField(max_length=50, default="active")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Subscription {self.stripe_subscription_id} for {self.user.username}"
+
 class UserProfile(models.Model):
     PLAN_CHOICES = (
         ('free', 'Free'),

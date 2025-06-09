@@ -51,6 +51,7 @@ from .models import (
     RecallNote,
     UserProfile,
     Payment,
+    Subscription,
 
 )
 from .serializers import (
@@ -58,6 +59,7 @@ from .serializers import (
     MicrocourseSerializer,
     MicrocourseSectionSerializer,
     PaymentSerializer,
+    SubscriptionSerializer,
 
 )
 
@@ -89,6 +91,7 @@ class CreatePaymentIntentView(APIView):
             payment_intent = stripe.PaymentIntent.create(
                 amount=amount,
                 currency=currency,
+                receipt_email=email,
             )
             payment_data = {
                 'amount': amount,
@@ -103,6 +106,53 @@ class CreatePaymentIntentView(APIView):
                                      'payment': serializer.data
                                      }, status=status.HTTP_201_CREATED)
             return JsonResponse({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except stripe.error.StripeError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class CancelSubscriptionView(APIView):
+    """Cancel an active Stripe subscription."""
+
+    def post(self, request):
+        subscription_id = request.data.get('subscription_id')
+        if not subscription_id:
+            return JsonResponse({'error': 'subscription_id is required'}, status=400)
+        try:
+            subscription = stripe.Subscription.delete(subscription_id)
+            Subscription.objects.filter(stripe_subscription_id=subscription_id).update(status=subscription.status)
+            serializer = SubscriptionSerializer(data={
+                'stripe_subscription_id': subscription.id,
+                'status': subscription.status,
+            })
+            if serializer.is_valid():
+                # Only save if not exists
+                Subscription.objects.update_or_create(
+                    stripe_subscription_id=subscription.id,
+                    defaults={'status': subscription.status, 'user': request.user}
+                )
+            return JsonResponse({'status': subscription.status})
+        except stripe.error.StripeError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class UpdateSubscriptionView(APIView):
+    """Update subscription plan or metadata using Stripe."""
+
+    def post(self, request):
+        subscription_id = request.data.get('subscription_id')
+        new_price_id = request.data.get('new_price_id')
+        if not subscription_id or not new_price_id:
+            return JsonResponse({'error': 'subscription_id and new_price_id are required'}, status=400)
+        try:
+            sub = stripe.Subscription.retrieve(subscription_id)
+            item_id = sub['items']['data'][0].id
+            updated = stripe.Subscription.modify(
+                subscription_id,
+                items=[{'id': item_id, 'price': new_price_id}],
+                proration_behavior='create_prorations',
+            )
+            Subscription.objects.filter(stripe_subscription_id=subscription_id).update(status=updated.status)
+            return JsonResponse({'status': updated.status})
         except stripe.error.StripeError as e:
             return JsonResponse({'error': str(e)}, status=400)
 
