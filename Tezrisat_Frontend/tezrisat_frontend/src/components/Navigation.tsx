@@ -137,6 +137,15 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
         />
       </Link>
 
+      <Link to="/subscription">
+        <NavItem
+          icon={<RefreshCw className="w-5 h-5" />}
+          label="Subscription"
+          onClick={() => {}}
+          isOpen={isSidebarOpen}
+        />
+      </Link>
+
       <Link to="">
         <NavItem
           icon={isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}

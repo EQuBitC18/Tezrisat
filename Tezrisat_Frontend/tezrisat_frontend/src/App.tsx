@@ -20,6 +20,9 @@ import PaymentPage from "./pages/PaymentPage.tsx";
 import StripeSuccessPage from "./pages/StripeSuccessPage.tsx";
 import Billing from "./pages/Billing.tsx";
 
+import SubscriptionManagement from "./pages/SubscriptionManagement.tsx";
+
+
 // @ts-ignore
 function Logout() {
     localStorage.clear();
@@ -65,6 +68,12 @@ function App() {
                             <Billing/>
                         </ProtectedRoute>
                     }/>
+                    <Route path="/subscription" element={
+                        <ProtectedRoute>
+                            <SubscriptionManagement/>
+                        </ProtectedRoute>
+                    }/>
+
                     <Route path="/payment" element={
                         <ProtectedRoute>
                             <PaymentPage/>
