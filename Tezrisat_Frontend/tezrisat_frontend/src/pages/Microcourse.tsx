@@ -201,6 +201,7 @@ const Microcourse: FC = () => {
   // Sidebar and token limit modal state
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [showTokenLimitModal, setShowTokenLimitModal] = useState<boolean>(false);
+  const [tokenLimitReached, setTokenLimitReached] = useState<boolean>(false);
 
   // Ref for scrolling to chapters
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -391,6 +392,7 @@ const Microcourse: FC = () => {
         error.response.data.error.includes("token limit")
       ) {
         setShowTokenLimitModal(true);
+        setTokenLimitReached(true);
       } else {
         console.error("Error generating next section:", error);
       }
@@ -442,9 +444,9 @@ const Microcourse: FC = () => {
                       <ChapterTextField chapter={chapter.section_title || "Untitled Section"} content={chapter.content || ""} code_examples={chapter.code_examples}  math_expressions={chapter.math_expressions}/>
                       {index === chapters.length - 1 && (
                         <button
-                          className="mt-2 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 relative z-50"
+                          className="mt-2 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 relative z-50 disabled:opacity-50"
                           onClick={() => handleGoInDepth(index)}
-                          disabled={inDepthLoading}
+                          disabled={inDepthLoading || tokenLimitReached}
                         >
                           {inDepthLoading ? (
                             <Loader2 className="animate-spin w-5 h-5" />

@@ -39,6 +39,9 @@ const ResourceUpload: FC = () => {
   const [microcourseCount, setMicrocourseCount] = useState<number>(0);
   // State for limit modal
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
+  // State for token limit modal
+  const [showTokenLimitModal, setShowTokenLimitModal] = useState<boolean>(false);
+  const [tokenLimitMessage, setTokenLimitMessage] = useState<string>("");
 
 
   const navigate = useNavigate();
@@ -151,8 +154,18 @@ const ResourceUpload: FC = () => {
       if (response.status === 200) {
         navigate("/home");
       }
-    } catch (error) {
-      console.error("Error uploading resources:", error);
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.error &&
+        error.response.data.error.includes("token limit")
+      ) {
+        setTokenLimitMessage(error.response.data.error);
+        setShowTokenLimitModal(true);
+      } else {
+        console.error("Error uploading resources:", error);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -250,7 +263,8 @@ const ResourceUpload: FC = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full bg-teal-600 dark:bg-gray-600 dark:hover:bg-gray-700 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center justify-center"
+                  disabled={showTokenLimitModal}
+                  className="w-full bg-teal-600 dark:bg-gray-600 dark:hover:bg-gray-700 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center justify-center disabled:opacity-50"
                 >
                   Upload Resources
                   <Upload className="ml-2 w-5 h-5" />
@@ -275,6 +289,16 @@ const ResourceUpload: FC = () => {
             >
               Close
             </Button>
+          </div>
+        </div>
+      )}
+
+      {showTokenLimitModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Token Limit Reached</h3>
+            <p className="mb-4 text-gray-700 dark:text-gray-300">{tokenLimitMessage || 'You have reached your monthly token limit. Please wait until next month or upgrade your plan.'}</p>
+            <Button onClick={() => setShowTokenLimitModal(false)} className="w-full bg-teal-600 dark:bg-gray-600 hover:bg-teal-700 text-white py-2 rounded">Close</Button>
           </div>
         </div>
       )}

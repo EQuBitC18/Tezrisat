@@ -257,7 +257,7 @@ def get_microcourse(request, pk):
 def go_in_depth(request):
     """
     Generate and add a new microcourse section using the provided previous section content.
-    Enforces token usage limits for free plan users.
+    Enforces token usage limits based on the user's plan.
     """
     user = request.user
     profile, _ = UserProfile.objects.get_or_create(user=user)
@@ -271,12 +271,19 @@ def go_in_depth(request):
     previous_section = request.data.get("previousSection")
     topic = microcourse.topic
 
-    TOKEN_LIMIT = 2000
+    TOKEN_LIMIT_FREE = 2000
+    TOKEN_LIMIT_PREMIUM = 60000
     estimated_tokens_needed = 2000
-    if profile.plan == "free" and profile.tokens_used >= TOKEN_LIMIT:
+    if profile.plan == "free":
+        token_limit = TOKEN_LIMIT_FREE
+    else:
+        token_limit = TOKEN_LIMIT_PREMIUM
+
+    if profile.tokens_used >= token_limit:
+        plan_label = "Free" if profile.plan == "free" else "Premium"
         return JsonResponse(
             {
-                "error": "Free plan users have reached the monthly token limit of 2000 tokens. Please upgrade for more usage."},
+                "error": f"{plan_label} plan users have reached the monthly token limit of {token_limit} tokens. Please wait until next month for more usage."},
             status=403,
         )
 
@@ -324,11 +331,11 @@ def go_in_depth(request):
         logger.error("Error creating new MicrocourseSection and related items: %s", e)
         return JsonResponse({"error": "Failed to create new microcourse section."}, status=500)
 
-    # Update token usage for free plans.
+    # Update token usage based on plan.
+    # Track how many tokens this generation used for quota enforcement.
     token_usage_from_response = microcourse_section_data.get("token_usage", estimated_tokens_needed)
-    if profile.plan == "free":
-        profile.tokens_used += token_usage_from_response
-        profile.save()
+    profile.tokens_used += token_usage_from_response
+    profile.save()
     serializer = MicrocourseSectionSerializer(new_section)
     return JsonResponse(serializer.data)
 
@@ -338,7 +345,7 @@ def go_in_depth(request):
 def add_microcourse(request):
     """
     Create a new microcourse using the provided data (including URLs and PDF files).
-    Enforce free plan limits and handle file saving.
+    Enforce plan limits and handle file saving.
     """
     logger.info("Received request to add microcourse")
     user = request.user
@@ -348,6 +355,18 @@ def add_microcourse(request):
     if profile.plan == "free" and profile.microcourses_created >= limit:
         return JsonResponse(
             {"error": "Free plan users are limited to 1 microcourse per month. Please upgrade for more."},
+            status=403,
+        )
+
+    TOKEN_LIMIT_FREE = 2000
+    TOKEN_LIMIT_PREMIUM = 60000
+    estimated_tokens_needed = 2000
+    token_limit = TOKEN_LIMIT_FREE if profile.plan == "free" else TOKEN_LIMIT_PREMIUM
+
+    if profile.tokens_used >= token_limit:
+        plan_label = "Free" if profile.plan == "free" else "Premium"
+        return JsonResponse(
+            {"error": f"{plan_label} plan users have reached the monthly token limit of {token_limit} tokens. Please wait until next month for more usage."},
             status=403,
         )
 
@@ -383,6 +402,8 @@ def add_microcourse(request):
     except Exception as e:
         logger.error("Error generating microcourse section: %s", e)
         return JsonResponse({"error": "Failed to generate microcourse section."}, status=500)
+
+    token_usage_from_response = microcourse_section_data.get("token_usage", estimated_tokens_needed)
 
     try:
         pdf_field = json.dumps(saved_pdf_filenames) if saved_pdf_filenames else None
@@ -432,7 +453,9 @@ def add_microcourse(request):
 
     if profile.plan == "free":
         profile.microcourses_created += 1
-        profile.save()
+
+    profile.tokens_used += token_usage_from_response
+    profile.save()
 
     serializer = MicrocourseSerializer(microcourse)
     if serializer.is_valid:
