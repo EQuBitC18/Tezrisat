@@ -91,6 +91,7 @@ class CreatePaymentIntentView(APIView):
             payment_intent = stripe.PaymentIntent.create(
                 amount=amount,
                 currency=currency,
+                receipt_email=email,
             )
             payment_data = {
                 'amount': amount,
