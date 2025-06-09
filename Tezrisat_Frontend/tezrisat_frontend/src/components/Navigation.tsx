@@ -7,7 +7,6 @@ import {
   Home,
   LogOut,
   Moon,
-  RefreshCw,
   Sun,
 } from "lucide-react";
 import {Link, useNavigate} from "react-router-dom";
@@ -123,24 +122,6 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
         <NavItem
           icon={<CreditCard className="w-5 h-5" />}
           label="Upgrade"
-          onClick={() => {}}
-          isOpen={isSidebarOpen}
-        />
-      </Link>
-
-      <Link to="/billing">
-        <NavItem
-          icon={<RefreshCw className="w-5 h-5" />}
-          label="Billing"
-          onClick={() => {}}
-          isOpen={isSidebarOpen}
-        />
-      </Link>
-
-      <Link to="/subscription">
-        <NavItem
-          icon={<RefreshCw className="w-5 h-5" />}
-          label="Subscription"
           onClick={() => {}}
           isOpen={isSidebarOpen}
         />

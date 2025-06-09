@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="Stripe added">
+    <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="Plans and Navigation small changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +147,8 @@
       <workItem from="1748042414825" duration="1327000" />
       <workItem from="1748044191762" duration="411000" />
       <workItem from="1749322325186" duration="2454000" />
-      <workItem from="1749408263389" duration="2100000" />
+      <workItem from="1749408263389" duration="6370000" />
+      <workItem from="1749490189967" duration="3188000" />
     </task>
     <task id="LOCAL-00001" summary="minor changes, Profile limit reached warning added, ...">
       <option name="closed" value="true" />
@@ -174,7 +174,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748042468362</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Plans and Navigation small changes">
+      <option name="closed" value="true" />
+      <created>1749412472393</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1749412472393</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -188,6 +196,7 @@
     <MESSAGE value="minor changes, Profile limit reached warning added, ..." />
     <MESSAGE value="added modal warning when microcourse limit has been reached, added the header with logo to login and register pages" />
     <MESSAGE value="Stripe added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Stripe added" />
+    <MESSAGE value="Plans and Navigation small changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Plans and Navigation small changes" />
   </component>
 </project>
