@@ -4,20 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="minor changes, Profile limit reached warning added, ...">
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/PaymentForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/PaymentSummary.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/StripeSuccessPage.tsx" afterDir="false" />
+    <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="Stripe added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -155,6 +145,10 @@
       <workItem from="1747870101120" duration="3000" />
       <workItem from="1747916359658" duration="6000" />
       <workItem from="1747939085428" duration="169000" />
+      <workItem from="1748042414825" duration="1327000" />
+      <workItem from="1748044191762" duration="411000" />
+      <workItem from="1749322325186" duration="2454000" />
+      <workItem from="1749408263389" duration="2100000" />
     </task>
     <task id="LOCAL-00001" summary="minor changes, Profile limit reached warning added, ...">
       <option name="closed" value="true" />
@@ -172,7 +166,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744311336393</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Stripe added">
+      <option name="closed" value="true" />
+      <created>1748042468362</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1748042468362</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,6 +187,7 @@
     </ignored-roots>
     <MESSAGE value="minor changes, Profile limit reached warning added, ..." />
     <MESSAGE value="added modal warning when microcourse limit has been reached, added the header with logo to login and register pages" />
-    <option name="LAST_COMMIT_MESSAGE" value="added modal warning when microcourse limit has been reached, added the header with logo to login and register pages" />
+    <MESSAGE value="Stripe added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Stripe added" />
   </component>
 </project>

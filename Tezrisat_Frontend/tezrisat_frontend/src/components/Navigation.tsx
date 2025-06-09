@@ -6,7 +6,6 @@ import {
   CreditCard,
   Home,
   LogOut,
-  Menu,
   Moon,
   RefreshCw,
   Sun,
@@ -106,7 +105,7 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="p-2 rounded-full hover:bg-white/10 dark:hover:bg-gray-700"
         >
-          <Menu className="w-6 h-6" />
+          {/*<Menu className="w-6 h-6" />*/}
         </button>
       </div>
 
