@@ -67,8 +67,13 @@ logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class PaymentListView(generics.ListAPIView):
-    queryset = Payment.objects.all()
+    """Return payments for the authenticated user only."""
+
     serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Payment.objects.filter(user=self.request.user)
 
 class CreatePaymentIntentView(APIView):
     def post(self, request):
@@ -94,6 +99,7 @@ class CreatePaymentIntentView(APIView):
                 receipt_email=email,
             )
             payment_data = {
+                'user': request.user.id,
                 'amount': amount,
                 'currency': currency,
                 'stripe_payment_id': payment_intent['id'],
@@ -153,6 +159,55 @@ class UpdateSubscriptionView(APIView):
             )
             Subscription.objects.filter(stripe_subscription_id=subscription_id).update(status=updated.status)
             return JsonResponse({'status': updated.status})
+        except stripe.error.StripeError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class StripeWebhookView(APIView):
+    """Handle incoming Stripe webhook events."""
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        payload = request.body
+        sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+        endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+
+        try:
+            event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+        except (ValueError, stripe.error.SignatureVerificationError) as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+        if event['type'] == 'payment_intent.succeeded':
+            intent = event['data']['object']
+            try:
+                payment = Payment.objects.get(stripe_payment_id=intent['id'])
+                profile, _ = UserProfile.objects.get_or_create(user=payment.user)
+                profile.plan = 'premium'
+                profile.save()
+            except Payment.DoesNotExist:
+                pass
+
+        return JsonResponse({'status': 'received'})
+
+
+class CreateSubscriptionView(APIView):
+    """Create a new Stripe subscription for the authenticated user."""
+
+    def post(self, request):
+        price_id = request.data.get('price_id')
+        if not price_id:
+            return JsonResponse({'error': 'price_id is required'}, status=400)
+        try:
+            customer = stripe.Customer.create(email=request.user.email)
+            sub = stripe.Subscription.create(customer=customer.id, items=[{'price': price_id}])
+
+            Subscription.objects.create(
+                user=request.user,
+                stripe_subscription_id=sub.id,
+                status=sub.status,
+            )
+            return JsonResponse({'subscription_id': sub.id, 'status': sub.status})
         except stripe.error.StripeError as e:
             return JsonResponse({'error': str(e)}, status=400)
 

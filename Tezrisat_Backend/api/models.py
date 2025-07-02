@@ -5,12 +5,17 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class Payment(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+    """Store a single payment made via Stripe."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments")
     amount = models.PositiveIntegerField()
     currency = models.CharField(max_length=10, default="usd")
     stripe_payment_id = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.amount} {self.currency}"
 
 
 class Subscription(models.Model):
