@@ -22,7 +22,7 @@ const PaymentForm = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:5173/success",
+        return_url: import.meta.env.VITE_PAYMENT_RETURN_URL as string,
       },
     });
     if (error) setMessage(error.message || "An error occurred.");

@@ -17,7 +17,8 @@ from api.models import (
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ['id', 'amount', 'currency', 'stripe_payment_id', 'created_at', 'email']
+        fields = ['id', 'user', 'amount', 'currency', 'stripe_payment_id', 'created_at', 'email']
+        extra_kwargs = {'user': {'read_only': True}}
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

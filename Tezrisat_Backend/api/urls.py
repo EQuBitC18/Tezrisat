@@ -7,6 +7,8 @@ from .views import (
     CreatePaymentIntentView,
     CancelSubscriptionView,
     UpdateSubscriptionView,
+    CreateSubscriptionView,
+    StripeWebhookView,
 )
 
 # URLConfiguration
@@ -32,6 +34,8 @@ urlpatterns = [
     path("create-payment-intent/", CreatePaymentIntentView.as_view(), name="create-payment-intent"),
     path("cancel-subscription/", CancelSubscriptionView.as_view(), name="cancel-subscription"),
     path("update-subscription/", UpdateSubscriptionView.as_view(), name="update-subscription"),
+    path("create-subscription/", CreateSubscriptionView.as_view(), name="create-subscription"),
+    path("stripe-webhook/", StripeWebhookView.as_view(), name="stripe-webhook"),
 
 ]
 
