@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Deleted some Stripe-related generated code for cleaning">
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/PaymentForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderBasisTwo.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Microcourse.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
