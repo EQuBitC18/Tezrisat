@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Deleted some Stripe-related generated code for cleaning">
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/PaymentForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/MCBuilderBasisTwo.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Microcourse.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "main",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "ts.external.directory.path": "C:\\Users\\equbi\\PycharmProjects\\Tezrisat\\Tezrisat_Frontend\\tezrisat_frontend\\node_modules\\typescript\\lib"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Deleted some Stripe-related generated code for cleaning" />
+    <option name="LAST_COMMIT_MESSAGE" value="Deleted some Stripe-related generated code for cleaning" />
+  </component>
+</project>
