@@ -7,9 +7,7 @@ from api.models import (
     MicrocourseSection,
     GlossaryTerm,
     QuizQuestion,
-    RecallNote,
-    Payment,
-    Subscription,
+    RecallNote, Payment,
 )
 
 
@@ -19,17 +17,6 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ['id', 'amount', 'currency', 'stripe_payment_id', 'created_at', 'email']
 
-
-class SubscriptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subscription
-        fields = [
-            'id',
-            'stripe_subscription_id',
-            'status',
-            'created_at',
-        ]
-        extra_kwargs = {'user': {'read_only': True}}
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

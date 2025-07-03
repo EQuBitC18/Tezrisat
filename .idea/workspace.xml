@@ -6,9 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="d775b071-363a-4ac7-8b12-19591a2a9c5b" name="Changes" comment="Stripe added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/migrations/0002_remove_microcoursesection_quiz_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/migrations/0003_subscription.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/PaymentPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Plans.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/Billing.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

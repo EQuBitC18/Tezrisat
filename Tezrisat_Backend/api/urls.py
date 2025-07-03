@@ -5,8 +5,6 @@ from . import views
 from .views import (
     PaymentListView,
     CreatePaymentIntentView,
-    CancelSubscriptionView,
-    UpdateSubscriptionView,
 )
 
 # URLConfiguration
@@ -30,8 +28,6 @@ urlpatterns = [
 
     path("payment/", PaymentListView.as_view(), name="payment-list"),
     path("create-payment-intent/", CreatePaymentIntentView.as_view(), name="create-payment-intent"),
-    path("cancel-subscription/", CancelSubscriptionView.as_view(), name="cancel-subscription"),
-    path("update-subscription/", UpdateSubscriptionView.as_view(), name="update-subscription"),
 
 ]
 
