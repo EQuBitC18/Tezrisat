@@ -24,7 +24,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       // Override the problematic rule:
-      '@typescript-eslint/no-unused-expressions': ['warn'], // or "off" if you prefer to disable it
+      '@typescript-eslint/no-unused-expressions': ['off'],
     },
   },
 )

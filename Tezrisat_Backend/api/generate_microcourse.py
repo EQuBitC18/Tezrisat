@@ -403,7 +403,6 @@ def generate_microcourse_section(topic: str,
                                  ) -> Dict[str, Any]:
     # Use locally processed finetuning context
     state = {}
-    print("gelangt")
     state["finetune_context"] = get_finetuning_context(topic, pdf_path, website_url)
     # TODO - Solve maximum context length problem
     MAX_CONTEXT_LENGTH = 500  # Reduced limit to avoid excessive tokens

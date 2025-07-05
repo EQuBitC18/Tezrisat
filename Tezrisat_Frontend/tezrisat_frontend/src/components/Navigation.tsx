@@ -7,7 +7,6 @@ import {
   Home,
   LogOut,
   Moon,
-  RefreshCw,
   Sun,
 } from "lucide-react";
 import {Link, useNavigate} from "react-router-dom";

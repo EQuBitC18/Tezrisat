@@ -7,12 +7,24 @@
     <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Deleted some Stripe-related generated code for cleaning">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/generate_microcourse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/generate_microcourse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/eslint.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/eslint.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/components/Navigation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/pages/SubscriptionManagement.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/tsconfig.node.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/tsconfig.node.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -22,16 +34,76 @@
       </list>
     </option>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "main",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "ts.external.directory.path": "C:\\Users\\equbi\\PycharmProjects\\Tezrisat\\Tezrisat_Frontend\\tezrisat_frontend\\node_modules\\typescript\\lib"
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "EQuBitC18"
   }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/EQuBitC18/Tezrisat.git",
+    "accountId": "94f8ffdb-6c76-40b2-8a2c-4faf290cbe2a"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2zRFzqCwurEMQdPzbEYAW0FimJW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Users\\equbi\\PycharmProjects\\Tezrisat\\Tezrisat_Frontend\\tezrisat_frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.82" />
+        <option value="bundled-python-sdk-975db3bf15a3-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.82" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Deleted some Stripe-related generated code for cleaning" />
+      <created>1751686248502</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751686248502</updated>
+      <workItem from="1751686250662" duration="3371000" />
+    </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Deleted some Stripe-related generated code for cleaning" />
