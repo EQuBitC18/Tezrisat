@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Refactor navigation and update TypeScript configuration">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update package.json and workspace.xml for navigation refactor and TypeScript configuration">
       <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +77,7 @@
       <option name="presentableId" value="Default" />
       <updated>1751686248502</updated>
       <workItem from="1751686250662" duration="3371000" />
-      <workItem from="1751689680855" duration="1095000" />
+      <workItem from="1751689680855" duration="1928000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor navigation and update TypeScript configuration">
       <option name="closed" value="true" />
@@ -88,7 +87,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751689851239</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Update package.json and workspace.xml for navigation refactor and TypeScript configuration">
+      <option name="closed" value="true" />
+      <created>1751690820607</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1751690820607</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -108,6 +115,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Deleted some Stripe-related generated code for cleaning" />
     <MESSAGE value="Refactor navigation and update TypeScript configuration" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor navigation and update TypeScript configuration" />
+    <MESSAGE value="Update package.json and workspace.xml for navigation refactor and TypeScript configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update package.json and workspace.xml for navigation refactor and TypeScript configuration" />
   </component>
 </project>
