@@ -33,3 +33,6 @@ db.sqlite3
 
 __pycache__/
 *.pyc
+*.pot
+local_settings.py
+media
