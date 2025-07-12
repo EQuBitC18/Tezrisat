@@ -1,12 +1,33 @@
 import { CheckCircle } from "lucide-react"
-
 // @ts-ignore
 import { Button } from "@/components/ui/button"
 import { AnimatedBlob } from "../components/animated-blob"
 import { FloatingShapes } from "../components/floating-shapes"
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom"
+// @ts-ignore
+import { loadStripe } from "@stripe/stripe-js"
+import { useEffect, useState } from "react"
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "")
 
 export default function StripeSuccessPage() {
+  const [paymentIntent, setPaymentIntent] = useState<any>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const clientSecret = params.get("payment_intent_client_secret")
+    if (!clientSecret) return
+
+    stripePromise.then((stripe) => {
+      if (!stripe) return
+      stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+        if (paymentIntent) {
+          setPaymentIntent(paymentIntent)
+        }
+      })
+    })
+  }, [])
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background gradient */}
@@ -38,15 +59,25 @@ export default function StripeSuccessPage() {
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-teal-200/40 p-6 mb-8">
             <div className="flex justify-between items-center mb-4 pb-4 border-b border-teal-100">
               <span className="text-teal-800 font-medium">Order ID</span>
-              <span className="text-teal-900 font-mono">STR_12345678</span>
+              <span className="text-teal-900 font-mono">
+                {paymentIntent ? paymentIntent.id : "-"}
+              </span>
             </div>
             <div className="flex justify-between items-center mb-4 pb-4 border-b border-teal-100">
               <span className="text-teal-800 font-medium">Date</span>
-              <span className="text-teal-900">{new Date().toLocaleDateString()}</span>
+              <span className="text-teal-900">
+                {paymentIntent
+                  ? new Date(paymentIntent.created * 1000).toLocaleDateString()
+                  : "-"}
+              </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-teal-800 font-medium">Amount</span>
-              <span className="text-teal-900 font-bold">$10.00</span>
+              <span className="text-teal-900 font-bold">
+                {paymentIntent
+                  ? `$${(paymentIntent.amount / 100).toFixed(2)}`
+                  : "-"}
+              </span>
             </div>
           </div>
 

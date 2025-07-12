@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, FC, useEffect, SetStateAction} from "react";
+import {useState, FC} from "react";
 import {Check, HelpCircle} from "lucide-react";
 // @ts-ignore
 import {Button} from "@/components/ui/button";
@@ -22,34 +22,16 @@ const PlansPage: FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   // @ts-ignore
   const [loading, setLoading] = useState(false);
-  // @ts-ignore
-  const [currency, setCurrency] = useState("USD");
-  // @ts-ignore
-  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    api
-        .get("/api/profile/")
-        .then((res: { data: { email: SetStateAction<string>; }; }) => {
-        setEmail(res.data.email);
-      })
-      .catch((err: any) => {
-        console.error("Failed to fetch current user:", err);
-      });
-  }, []);
 
 
 
-  const handlePayClick = async (amount : number) => {
+  const handlePayClick = async () => {
     setLoading(true);
 
     try {
-      const response = await api.post(`/api/create-payment-intent/`, {
-        amount,
-        currency,
-        email,
-      });
+      const response = await api.post(`/api/create-subscription/`, {});
 
       const data = await response.data;
       console.log("stripe data: ", data)
@@ -57,11 +39,11 @@ const PlansPage: FC = () => {
       if (data.clientSecret) {
         navigate("/payment", { state: { clientSecret: data.clientSecret } });
       } else {
-        alert("Error creating payment intent.");
+        alert("Error creating subscription.");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error creating payment intent.");
+      alert("Error creating subscription.");
     } finally {
       setLoading(false);
     }
@@ -100,6 +82,7 @@ const PlansPage: FC = () => {
 
             <TabsContent value="monthly" className="w-full">
               <div className="grid md:grid-cols-2 gap-8">
+
                 {/* Starter Plan */}
                 <Card className="bg-white/40 backdrop-blur-sm border-teal-200/50 rounded-3xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
                   <CardHeader>
@@ -178,56 +161,12 @@ const PlansPage: FC = () => {
                   </CardContent>
                   <CardFooter>
                     <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                    onClick={() => handlePayClick(1000)}>
+                    onClick={handlePayClick}>
                       {loading ? "Processing…" : "Get Started"}
                     </Button>
                   </CardFooter>
                 </Card>
 
-                {/* Enterprise Plan */}
-                {/*<Card className="bg-white/40 backdrop-blur-sm border-teal-200/50 rounded-3xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">*/}
-                {/*  <CardHeader>*/}
-                {/*    <CardTitle className="text-teal-900 text-2xl">Enterprise</CardTitle>*/}
-                {/*    <CardDescription className="text-teal-700">For teams and organizations</CardDescription>*/}
-                {/*    <div className="mt-4">*/}
-                {/*      <span className="text-4xl font-bold text-teal-900">$99</span>*/}
-                {/*      <span className="text-teal-700">/month</span>*/}
-                {/*    </div>*/}
-                {/*  </CardHeader>*/}
-                {/*  <CardContent className="space-y-4">*/}
-                {/*    <ul className="space-y-3">*/}
-                {/*      <li className="flex items-start">*/}
-                {/*        <Check className="mr-2 h-5 w-5 text-teal-500 shrink-0 mt-0.5" />*/}
-                {/*        <span className="text-teal-800">Unlimited microcourses</span>*/}
-                {/*      </li>*/}
-                {/*      <li className="flex items-start">*/}
-                {/*        <Check className="mr-2 h-5 w-5 text-teal-500 shrink-0 mt-0.5" />*/}
-                {/*        <span className="text-teal-800">Full customization suite</span>*/}
-                {/*      </li>*/}
-                {/*      <li className="flex items-start">*/}
-                {/*        <Check className="mr-2 h-5 w-5 text-teal-500 shrink-0 mt-0.5" />*/}
-                {/*        <span className="text-teal-800">All content types + interactive elements</span>*/}
-                {/*      </li>*/}
-                {/*      <li className="flex items-start">*/}
-                {/*        <Check className="mr-2 h-5 w-5 text-teal-500 shrink-0 mt-0.5" />*/}
-                {/*        <span className="text-teal-800">Dedicated support manager</span>*/}
-                {/*      </li>*/}
-                {/*      <li className="flex items-start">*/}
-                {/*        <Check className="mr-2 h-5 w-5 text-teal-500 shrink-0 mt-0.5" />*/}
-                {/*        <span className="text-teal-800">Advanced analytics &amp; reporting</span>*/}
-                {/*      </li>*/}
-                {/*      <li className="flex items-start">*/}
-                {/*        <Check className="mr-2 h-5 w-5 text-teal-500 shrink-0 mt-0.5" />*/}
-                {/*        <span className="text-teal-800">Custom LLM fine-tuning</span>*/}
-                {/*      </li>*/}
-                {/*    </ul>*/}
-                {/*  </CardContent>*/}
-                {/*  <CardFooter>*/}
-                {/*    <Button className="w-full bg-teal-600 hover:bg-teal-700 text-white">*/}
-                {/*      Contact Sales*/}
-                {/*    </Button>*/}
-                {/*  </CardFooter>*/}
-                {/*</Card>*/}
               </div>
             </TabsContent>
           </Tabs>

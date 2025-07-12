@@ -107,6 +107,55 @@ class CreatePaymentIntentView(APIView):
             return JsonResponse({'error': str(e)}, status=400)
 
 
+class CreateSubscriptionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        profile = user.profile
+
+        try:
+            if not profile.stripe_customer_id:
+                customer = stripe.Customer.create(email=user.email)
+                profile.stripe_customer_id = customer.id
+                profile.save()
+
+            subscription = stripe.Subscription.create(
+                customer=profile.stripe_customer_id,
+                items=[{'price': settings.STRIPE_PRICE_ID}],
+                payment_behavior='default_incomplete',
+                payment_settings={'save_default_payment_method': 'on_subscription'},
+                expand=['latest_invoice.payment_intent'],
+            )
+
+            profile.stripe_subscription_id = subscription.id
+            profile.plan = 'premium'
+            profile.save()
+
+            client_secret = subscription.latest_invoice.payment_intent.client_secret
+            return JsonResponse({'clientSecret': client_secret, 'subscriptionId': subscription.id})
+        except stripe.error.StripeError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class CancelSubscriptionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        profile = request.user.profile
+        sub_id = profile.stripe_subscription_id
+        if not sub_id:
+            return JsonResponse({'error': 'No active subscription'}, status=400)
+        try:
+            stripe.Subscription.delete(sub_id)
+            profile.stripe_subscription_id = None
+            profile.plan = 'free'
+            profile.save()
+            return JsonResponse({'status': 'canceled'})
+        except stripe.error.StripeError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_current_user(request):

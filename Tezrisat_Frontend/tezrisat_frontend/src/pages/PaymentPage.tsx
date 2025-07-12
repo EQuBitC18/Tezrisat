@@ -10,7 +10,7 @@ import {FloatingShapes} from "../components/floating-shapes";
 
 
 const stripePromise = loadStripe(
-  "pk_test_51RP6du2N1Egm3bPc4KeHu2MvrpVsmZ7019vDX3xG6qUq6PSPwv7x9K7boINrGNCj5FWhshOQD13MSmPkITt8YdHG003zj5DaZE"
+  import.meta.env.VITE_STRIPE_PUBLIC_KEY || ""
 );
 
 const PaymentPage = () => {
@@ -21,7 +21,7 @@ const PaymentPage = () => {
   useEffect(() => {
     if (clientSecret) {
       setOptions({
-      // @ts-ignore
+        // @ts-ignore
         clientSecret,
         appearance: {
           theme: "stripe",

@@ -21,6 +21,8 @@ class UserProfile(models.Model):
     plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default='free')
     tokens_used = models.PositiveIntegerField(default=0)
     microcourses_created = models.PositiveIntegerField(default=0)
+    stripe_customer_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True)
     # Record when usage counters were last reset; we'll reset these every month
     last_reset = models.DateTimeField(default=timezone.now)
 
