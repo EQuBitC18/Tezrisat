@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update settings.py and workspace.xml for dependency management and project configuration">
+    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update requirements.txt and workspace.xml for dependency management and project configuration">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" afterDir="false" />
     </list>
@@ -125,7 +125,7 @@
       <workItem from="1752339596391" duration="2078000" />
       <workItem from="1752773030396" duration="1600000" />
       <workItem from="1752883893888" duration="3760000" />
-      <workItem from="1752887889568" duration="1196000" />
+      <workItem from="1752887889568" duration="1622000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor navigation and update TypeScript configuration">
       <option name="closed" value="true" />
@@ -247,7 +247,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752888957601</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Update requirements.txt and workspace.xml for dependency management and project configuration">
+      <option name="closed" value="true" />
+      <created>1752889107251</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1752889107251</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -288,9 +296,9 @@
     <MESSAGE value="Update requirements and workspace.xml for build script management" />
     <MESSAGE value="Update requirements.txt and workspace.xml for build script management" />
     <MESSAGE value="Update requirements.txt and workspace.xml for dependency and task management" />
-    <MESSAGE value="Update requirements.txt and workspace.xml for dependency management and project configuration" />
     <MESSAGE value="Update settings.py and workspace.xml for dependency management and project configuration" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update settings.py and workspace.xml for dependency management and project configuration" />
+    <MESSAGE value="Update requirements.txt and workspace.xml for dependency management and project configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update requirements.txt and workspace.xml for dependency management and project configuration" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Tezrisat$settings.coverage" NAME="settings Coverage Results" MODIFIED="1752340507292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend" />
