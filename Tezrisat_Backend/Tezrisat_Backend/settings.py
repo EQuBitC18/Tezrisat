@@ -158,7 +158,10 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://tezrisat-frontend.onrender.com"
+]
 CORS_ALLOWS_CREDENTIALS = True
 
 MEDIA_URL = '/media/'

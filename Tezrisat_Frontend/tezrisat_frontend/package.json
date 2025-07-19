@@ -30,6 +30,7 @@
     "@react-three/fiber": "^8.17.7",
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.3.0",
+    "axios": "^1.10.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "components": "^0.1.0",
