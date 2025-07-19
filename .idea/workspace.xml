@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update requirements.txt and workspace.xml for dependency management and task configuration">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/api/views.py" afterDir="false" />
+    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Refactor payment-related models, serializers, views, and URLs to remove unused code">
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +124,7 @@
       <workItem from="1752339596391" duration="2078000" />
       <workItem from="1752773030396" duration="1600000" />
       <workItem from="1752883893888" duration="3760000" />
-      <workItem from="1752887889568" duration="2254000" />
+      <workItem from="1752887889568" duration="2831000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor navigation and update TypeScript configuration">
       <option name="closed" value="true" />
@@ -266,7 +262,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752889533941</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Refactor payment-related models, serializers, views, and URLs to remove unused code">
+      <option name="closed" value="true" />
+      <created>1752890222358</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1752890222358</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -310,7 +314,8 @@
     <MESSAGE value="Update settings.py and workspace.xml for dependency management and project configuration" />
     <MESSAGE value="Update requirements.txt and workspace.xml for dependency management and project configuration" />
     <MESSAGE value="Update requirements.txt and workspace.xml for dependency management and task configuration" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update requirements.txt and workspace.xml for dependency management and task configuration" />
+    <MESSAGE value="Refactor payment-related models, serializers, views, and URLs to remove unused code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor payment-related models, serializers, views, and URLs to remove unused code" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Tezrisat$settings.coverage" NAME="settings Coverage Results" MODIFIED="1752340507292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend" />
