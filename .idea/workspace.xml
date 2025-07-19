@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update requirements and workspace.xml for build script management" />
+    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update requirements.txt and workspace.xml for build script management">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -121,7 +124,7 @@
       <workItem from="1752324354291" duration="672000" />
       <workItem from="1752339596391" duration="2078000" />
       <workItem from="1752773030396" duration="1600000" />
-      <workItem from="1752883893888" duration="2278000" />
+      <workItem from="1752883893888" duration="2637000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor navigation and update TypeScript configuration">
       <option name="closed" value="true" />
@@ -195,7 +198,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752885911372</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Update requirements.txt and workspace.xml for build script management">
+      <option name="closed" value="true" />
+      <created>1752886238769</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1752886238769</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,7 +234,8 @@
     <MESSAGE value="Add build script and update settings for static file management" />
     <MESSAGE value="Update ALLOWED_HOSTS in settings.py and modify workspace.xml for build script management" />
     <MESSAGE value="Update requirements and workspace.xml for build script management" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update requirements and workspace.xml for build script management" />
+    <MESSAGE value="Update requirements.txt and workspace.xml for build script management" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update requirements.txt and workspace.xml for build script management" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Tezrisat$settings.coverage" NAME="settings Coverage Results" MODIFIED="1752340507292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend" />
