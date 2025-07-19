@@ -4,14 +4,6 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-class Payment(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField()
-    currency = models.CharField(max_length=10, default="usd")
-    stripe_payment_id = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    email = models.EmailField()
-
 class UserProfile(models.Model):
     PLAN_CHOICES = (
         ('free', 'Free'),
@@ -21,8 +13,6 @@ class UserProfile(models.Model):
     plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default='free')
     tokens_used = models.PositiveIntegerField(default=0)
     microcourses_created = models.PositiveIntegerField(default=0)
-    stripe_customer_id = models.CharField(max_length=255, blank=True, null=True)
-    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True)
     # Record when usage counters were last reset; we'll reset these every month
     last_reset = models.DateTimeField(default=timezone.now)
 

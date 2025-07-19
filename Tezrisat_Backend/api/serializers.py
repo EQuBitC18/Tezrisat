@@ -7,16 +7,11 @@ from api.models import (
     MicrocourseSection,
     GlossaryTerm,
     QuizQuestion,
-    RecallNote, Payment,
+    RecallNote
 )
 
 
 # serializers.py
-class PaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = ['id', 'amount', 'currency', 'stripe_payment_id', 'created_at', 'email']
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,15 +1,10 @@
 import json
-import os
 import logging
-import stripe
-from django.conf import settings
-
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 
 from rest_framework import generics
-from rest_framework import status
 from rest_framework.decorators import (
     api_view,
     parser_classes,
@@ -17,29 +12,10 @@ from rest_framework.decorators import (
 )
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.views import APIView
-
-from serpapi import GoogleSearch
-
-# Langchain imports (if needed for your use-case)
-from langchain import hub
-from langchain.agents import AgentExecutor, create_react_agent
-from langchain.chains import (
-    create_history_aware_retriever,
-    create_retrieval_chain,
-)
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain.chains.history_aware_retriever import create_history_aware_retriever
 from langchain.chains.llm import LLMChain
-from langchain.chains.retrieval_qa.base import RetrievalQA
-from langchain.memory import ConversationBufferWindowMemory
-from langchain_chroma import Chroma
-from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.tools import Tool
-from langchain_openai import ChatOpenAI, OpenAI, OpenAIEmbeddings
-
-from serpapi import GoogleSearch
+from langchain_openai import ChatOpenAI
+#from serpapi import GoogleSearch
 
 # Local project imports
 from .generate_microcourse import generate_microcourse_section
@@ -50,111 +26,14 @@ from .models import (
     QuizQuestion,
     RecallNote,
     UserProfile,
-    Payment,
-
 )
 from .serializers import (
     UserSerializer,
     MicrocourseSerializer,
-    MicrocourseSectionSerializer, PaymentSerializer,
-
+    MicrocourseSectionSerializer,
 )
 
 logger = logging.getLogger(__name__)
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
-class PaymentListView(generics.ListAPIView):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
-
-class CreatePaymentIntentView(APIView):
-    def post(self, request):
-        amount = request.data.get('amount')
-        currency = request.data.get('currency')
-        email = request.data.get('email')
-
-        if not email:
-            return JsonResponse({'error': 'Email is required'}, status=400)
-        if not amount or int(amount) <= 0:
-            return JsonResponse({'error': 'Amount must be greater than 0'}, status=400)
-        if not currency:
-            return JsonResponse({'error': 'Currency is required'}, status=400)
-
-        supported_currencies = ['usd', 'eur']
-        if currency.lower() not in supported_currencies:
-            return JsonResponse({'error': 'Currency not supported'}, status=400)
-
-        try:
-            payment_intent = stripe.PaymentIntent.create(
-                amount=amount,
-                currency=currency,
-                receipt_email=email,
-            )
-            payment_data = {
-                'amount': amount,
-                'currency': currency,
-                'stripe_payment_id': payment_intent['id'],
-                'email': email
-            }
-            serializer = PaymentSerializer(data=payment_data)
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse({'clientSecret': payment_intent['client_secret'],
-                                     'payment': serializer.data
-                                     }, status=status.HTTP_201_CREATED)
-            return JsonResponse({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        except stripe.error.StripeError as e:
-            return JsonResponse({'error': str(e)}, status=400)
-
-
-class CreateSubscriptionView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        user = request.user
-        profile = user.profile
-
-        try:
-            if not profile.stripe_customer_id:
-                customer = stripe.Customer.create(email=user.email)
-                profile.stripe_customer_id = customer.id
-                profile.save()
-
-            subscription = stripe.Subscription.create(
-                customer=profile.stripe_customer_id,
-                items=[{'price': settings.STRIPE_PRICE_ID}],
-                payment_behavior='default_incomplete',
-                payment_settings={'save_default_payment_method': 'on_subscription'},
-                expand=['latest_invoice.payment_intent'],
-            )
-
-            profile.stripe_subscription_id = subscription.id
-            profile.plan = 'premium'
-            profile.save()
-
-            client_secret = subscription.latest_invoice.payment_intent.client_secret
-            return JsonResponse({'clientSecret': client_secret, 'subscriptionId': subscription.id})
-        except stripe.error.StripeError as e:
-            return JsonResponse({'error': str(e)}, status=400)
-
-
-class CancelSubscriptionView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        profile = request.user.profile
-        sub_id = profile.stripe_subscription_id
-        if not sub_id:
-            return JsonResponse({'error': 'No active subscription'}, status=400)
-        try:
-            stripe.Subscription.delete(sub_id)
-            profile.stripe_subscription_id = None
-            profile.plan = 'free'
-            profile.save()
-            return JsonResponse({'status': 'canceled'})
-        except stripe.error.StripeError as e:
-            return JsonResponse({'error': str(e)}, status=400)
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
