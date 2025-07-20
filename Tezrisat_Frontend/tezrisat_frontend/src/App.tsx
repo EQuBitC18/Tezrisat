@@ -3,7 +3,7 @@ import Home from "./pages/Home.tsx";
 import MCBuilderWelcome from "./pages/MCBuilderWelcome.tsx";
 import MCBuilderBasis from "./pages/MCBuilderBasis.tsx";
 import Welcome from "./pages/Welcome.tsx";
-import {Routes, Route, BrowserRouter, Navigate} from 'react-router-dom';
+import {Routes, Route, Navigate, HashRouter} from 'react-router-dom';
 import LoadingPage from "./pages/LoadingPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 // @ts-ignore
@@ -34,7 +34,7 @@ function RegisterAndLogout() {
 
 function App() {
     return (
-        <BrowserRouter>
+        <HashRouter>
                 <Routes>
                     <Route path="/" element={
                         <Welcome/>
@@ -106,7 +106,7 @@ function App() {
                     <Route path="/register" element={<RegisterAndLogout/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 

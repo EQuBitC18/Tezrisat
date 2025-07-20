@@ -178,9 +178,9 @@ const RegisterPage: FC<FormProps> = ({
                 </CardDescription>
                 <CardDescription className="text-teal-100 dark:text-gray-400">
                   Already have an account?{" "}
-                  <a href="/login" className="text-black hover:text-teal-100">
+                  <Link to="/login" className="text-black hover:text-teal-100">
                     Login
-                  </a>
+                  </Link>
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-0">
