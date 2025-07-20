@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update settings.py to use dj_database_url for database configuration and modify workspace.xml for task management">
+    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Update settings.py to integrate dj_database_url for database configuration and add it to requirements.txt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +126,7 @@
       <workItem from="1752773030396" duration="1600000" />
       <workItem from="1752883893888" duration="3760000" />
       <workItem from="1752887889568" duration="8259000" />
-      <workItem from="1752974009992" duration="2937000" />
+      <workItem from="1752974009992" duration="4564000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor navigation and update TypeScript configuration">
       <option name="closed" value="true" />
@@ -377,7 +376,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752976709690</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Update settings.py to integrate dj_database_url for database configuration and add it to requirements.txt">
+      <option name="closed" value="true" />
+      <created>1752976986067</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1752976986068</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -406,7 +413,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Deleted some Stripe-related generated code for cleaning" />
     <MESSAGE value="Refactor navigation and update TypeScript configuration" />
     <MESSAGE value="Update package.json and workspace.xml for navigation refactor and TypeScript configuration" />
     <MESSAGE value="Update build script in package.json and modify workspace.xml for navigation refactor" />
@@ -431,7 +437,8 @@
     <MESSAGE value="Update settings.py for PostgreSQL database configuration and modify workspace.xml for task management" />
     <MESSAGE value="Add psycopg2 and psycopg2-binary to requirements for PostgreSQL support" />
     <MESSAGE value="Update settings.py to use dj_database_url for database configuration and modify workspace.xml for task management" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update settings.py to use dj_database_url for database configuration and modify workspace.xml for task management" />
+    <MESSAGE value="Update settings.py to integrate dj_database_url for database configuration and add it to requirements.txt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update settings.py to integrate dj_database_url for database configuration and add it to requirements.txt" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Tezrisat$settings.coverage" NAME="settings Coverage Results" MODIFIED="1752340507292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend" />
