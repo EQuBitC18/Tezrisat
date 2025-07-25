@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Refactor routing in App.tsx and update workspace.xml for task management">
-      <change beforePath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Frontend/tezrisat_frontend/src/App.tsx" afterDir="false" />
+    <list default="true" id="0a22ccf5-c1ab-4d6d-96b1-cea5c5eafb72" name="Changes" comment="Refactor routing in App.tsx to include ProtectedRoute for home and update workspace.xml">
+      <change beforePath="$PROJECT_DIR$/Tezrisat_Backend/Procfile" beforeDir="false" afterPath="$PROJECT_DIR$/Tezrisat_Backend/Procfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +126,7 @@
       <workItem from="1752883893888" duration="3760000" />
       <workItem from="1752887889568" duration="8259000" />
       <workItem from="1752974009992" duration="5530000" />
-      <workItem from="1753469642127" duration="1299000" />
+      <workItem from="1753469642127" duration="2586000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor navigation and update TypeScript configuration">
       <option name="closed" value="true" />
@@ -400,7 +400,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753470776650</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Refactor routing in App.tsx to include ProtectedRoute for home and update workspace.xml">
+      <option name="closed" value="true" />
+      <created>1753470965359</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1753470965359</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -429,7 +437,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update build script in package.json and modify workspace.xml for navigation refactor" />
     <MESSAGE value="Update API base URL in api.js and modify workspace.xml for navigation refactor" />
     <MESSAGE value="Add subscription fields to user profile and implement subscription management" />
     <MESSAGE value="Update .gitignore, Procfile, requirements.txt, and settings.py for deployment configuration" />
@@ -454,7 +461,8 @@
     <MESSAGE value="Update settings.py to integrate dj_database_url for database configuration and add it to requirements.txt" />
     <MESSAGE value="Update settings.py to configure database with dj_database_url and modify workspace.xml for task management" />
     <MESSAGE value="Refactor routing in App.tsx and update workspace.xml for task management" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor routing in App.tsx and update workspace.xml for task management" />
+    <MESSAGE value="Refactor routing in App.tsx to include ProtectedRoute for home and update workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor routing in App.tsx to include ProtectedRoute for home and update workspace.xml" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Tezrisat$settings.coverage" NAME="settings Coverage Results" MODIFIED="1752340507292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tezrisat_Backend/Tezrisat_Backend" />

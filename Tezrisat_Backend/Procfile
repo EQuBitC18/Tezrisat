@@ -1,1 +1,1 @@
-web: gunicorn Tezrisat_Backend.wsgi
+web: gunicorn Tezrisat_Backend.wsgi --bind 0.0.0.0:$PORT --workers 3
