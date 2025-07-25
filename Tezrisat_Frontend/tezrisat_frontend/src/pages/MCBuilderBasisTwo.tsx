@@ -2,7 +2,7 @@
 
 // @ts-ignore
 import api from "../api";
-import React, {useState, useCallback, FC, useEffect} from "react";
+import React, {useState, useCallback, FC} from "react";
 import { motion } from "framer-motion";
 import { Upload, Link as LinkIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
@@ -13,7 +13,6 @@ import Navigation from "../components/Navigation";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LoadingPage from "./LoadingPage";
-import {Button} from "../../components/ui/button.tsx";
 
 /**
  * Interface for the microcourse data passed through navigation state.
