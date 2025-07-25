@@ -198,9 +198,8 @@ const Microcourse: FC = () => {
   const [question, setQuestion] = useState<string>("");
   const [inDepthLoading, setInDepthLoading] = useState<boolean>(false);
 
-  // Sidebar and token limit modal state
+  // Sidebar state
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  const [showTokenLimitModal, setShowTokenLimitModal] = useState<boolean>(false);
 
   // Ref for scrolling to chapters
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -384,16 +383,7 @@ const Microcourse: FC = () => {
       console.log("newSection ", response.data);
       window.location.reload();
     } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.error &&
-        error.response.data.error.includes("token limit")
-      ) {
-        setShowTokenLimitModal(true);
-      } else {
-        console.error("Error generating next section:", error);
-      }
+      console.error("Error generating next section:", error);
     } finally {
       setInDepthLoading(false);
     }
@@ -555,26 +545,6 @@ const Microcourse: FC = () => {
       {/* Glossary Modal */}
       {/* @ts-ignore */}
       <GlossaryModal isOpen={isModalOpen && modalType === 'Glossary'} onClose={() => setIsModalOpen(false)} terms={glossaryTerms} onAddTerm={handleAddTerm} onDeleteTerm={handleDeleteTerm} />
-
-      {/* Token Limit Warning Modal */}
-      {showTokenLimitModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-              Token Limit Reached
-            </h3>
-            <p className="mb-4 text-gray-700 dark:text-gray-300">
-              Free plan users have a monthly limit of 2000 tokens for generating content. Please upgrade to generate more.
-            </p>
-            <button
-              onClick={() => setShowTokenLimitModal(false)}
-              className="w-full bg-teal-600 dark:bg-gray-600 text-white py-2 rounded hover:bg-teal-700 dark:hover:bg-gray-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

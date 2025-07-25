@@ -49,7 +49,6 @@ def get_current_user(request):
         "last_name": user.last_name,
         "username": user.username,
         "email": user.email,
-        "microcourses_created": user.profile.microcourses_created,
     }
     return JsonResponse(data)
 
@@ -137,11 +136,9 @@ def get_microcourse(request, pk):
 def go_in_depth(request):
     """
     Generate and add a new microcourse section using the provided previous section content.
-    Enforces token usage limits for free plan users.
     """
     user = request.user
-    profile, _ = UserProfile.objects.get_or_create(user=user)
-    profile.reset_usage()
+    UserProfile.objects.get_or_create(user=user)
 
     try:
         microcourse = Microcourse.objects.get(id=request.data.get("microcourseId"), user=user)
@@ -151,14 +148,7 @@ def go_in_depth(request):
     previous_section = request.data.get("previousSection")
     topic = microcourse.topic
 
-    TOKEN_LIMIT = 2000
     estimated_tokens_needed = 2000
-    if profile.plan == "free" and profile.tokens_used >= TOKEN_LIMIT:
-        return JsonResponse(
-            {
-                "error": "Free plan users have reached the monthly token limit of 2000 tokens. Please upgrade for more usage."},
-            status=403,
-        )
 
     try:
         microcourse_section_data = generate_microcourse_section(
@@ -204,11 +194,7 @@ def go_in_depth(request):
         logger.error("Error creating new MicrocourseSection and related items: %s", e)
         return JsonResponse({"error": "Failed to create new microcourse section."}, status=500)
 
-    # Update token usage for free plans.
     token_usage_from_response = microcourse_section_data.get("token_usage", estimated_tokens_needed)
-    if profile.plan == "free":
-        profile.tokens_used += token_usage_from_response
-        profile.save()
     serializer = MicrocourseSectionSerializer(new_section)
     return JsonResponse(serializer.data)
 
@@ -218,18 +204,10 @@ def go_in_depth(request):
 def add_microcourse(request):
     """
     Create a new microcourse using the provided data (including URLs and PDF files).
-    Enforce free plan limits and handle file saving.
     """
     logger.info("Received request to add microcourse")
     user = request.user
-    profile, _ = UserProfile.objects.get_or_create(user=user)
-    profile.reset_usage()
-    limit = 1
-    if profile.plan == "free" and profile.microcourses_created >= limit:
-        return JsonResponse(
-            {"error": "Free plan users are limited to 1 microcourse per month. Please upgrade for more."},
-            status=403,
-        )
+    UserProfile.objects.get_or_create(user=user)
 
     import json
     title = request.data.get("title")
@@ -310,9 +288,6 @@ def add_microcourse(request):
         logger.error("Error creating MicrocourseSection and related items: %s", e)
         return JsonResponse({"error": "Failed to create microcourse section and related items."}, status=500)
 
-    if profile.plan == "free":
-        profile.microcourses_created += 1
-        profile.save()
 
     serializer = MicrocourseSerializer(microcourse)
     if serializer.is_valid:

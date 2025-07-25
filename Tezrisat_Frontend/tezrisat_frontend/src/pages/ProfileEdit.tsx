@@ -229,18 +229,6 @@ const ProfileEdit: FC = () => {
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
 
-              <Button
-                onClick={() => {
-                  const portal =
-                    "https://billing.stripe.com/p/login/test_dRm9AMe2c1bw4wd1fK5ZC00?prefilled_email=" +
-                    encodeURIComponent(email);
-                  window.location.href = portal;
-                }}
-                className="w-full bg-teal-500 dark:bg-gray-600 dark:hover:bg-gray-700 hover:bg-teal-600"
-              >
-                Manage Billing
-              </Button>
-
               {/* Display success and error messages */}
               {successMsg && (
                 <p className="text-green-600 font-semibold text-sm sm:text-base">

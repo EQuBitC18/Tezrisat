@@ -118,14 +118,6 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
         />
       </Link>
 
-      <Link to="/plans">
-        <NavItem
-          icon={<CreditCard className="w-5 h-5" />}
-          label="Upgrade"
-          onClick={() => {}}
-          isOpen={isSidebarOpen}
-        />
-      </Link>
 
       <Link to="">
         <NavItem

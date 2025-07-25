@@ -284,14 +284,6 @@ const Home: React.FC = () => {
                     How It Works
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/pricing"
-                    className="text-teal-700 hover:text-teal-500 transition-colors"
-                  >
-                    Pricing
-                  </Link>
-                </li>
               </ul>
             </div>
             <div>

@@ -1,33 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class UserProfile(models.Model):
-    PLAN_CHOICES = (
-        ('free', 'Free'),
-        ('premium', 'Premium'),
-    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default='free')
-    tokens_used = models.PositiveIntegerField(default=0)
-    microcourses_created = models.PositiveIntegerField(default=0)
-    # Record when usage counters were last reset; we'll reset these every month
-    last_reset = models.DateTimeField(default=timezone.now)
-
-    def reset_usage(self):
-        """
-        Reset usage counters at the beginning of the month.
-        """
-        now = timezone.now()
-        # Calculate start of current month.
-        current_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        if self.last_reset < current_month_start:
-            self.tokens_used = 0
-            self.microcourses_created = 0
-            self.last_reset = current_month_start
-            self.save()
 
     def __str__(self):
         return f"{self.user.username}'s Profile"

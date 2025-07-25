@@ -93,7 +93,6 @@ const CardDeck: FC<CardDeckProps> = ({
 const Dashboard: FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [decks, setDecks] = useState<Deck[]>([]);
-  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const navigate = useNavigate();
 
   /**
@@ -157,11 +156,7 @@ const Dashboard: FC = () => {
    * Checks for the free plan limit before navigation.
    */
   const handleAddNewMicrocourse = () => {
-    if (decks.length >= 2) {
-      setShowLimitModal(true);
-    } else {
-      navigate('/mc-builder-welcome');
-    }
+    navigate('/mc-builder-welcome');
   };
 
   return (
@@ -217,27 +212,6 @@ const Dashboard: FC = () => {
 
       {/* Footer */}
       <Footer isSidebarOpen={isSidebarOpen} />
-
-      {/* Warning Modal for Free Plan Limit */}
-      {showLimitModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-              Limit Reached
-            </h3>
-            <p className="mb-4 text-gray-700 dark:text-gray-300">
-              Free plan users can create a maximum of 1 microcourse per month. Please upgrade for additional microcourses.
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowLimitModal(false)}
-              className="w-full bg-teal-600 dark:bg-gray-600 text-white py-2 rounded hover:bg-teal-700 dark:hover:bg-gray-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
