@@ -1,7 +1,9 @@
 import json
 import logging
+import os
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 from django.http import JsonResponse
 
 from rest_framework import generics
@@ -239,11 +241,11 @@ def add_microcourse(request):
     pdf_files = request.FILES.getlist("pdf")
     saved_pdf_filenames = []
     if pdf_files:
-        fs = FileSystemStorage(location="media/pdfs")
+        fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "pdfs"))
         for pdf in pdf_files:
             try:
                 filename = fs.save(pdf.name, pdf)
-                saved_pdf_filenames.append(filename)
+                saved_pdf_filenames.append(f"pdfs/{filename}")
                 logger.info("PDF file saved successfully: %s", filename)
             except Exception as e:
                 logger.error("Error saving PDF file: %s", e)
@@ -263,7 +265,7 @@ def add_microcourse(request):
         return JsonResponse({"error": "Failed to generate microcourse section."}, status=500)
 
     try:
-        pdf_field = json.dumps(saved_pdf_filenames) if saved_pdf_filenames else None
+        pdf_field = saved_pdf_filenames[0] if saved_pdf_filenames else None
         microcourse = Microcourse.objects.create(
             title=title,
             topic=topic,
