@@ -17,6 +17,7 @@ interface NewMicrocourse {
   topic: string;
   complexity: string;
   targetAudience: string;
+  openaiKey: string;
 }
 
 const MicrocourseSetup: FC = () => {
@@ -28,6 +29,8 @@ const MicrocourseSetup: FC = () => {
   const [topic, setTopic] = useState<string>("");
   const [complexity, setComplexity] = useState<string>("");
   const [targetAudience, setTargetAudience] = useState<string>("");
+  const [openaiKey, setOpenaiKey] = useState<string>("");
+  const [keyError, setKeyError] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -40,11 +43,19 @@ const MicrocourseSetup: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const keyPattern = /^sk-[A-Za-z0-9]{32,}$/;
+    if (!keyPattern.test(openaiKey)) {
+      setKeyError("Please enter a valid OpenAI API key");
+      return;
+    }
+    setKeyError("");
+
     const newMicrocourse: NewMicrocourse = {
       title,
       topic,
       complexity,
       targetAudience,
+      openaiKey,
     };
 
     try {
@@ -146,6 +157,25 @@ const MicrocourseSetup: FC = () => {
                   onChange={(e) => setTargetAudience(e.target.value)}
                   className="w-full px-3 py-2 bg-white/20 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
+              </div>
+              {/* OpenAI API Key */}
+              <div>
+                <label htmlFor="openaiKey" className="block text-sm font-medium mb-2">
+                  OpenAI API Key
+                </label>
+                <input
+                  type="text"
+                  id="openaiKey"
+                  name="openaiKey"
+                  required
+                  placeholder="sk-..."
+                  value={openaiKey}
+                  onChange={(e) => setOpenaiKey(e.target.value)}
+                  className="w-full px-3 py-2 bg-white/20 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+                {keyError && (
+                  <p className="text-red-500 text-sm mt-1">{keyError}</p>
+                )}
               </div>
               {/* Submit Button */}
               <div>

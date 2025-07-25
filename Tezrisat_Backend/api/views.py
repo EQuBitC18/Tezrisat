@@ -210,6 +210,10 @@ def add_microcourse(request):
     UserProfile.objects.get_or_create(user=user)
 
     import json
+    openai_key = request.data.get("openai_key")
+    if not openai_key:
+        return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+    os.environ["OPENAI_API_KEY"] = openai_key
     title = request.data.get("title")
     topic = request.data.get("topic")
     complexity = request.data.get("complexity")
