@@ -48,7 +48,7 @@ const LoadingPage: FC = () => {
         {/* Logo with breathing animation */}
         <div className="relative mb-12 animate-breathe">
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tezrisat_Logo_Transparent.png"
+            src="/Tezrisat_Logo_Transparent.png"
             alt="Tezrisat Logo"
             className="w-48 h-48 md:w-64 md:h-64 object-contain"
           />

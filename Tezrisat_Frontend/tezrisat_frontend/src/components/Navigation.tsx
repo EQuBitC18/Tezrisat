@@ -95,7 +95,7 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
                 <button
                     onClick={() => navigate("/home")}
                     className="p-2 rounded-full hover:bg-white/10 dark:hover:bg-gray-700">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tezrisat_Logo_Transparent.png" alt="Tezrisat Logo" className="h-13"/>
+                    <img src="/Tezrisat_Logo_Transparent.png" alt="Tezrisat Logo" className="h-13"/>
                 </button>
               </motion.h2>
           )}
