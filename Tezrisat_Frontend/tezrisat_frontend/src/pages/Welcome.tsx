@@ -34,7 +34,7 @@ const Home: React.FC = () => {
 
   // Navigate to signup/register page
   const navigateToSignup = () => {
-    navigate("/home");
+    navigate("/register");
   };
 
   return (

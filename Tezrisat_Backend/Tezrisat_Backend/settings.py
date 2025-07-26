@@ -33,11 +33,12 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ["tezrisat-backend.onrender.com", "127.0.0.1", "localhost"]
 
 REST_FRAMEWORK = {
-    # Disable authentication and allow unrestricted access so the
-    # demo can be used without signing in.
-    "DEFAULT_AUTHENTICATION_CLASSES": [],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
+        #"rest_framework.permissions.AllowAny",
     ],
 }
 

@@ -16,8 +16,6 @@ import Microcourse from "./pages/Microcourse.tsx";
 import ProfileEdit from "./pages/ProfileEdit.tsx";
 import AboutPage from "./pages/About.tsx";
 
-
-
 // @ts-ignore
 function Logout() {
     localStorage.clear();
@@ -42,49 +40,47 @@ function App() {
                     }/>
 
                     <Route path="/home" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <Home/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
                     <Route path="/profile" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <ProfileEdit/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
                     <Route path="/mc-builder-welcome" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <MCBuilderWelcome/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
                     <Route path="/mc-builder-basis" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <MCBuilderBasis/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
                     <Route path="/mc-builder-basis-two" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <MCBuilderBasisTwo/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
                     <Route path="/loading-page" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <LoadingPage/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
                     <Route path="/microcourse/:id" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <Microcourse/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
                     <Route path="/logout" element={
-                        //<ProtectedRoute>
+                        <ProtectedRoute>
                             <Logout/>
-                        //</ProtectedRoute>
+                        </ProtectedRoute>
                     }/>
-                    {/*
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<RegisterAndLogout/>}/>
-                    */}
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
         </HashRouter>

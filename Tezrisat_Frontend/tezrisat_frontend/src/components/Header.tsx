@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 //import { User } from "lucide-react";
-// import api from "../api";
+// @ts-ignore
+import api from "../api";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -12,7 +13,8 @@ import { useNavigate } from "react-router-dom";
  * @returns {JSX.Element} The rendered Header component.
  */
 const Header: React.FC = () => {
-  // const [user, setUser] = useState(null);
+  // @ts-ignore
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
 
@@ -24,17 +26,21 @@ const Header: React.FC = () => {
     navigate(`/profile`);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await api.get("/api/get_currentuser/");
-  //       setUser(response.data.username);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    /**
+     * Fetches the current user's information from the API.
+     */
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/api/get_currentuser/");
+        // @ts-ignore
+        setUser(response.data.username);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <header className="flex justify-between items-center mb-8 top-0 z-20 bg-white/10 backdrop-blur-md p-4 rounded-lg">

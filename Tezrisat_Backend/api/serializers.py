@@ -1,8 +1,7 @@
 import logging
 from django.contrib.auth.models import User
-from rest_framework import serializers
-# from rest_framework import generics
-# from rest_framework.permissions import IsAuthenticated
+from rest_framework import serializers, generics
+from rest_framework.permissions import IsAuthenticated
 from api.models import (
     Microcourse,
     MicrocourseSection,
@@ -14,28 +13,27 @@ from api.models import (
 
 # serializers.py
 
-# UserSerializer is not needed when authentication is disabled
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
-#         extra_kwargs = {'password': {'write_only': True}}
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
-#     def validate_email(self, value):
-#         if User.objects.filter(email=value).exists():
-#             raise serializers.ValidationError("A user with that email already exists.")
-#         return value
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with that email already exists.")
+        return value
 
-#     def validate_username(self, value):
-#         if User.objects.filter(username=value).exists():
-#             raise serializers.ValidationError("A user with that username already exists.")
-#         return value
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("A user with that username already exists.")
+        return value
 
-#     def create(self, validated_data):
-#         logging.info("Starting user generation.")
-#         user = User.objects.create_user(**validated_data)
-#         logging.info("Completed user generation.")
-#         return user
+    def create(self, validated_data):
+        logging.info("Starting user generation.")
+        user = User.objects.create_user(**validated_data)
+        logging.info("Completed user generation.")
+        return user
 
 class GlossaryTermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,9 +92,9 @@ class MicrocourseSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {"user": {"read_only": True}}
 
-# class MicrocourseDetail(generics.RetrieveAPIView):
-#     serializer_class = MicrocourseSerializer
-#     permission_classes = [IsAuthenticated]
+class MicrocourseDetail(generics.RetrieveAPIView):
+    serializer_class = MicrocourseSerializer
+    permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         return Microcourse.objects.filter(user=self.request.user)
+    def get_queryset(self):
+        return Microcourse.objects.filter(user=self.request.user)
