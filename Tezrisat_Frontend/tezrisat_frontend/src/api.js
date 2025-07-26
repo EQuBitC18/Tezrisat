@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ACCESS_TOKEN } from "./constants";
+// import { ACCESS_TOKEN } from "./constants";
 
 const defaultUrl = "https://tezrisat-backend.onrender.com";
 const envUrl = import.meta.env.VITE_API_URL;
@@ -11,17 +11,18 @@ const api = axios.create({
     "Content-type": "application/json",
   },
 });
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+// Disable attaching tokens to requests
+// api.interceptors.request.use(
+//     (config) => {
+//         const token = localStorage.getItem(ACCESS_TOKEN);
+//         if (token) {
+//             config.headers.Authorization = `Bearer ${token}`;
+//         }
+//         return config;
+//     },
+//     (error) => {
+//         return Promise.reject(error);
+//     }
+// );
 
 export default api

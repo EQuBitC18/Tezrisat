@@ -6,14 +6,14 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.http import JsonResponse
 
-from rest_framework import generics
+# from rest_framework import generics
 from rest_framework.decorators import (
     api_view,
     parser_classes,
     permission_classes,
 )
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from langchain.chains.llm import LLMChain
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
@@ -27,51 +27,42 @@ from .models import (
     GlossaryTerm,
     QuizQuestion,
     RecallNote,
-    UserProfile,
+    # UserProfile,
 )
 from .serializers import (
-    UserSerializer,
+    # UserSerializer,
     MicrocourseSerializer,
     MicrocourseSectionSerializer,
 )
 
 logger = logging.getLogger(__name__)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_current_user(request):
-    """
-    Retrieve the authenticated user's profile information.
-    """
-    user = request.user
-    data = {
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "username": user.username,
-        "email": user.email,
-    }
-    return JsonResponse(data)
+# User related views are disabled for the public demo
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_current_user(request):
+#     user = request.user
+#     data = {
+#         "first_name": user.first_name,
+#         "last_name": user.last_name,
+#         "username": user.username,
+#         "email": user.email,
+#     }
+#     return JsonResponse(data)
 
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_profile(request):
-    """
-    Update the profile of the authenticated user.
-    Expects updated details in request.data["body"].
-    """
-    user = request.user
-    data = request.data.get("body", {})
-
-    user.first_name = data.get("firstname", "")
-    user.last_name = data.get("lastname", "")
-    user.username = data.get("username", "")
-    user.email = data.get("email", "")
-    if data.get("password"):
-        user.set_password(data["password"])
-
-    user.save()
-    return JsonResponse({"detail": "Profile updated successfully"}, status=200)
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def update_profile(request):
+#     user = request.user
+#     data = request.data.get("body", {})
+#     user.first_name = data.get("firstname", "")
+#     user.last_name = data.get("lastname", "")
+#     user.username = data.get("username", "")
+#     user.email = data.get("email", "")
+#     if data.get("password"):
+#         user.set_password(data["password"])
+#     user.save()
+#     return JsonResponse({"detail": "Profile updated successfully"}, status=200)
 
 
 @api_view(['GET'])
@@ -91,14 +82,13 @@ def get_microcourses(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_microcourse(request, pk):
     """
     Retrieve detailed information for a specific microcourse
     belonging to the authenticated user.
     """
     try:
-        microcourse = Microcourse.objects.get(id=pk, user=request.user)
+        microcourse = Microcourse.objects.get(id=pk)
         logger.info("Microcourse retrieved successfully")
         sections_data = []
         for section in microcourse.sections.all().order_by("id"):
@@ -137,11 +127,9 @@ def go_in_depth(request):
     """
     Generate and add a new microcourse section using the provided previous section content.
     """
-    user = request.user
-    UserProfile.objects.get_or_create(user=user)
-
+    # No user handling for the demo
     try:
-        microcourse = Microcourse.objects.get(id=request.data.get("microcourseId"), user=user)
+        microcourse = Microcourse.objects.get(id=request.data.get("microcourseId"))
     except Microcourse.DoesNotExist:
         return JsonResponse({"error": "Microcourse not found"}, status=404)
 
@@ -206,8 +194,9 @@ def add_microcourse(request):
     Create a new microcourse using the provided data (including URLs and PDF files).
     """
     logger.info("Received request to add microcourse")
-    user = request.user
-    UserProfile.objects.get_or_create(user=user)
+    # Associate the new microcourse with the first user in the system so
+    # that a user account is not required.
+    user = User.objects.first()
 
     import json
     openai_key = request.data.get("openai_key")
@@ -326,7 +315,7 @@ def get_agent_response(request):
     question = data.get("question")
     data_id = data.get("id")
     try:
-        microcourse = Microcourse.objects.get(id=data_id, user=request.user)
+        microcourse = Microcourse.objects.get(id=data_id)
     except Microcourse.DoesNotExist:
         return JsonResponse({"error": "Microcourse not found"}, status=404)
 
@@ -369,7 +358,6 @@ def get_agent_response(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def add_glossary_term(request):
     """
     Add a new glossary term to the latest section of the microcourse.
@@ -409,7 +397,6 @@ def add_glossary_term(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete_glossary_term(request, term_id):
     """
     Delete a glossary term by its ID.
@@ -423,7 +410,6 @@ def delete_glossary_term(request, term_id):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def add_note(request):
     """
     Add a new recall note to a specific section.
@@ -450,7 +436,6 @@ def add_note(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete_note(request, note_id):
     """
     Delete a recall note identified by its ID.
@@ -464,23 +449,20 @@ def delete_note(request, note_id):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete_microcourse(request, microcourse_id):
     """
     Delete a microcourse ensuring that it belongs to the requesting user.
     """
     try:
-        microcourse = Microcourse.objects.get(pk=microcourse_id, user=request.user)
+        microcourse = Microcourse.objects.get(pk=microcourse_id)
     except Microcourse.DoesNotExist:
         return JsonResponse({"detail": "Microcourse not found."}, status=404)
     microcourse.delete()
     return JsonResponse({"detail": "Microcourse deleted successfully."}, status=200)
 
 
-class CreateUserView(generics.CreateAPIView):
-    """
-    API endpoint for creating a new user.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+# class CreateUserView(generics.CreateAPIView):
+#     """API endpoint for creating a new user."""
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [AllowAny]
