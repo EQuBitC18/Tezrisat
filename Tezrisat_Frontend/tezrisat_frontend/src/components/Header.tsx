@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-//import { User } from "lucide-react";
+import { User } from "lucide-react";
 // @ts-ignore
 import api from "../api";
 import { useNavigate } from "react-router-dom";
@@ -44,14 +44,11 @@ const Header: React.FC = () => {
 
   return (
     <header className="flex justify-between items-center mb-8 top-0 z-20 bg-white/10 backdrop-blur-md p-4 rounded-lg">
-      {/*<h1 className="text-3xl font-bold">Welcome, {user}!</h1>*/}
-      <h1 className="text-3xl font-bold">Welcome to this portfolio project!</h1>
+      <h1 className="text-3xl font-bold">Welcome, {user}!</h1>
       <div className="flex items-center space-x-2">
-        {/*
         <button onClick={navigate_to_profile} type="submit">
           <User className="w-8 h-8 bg-white/20 rounded-full p-1" />
         </button>
-         */}
       </div>
     </header>
   );
