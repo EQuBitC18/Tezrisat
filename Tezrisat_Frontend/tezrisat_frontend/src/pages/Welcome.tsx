@@ -104,11 +104,12 @@ const Home: React.FC = () => {
                   Start Learning
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
+                {/*
                 <a href="#how-it-works">
                   <Button variant="outline" className="border-teal-200 text-teal-700 hover:bg-teal-50 h-12 px-6">
                     How It Works
                   </Button>
-                </a>
+                </a>*/}
               </div>
             </motion.div>
             <motion.div
@@ -270,21 +271,6 @@ const Home: React.FC = () => {
                 </span>
               </div>
               <p className="text-teal-700 text-sm">Conquer the unknown!</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-teal-900 mb-4">
-                Platform
-              </h3>
-              {/*<ul className="space-y-2 text-sm">
-                <li>
-                  <Link
-                    to="#how-it-works"
-                    className="text-teal-700 hover:text-teal-500 transition-colors"
-                  >
-                    How It Works
-                  </Link>
-                </li>
-              </ul>*/}
             </div>
             <div>
               <h3 className="text-sm font-medium text-teal-900 mb-4">
