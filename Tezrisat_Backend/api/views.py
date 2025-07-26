@@ -208,8 +208,8 @@ def add_microcourse(request):
     logger.info("Received request to add microcourse")
     user = request.user
     UserProfile.objects.get_or_create(user=user)
-
     openai_key = request.data.get("openai_key")
+    print("OpenAI API Key:", openai_key)  # Debugging line to check the key
     if not openai_key:
         return JsonResponse({"error": "OpenAI API key is required."}, status=400)
     os.environ["OPENAI_API_KEY"] = openai_key
