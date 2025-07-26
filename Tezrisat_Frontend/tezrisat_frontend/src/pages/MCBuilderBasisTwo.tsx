@@ -123,7 +123,11 @@ const ResourceUpload: FC = () => {
     try {
       setIsLoading(true);
       console.log("hier 2");
-      const response = await api.post("/api/add_microcourse/", formData);
+      const response = await api.post("/api/add_microcourse/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.status === 200) {
         navigate("/home");
       }
