@@ -275,7 +275,7 @@ const Home: React.FC = () => {
               <h3 className="text-sm font-medium text-teal-900 mb-4">
                 Platform
               </h3>
-              <ul className="space-y-2 text-sm">
+              {/*<ul className="space-y-2 text-sm">
                 <li>
                   <Link
                     to="#how-it-works"
@@ -284,7 +284,7 @@ const Home: React.FC = () => {
                     How It Works
                   </Link>
                 </li>
-              </ul>
+              </ul>*/}
             </div>
             <div>
               <h3 className="text-sm font-medium text-teal-900 mb-4">
