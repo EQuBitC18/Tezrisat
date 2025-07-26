@@ -23,7 +23,7 @@ const Footer = ({ isSidebarOpen }: { isSidebarOpen: boolean; }): JSX.Element => 
         <div className="flex items-center space-x-4">
         </div>
         <div className="text-sm mt-4 md:mt-0">
-          © 2023 Microcourse Builder. All rights reserved.
+
         </div>
       </div>
     </motion.footer>

@@ -245,7 +245,7 @@ const Home: React.FC = () => {
                   className="bg-white text-teal-600 hover:bg-teal-50 h-12 px-8"
                   onClick={navigateToSignup}
                 >
-                  Get Started for Free
+                  Get Started
                 </Button>
               </div>
             </div>
@@ -288,21 +288,6 @@ const Home: React.FC = () => {
             </div>
             <div>
               <h3 className="text-sm font-medium text-teal-900 mb-4">
-                Company
-              </h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link
-                    to="/about"
-                    className="text-teal-700 hover:text-teal-500 transition-colors"
-                  >
-                    About Us
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-teal-900 mb-4">
                 Legal
               </h3>
               <ul className="space-y-2 text-sm">
@@ -335,11 +320,11 @@ const Home: React.FC = () => {
           </div>
           <div className="mt-8 pt-8 border-t border-teal-100 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-teal-700">
-              © {new Date().getFullYear()} Tezrisat. All rights reserved.
+
             </p>
             <div className="flex gap-4">
               <Link
-                to="#"
+                to="https://www.linkedin.com/in/emre-%C3%A7amkerten-5bb7aa27b/"
                 className="text-teal-700 hover:text-teal-500 transition-colors"
               >
                 <span className="sr-only">LinkedIn</span>

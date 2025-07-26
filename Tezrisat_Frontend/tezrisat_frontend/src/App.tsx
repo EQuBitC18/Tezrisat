@@ -80,11 +80,11 @@ function App() {
                         //<ProtectedRoute>
                             <Logout/>
                         //</ProtectedRoute>
-                        //<Route path="/login" element={<Login/>}/>
-                        //<Route path="/register" element={<RegisterAndLogout/>}/>
                     }/>
-
-
+                    {/*
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/register" element={<RegisterAndLogout/>}/>
+                    */}
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
         </HashRouter>
