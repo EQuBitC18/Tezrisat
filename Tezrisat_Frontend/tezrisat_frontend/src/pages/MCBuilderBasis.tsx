@@ -43,7 +43,7 @@ const MicrocourseSetup: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const keyPattern = /^sk-[A-Za-z0-9]{32,}$/;
+    const keyPattern = /^sk-(live|test|proj)-[A-Za-z0-9]{24,}$/;
     if (!keyPattern.test(openaiKey)) {
       setKeyError("Please enter a valid OpenAI API key");
       return;
