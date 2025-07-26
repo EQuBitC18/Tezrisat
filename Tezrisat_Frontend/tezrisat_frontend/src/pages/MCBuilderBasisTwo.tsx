@@ -23,6 +23,7 @@ interface NewMicrocourse {
   topic: string;
   complexity: string;
   targetAudience: string;
+  openaiKey: string;
 }
 
 const ResourceUpload: FC = () => {
@@ -94,6 +95,7 @@ const ResourceUpload: FC = () => {
     formData.append("topic", newMicrocourse.topic);
     formData.append("complexity", newMicrocourse.complexity);
     formData.append("target_audience", newMicrocourse.targetAudience);
+    formData.append("openai_key", newMicrocourse.openaiKey);
 
     // Append each non-empty URL field
     urls.forEach((url) => {
