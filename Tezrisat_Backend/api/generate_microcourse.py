@@ -529,7 +529,7 @@ def generate_microcourse_section(
         
         Ensure the JSON starts with {{ and ends with }}.
         """
-    main_section, error_main = retry_generate(_generate_main_section, prompt_main)
+    main_section, error_main = retry_generate(_generate_main_section, prompt_main, openai_api_key)
     if error_main:
         raise Exception(error_main)
 
