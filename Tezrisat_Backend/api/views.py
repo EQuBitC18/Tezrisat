@@ -16,7 +16,11 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from langchain.chains.llm import LLMChain
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+# from serpapi import GoogleSearch
 from langchain_openai import ChatOpenAI
+
+# Local utilities
+from .utils import encrypt_api_key, decrypt_api_key
 #from serpapi import GoogleSearch
 
 # Local project imports
@@ -71,6 +75,10 @@ def update_profile(request):
         user.set_password(data["password"])
 
     user.save()
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    if data.get("openai_key"):
+        profile.encrypted_openai_key = encrypt_api_key(data["openai_key"])
+        profile.save()
     return JsonResponse({"detail": "Profile updated successfully"}, status=200)
 
 
@@ -138,7 +146,7 @@ def go_in_depth(request):
     Generate and add a new microcourse section using the provided previous section content.
     """
     user = request.user
-    UserProfile.objects.get_or_create(user=user)
+    profile, _ = UserProfile.objects.get_or_create(user=user)
 
     try:
         microcourse = Microcourse.objects.get(id=request.data.get("microcourseId"), user=user)
@@ -150,11 +158,21 @@ def go_in_depth(request):
 
     estimated_tokens_needed = 2000
 
+    openai_key = request.data.get("openai_key")
+    if openai_key:
+        profile.encrypted_openai_key = encrypt_api_key(openai_key)
+        profile.save()
+    elif profile.encrypted_openai_key:
+        openai_key = decrypt_api_key(profile.encrypted_openai_key)
+    else:
+        return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+
     try:
         microcourse_section_data = generate_microcourse_section(
             topic,
             is_next_section=True,
             previous_section=previous_section,
+            openai_api_key=openai_key,
         )
     except Exception as e:
         logger.error("Error generating microcourse section: %s", e)
@@ -207,12 +225,15 @@ def add_microcourse(request):
     """
     logger.info("Received request to add microcourse")
     user = request.user
-    UserProfile.objects.get_or_create(user=user)
+    profile, _ = UserProfile.objects.get_or_create(user=user)
     openai_key = request.data.get("openai_key")
-    print("OpenAI API Key:", openai_key)  # Debugging line to check the key
-    if not openai_key:
+    if openai_key:
+        profile.encrypted_openai_key = encrypt_api_key(openai_key)
+        profile.save()
+    elif profile.encrypted_openai_key:
+        openai_key = decrypt_api_key(profile.encrypted_openai_key)
+    else:
         return JsonResponse({"error": "OpenAI API key is required."}, status=400)
-    os.environ["OPENAI_API_KEY"] = openai_key
     title = request.data.get("title")
     topic = request.data.get("topic")
     complexity = request.data.get("complexity")
@@ -239,6 +260,7 @@ def add_microcourse(request):
             pdf_path=saved_pdf_filenames,
             website_url=urls_json,
             is_next_section=False,
+            openai_api_key=openai_key,
         )
         logger.info("Generated section: %s", json.dumps(microcourse_section_data, indent=2))
     except Exception as e:
@@ -318,7 +340,17 @@ def get_agent_response(request):
         MessagesPlaceholder(variable_name="messages"),
     ])
 
-    llm = ChatOpenAI(temperature=0.7)
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    openai_key = request.data.get("openai_key")
+    if openai_key:
+        profile.encrypted_openai_key = encrypt_api_key(openai_key)
+        profile.save()
+    elif profile.encrypted_openai_key:
+        openai_key = decrypt_api_key(profile.encrypted_openai_key)
+    else:
+        return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+
+    llm = ChatOpenAI(temperature=0.7, openai_api_key=openai_key)
     chain = LLMChain(llm=llm, prompt=prompt_template)
 
     data = json.loads(request.body)

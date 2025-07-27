@@ -4,7 +4,6 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
-  // @ts-ignore
   LogOut,
   Moon,
   Sun,
@@ -127,7 +126,6 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
           isOpen={isSidebarOpen}
         />
       </Link>
-      {/*
       <Link to="/logout">
         <NavItem
           icon={<LogOut className="w-5 h-5" />}
@@ -136,7 +134,6 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
           isOpen={isSidebarOpen}
         />
       </Link>
-      */}
     </motion.nav>
   );
 };

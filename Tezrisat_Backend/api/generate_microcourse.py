@@ -30,7 +30,6 @@ os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2")
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 os.environ["WOLFRAM_ALPHA_APPID"] = os.getenv("WOLFRAM_ALPHA_APPID")
 os.environ["SERPAPI_API_KEY"] = os.getenv("SERPAPI_API_KEY")
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 OpenAI.cache = InMemoryCache()
 OpenAI.model_rebuild()
@@ -101,22 +100,27 @@ class TokenUsageCallbackHandler(BaseCallbackHandler):
         if "usage" in response:
             self.token_usage = response["usage"].get("total_tokens", 0)
 
-def call_llm(prompt: str) -> (str, int):
+def call_llm(prompt: str, openai_api_key: str) -> (str, int):
     token_handler = TokenUsageCallbackHandler()
     callback_manager = CallbackManager([token_handler])
-    llm = OpenAI(temperature=0.7, max_tokens=1024, callback_manager=callback_manager)
+    llm = OpenAI(
+        temperature=0.7,
+        max_tokens=1024,
+        callback_manager=callback_manager,
+        openai_api_key=openai_api_key,
+    )
     output = llm(prompt)
     return output, token_handler.token_usage
 
 
-def document_relevancy_check(topic: str, text: str, max_length: int = 1000) -> Dict[str, Any]:
+def document_relevancy_check(topic: str, text: str, openai_api_key: str, max_length: int = 1000) -> Dict[str, Any]:
     # Truncate the text to avoid huge prompts
     truncated_text = text if len(text) <= max_length else text[:max_length] + "..."
     prompt = f"""Is the following text relevant to "{topic}"?
     Text: '''{truncated_text}'''
     Answer as JSON: {{"relevant": "yes" or "no", "score": number between 0 and 1, "reason": "brief explanation"}}
     """
-    output = call_llm(prompt)
+    output = call_llm(prompt, openai_api_key)
     try:
         return json.loads(output)
     except Exception as e:
@@ -124,11 +128,11 @@ def document_relevancy_check(topic: str, text: str, max_length: int = 1000) -> D
         return {"relevant": "no", "score": 0, "reason": "Parsing error"}
 
 
-def filter_relevant_docs(topic: str, docs: List[Document], threshold: float = 0.5, max_length: int = 1000) -> List[Document]:
+def filter_relevant_docs(topic: str, docs: List[Document], openai_api_key: str, threshold: float = 0.5, max_length: int = 1000) -> List[Document]:
     relevant_docs = []
     for doc in docs:
         logging.info("Processing doc for relevancy check.")
-        result = document_relevancy_check(topic, doc.page_content, max_length)
+        result = document_relevancy_check(topic, doc.page_content, openai_api_key, max_length)
         logging.info("Result from relevancy check: " + str(result))
         if result.get("relevant", "no").lower() == "yes" and float(result.get("score", 0)) >= threshold:
             relevant_docs.append(doc)
@@ -137,19 +141,19 @@ def filter_relevant_docs(topic: str, docs: List[Document], threshold: float = 0.
     return relevant_docs
 
 
-def get_finetuning_context(topic: str, pdf_path: Optional[Union[str, List[str]]], website_url: str) -> str:
+def get_finetuning_context(topic: str, pdf_path: Optional[Union[str, List[str]]], website_url: str, openai_api_key: str) -> str:
     docs = load_finetuning_docs(pdf_path, website_url)
     if not docs:
         return ""
     splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     docs_chunks = splitter.split_documents(docs)
-    embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
     vectorstore = Chroma.from_documents(docs_chunks, collection_name="microcourse", embedding=embeddings, persist_directory=".")
     try:
         retrieved_docs = vectorstore.similarity_search(topic, k=5)
     except AttributeError:
         retrieved_docs = vectorstore.get_relevant_documents(topic)
-    filtered_docs = filter_relevant_docs(topic, retrieved_docs, threshold=0.5)
+    filtered_docs = filter_relevant_docs(topic, retrieved_docs, openai_api_key, threshold=0.5)
     if not filtered_docs:
         return ""
     context = "\n\n".join([doc.page_content for doc in filtered_docs])
@@ -159,8 +163,8 @@ def get_finetuning_context(topic: str, pdf_path: Optional[Union[str, List[str]]]
 # ------------------------------
 # Generation Retry Mechanism
 # ------------------------------
-def _generate_main_section(prompt: str):
-    output, token_usage = call_llm(prompt)
+def _generate_main_section(prompt: str, openai_api_key: str):
+    output, token_usage = call_llm(prompt, openai_api_key)
     try:
         data = json.loads(output)
         data["token_usage"] = token_usage
@@ -170,8 +174,8 @@ def _generate_main_section(prompt: str):
 
 
 
-def _generate_code_examples(prompt: str):
-    output = call_llm(prompt)
+def _generate_code_examples(prompt: str, openai_api_key: str):
+    output = call_llm(prompt, openai_api_key)
     try:
         data = json.loads(output)
         if not isinstance(data, list):
@@ -193,8 +197,8 @@ def _generate_code_examples(prompt: str):
         return None, f"Error parsing code examples JSON. Raw output:\n{output}\nException: {e}"
 
 
-def _generate_math_expressions(prompt: str):
-    output = call_llm(prompt)
+def _generate_math_expressions(prompt: str, openai_api_key: str):
+    output = call_llm(prompt, openai_api_key)
     try:
         data = json.loads(output)
         if not isinstance(data, list):
@@ -216,10 +220,10 @@ def _generate_math_expressions(prompt: str):
         return None, f"Error parsing math expressions JSON. Raw output:\n{output}\nException: {e}"
 
 
-def retry_generate(generate_func, prompt: str, max_retries: int = 3, delay: int = 1):
+def retry_generate(generate_func, prompt: str, openai_api_key: str, max_retries: int = 3, delay: int = 1):
     attempts = 0
     while attempts < max_retries:
-        data, error = generate_func(prompt)
+        data, error = generate_func(prompt, openai_api_key)
         if error is None:
             return data, None
         else:
@@ -232,14 +236,14 @@ def retry_generate(generate_func, prompt: str, max_retries: int = 3, delay: int 
 # ------------------------------
 # Hallucination Detection
 # ------------------------------
-def hallucination_detection(response: str, context: str) -> Dict[str, Any]:
+def hallucination_detection(response: str, context: str, openai_api_key: str) -> Dict[str, Any]:
     prompt = f"""
     Based on the following context: '''{context}''', and the given response: '''{response}''', determine if any parts of the response are hallucinated (i.e., not supported by the context). 
     Answer in JSON with the following format:
     {{"hallucination_detected": "yes" or "no", "details": "brief explanation if any, or empty string if none"}}
     Do not include any additional commentary.
     """
-    output = call_llm(prompt)
+    output = call_llm(prompt, openai_api_key)
     try:
         data = json.loads(output)
         return data
@@ -251,7 +255,7 @@ def hallucination_detection(response: str, context: str) -> Dict[str, Any]:
 # ------------------------------
 # Microcourse Generation Functions
 # ------------------------------
-def generate_introduction_section(topic: str, finetune_context: str) -> Dict[str, Any]:
+def generate_introduction_section(topic: str, finetune_context: str, openai_api_key: str) -> Dict[str, Any]:
     extra_context = (
         f"\n\nAdditional fine-tuning context extracted from provided documents:\n{finetune_context}\n\n"
         if finetune_context else ""
@@ -299,13 +303,17 @@ def generate_introduction_section(topic: str, finetune_context: str) -> Dict[str
 
     Ensure the JSON starts with {{ and ends with }}.
     """
-    main_section, error_main = retry_generate(_generate_main_section, prompt_main)
+    main_section, error_main = retry_generate(
+        _generate_main_section,
+        prompt_main,
+        openai_api_key,
+    )
     if error_main:
         raise Exception(error_main)
     return main_section
 
 
-def generate_code_examples_section(topic: str) -> List[Dict[str, str]]:
+def generate_code_examples_section(topic: str, openai_api_key: str) -> List[Dict[str, str]]:
     prompt_code = f"""
     You are an expert educator creating a microcourse on the topic: {topic}.
     Based on the section generated above, please provide code examples that illustrate key concepts.
@@ -316,15 +324,19 @@ def generate_code_examples_section(topic: str) -> List[Dict[str, str]]:
     If no code examples are relevant, output an empty array: [].
     Do not include any additional commentary.
     """
-    code_examples, error_code = retry_generate(_generate_code_examples, prompt_code)
+    code_examples, error_code = retry_generate(
+        _generate_code_examples,
+        prompt_code,
+        openai_api_key,
+    )
     if error_code:
         raise Exception(error_code)
     return code_examples
 
 
-def _generate_math_expressions_refined(prompt: str):
+def _generate_math_expressions_refined(prompt: str, openai_api_key: str):
     """Refined function to parse JSON arrays for math expressions, or return an empty array if none."""
-    output = call_llm(prompt)
+    output = call_llm(prompt, openai_api_key)
     try:
         data = json.loads(output)
         if not isinstance(data, list):
@@ -344,7 +356,7 @@ def _generate_math_expressions_refined(prompt: str):
                 return None, f"Error parsing math expressions JSON after extraction.\nSubstring:\n{substring}\nException: {e2}"
         return None, f"Error parsing math expressions JSON. Output:\n{output}\nException: {e}"
 
-def generate_math_expressions_section(topic: str, content: str) -> List[Dict[str, str]]:
+def generate_math_expressions_section(topic: str, content: str, openai_api_key: str) -> List[Dict[str, str]]:
     """
     Produces math expressions relevant to the topic and main content.
     If math expressions are not relevant, returns an empty array (i.e. []).
@@ -372,7 +384,11 @@ def generate_math_expressions_section(topic: str, content: str) -> List[Dict[str
       }}
     ]
         """
-    math_expressions, error = retry_generate(_generate_math_expressions_refined, refined_prompt)
+    math_expressions, error = retry_generate(
+        _generate_math_expressions_refined,
+        refined_prompt,
+        openai_api_key,
+    )
     if error:
         raise Exception(error)
     return math_expressions
@@ -395,15 +411,22 @@ def perform_web_search(query: str) -> str:
 
 
 
-def generate_microcourse_section(topic: str,
-                                 pdf_path: list = None,
-                                 website_url: str = "",
-                                 is_next_section: bool = False,
-                                 previous_section: Optional[Dict[str, Any]] = None
-                                 ) -> Dict[str, Any]:
+def generate_microcourse_section(
+    topic: str,
+    pdf_path: list = None,
+    website_url: str = "",
+    is_next_section: bool = False,
+    previous_section: Optional[Dict[str, Any]] = None,
+    openai_api_key: str = "",
+) -> Dict[str, Any]:
     # Use locally processed finetuning context
     state = {}
-    state["finetune_context"] = get_finetuning_context(topic, pdf_path, website_url)
+    state["finetune_context"] = get_finetuning_context(
+        topic,
+        pdf_path,
+        website_url,
+        openai_api_key,
+    )
     # TODO - Solve maximum context length problem
     MAX_CONTEXT_LENGTH = 500  # Reduced limit to avoid excessive tokens
     if len(state["finetune_context"]) > MAX_CONTEXT_LENGTH:
@@ -511,16 +534,24 @@ def generate_microcourse_section(topic: str,
         raise Exception(error_main)
 
     if main_section.get("generate_code"):
-        code_examples = generate_code_examples_section(topic)
+        code_examples = generate_code_examples_section(topic, openai_api_key)
     else:
         code_examples = []
 
     if main_section.get("generate_math"):
-        math_expressions = generate_math_expressions_section(topic, main_section.get("content", ""))
+        math_expressions = generate_math_expressions_section(
+            topic,
+            main_section.get("content", ""),
+            openai_api_key,
+        )
     else:
         math_expressions = []
 
-    hall_result = hallucination_detection(main_section.get("content", ""), finetune_context)
+    hall_result = hallucination_detection(
+        main_section.get("content", ""),
+        finetune_context,
+        openai_api_key,
+    )
     if hall_result.get("hallucination_detected", "").lower() == "yes":
         logging.warning("Hallucination detected: " + hall_result.get("details", ""))
 
