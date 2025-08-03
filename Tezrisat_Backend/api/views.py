@@ -341,7 +341,12 @@ def get_agent_response(request):
     ])
 
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    openai_key = request.data.get("openai_key")
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON payload."}, status=400)
+
+    openai_key = payload.get("openai_key")
     if openai_key:
         profile.encrypted_openai_key = encrypt_api_key(openai_key)
         profile.save()
@@ -353,9 +358,8 @@ def get_agent_response(request):
     llm = ChatOpenAI(temperature=0.7, openai_api_key=openai_key)
     chain = LLMChain(llm=llm, prompt=prompt_template)
 
-    data = request.body #json.loads(request.body)
-    question = data.get("question")
-    data_id = data.get("id")
+    question = payload.get("question")
+    data_id = payload.get("id")
     try:
         microcourse = Microcourse.objects.get(id=data_id, user=request.user)
     except Microcourse.DoesNotExist:
