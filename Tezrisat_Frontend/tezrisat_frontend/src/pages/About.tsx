@@ -409,35 +409,6 @@ const AboutPage: FC = () => {
                   </li>
                 </ul>
               </div>
-              <div>
-                <h3 className="text-sm font-medium text-teal-900 mb-4">Legal</h3>
-                <ul className="space-y-2 text-sm">
-                  <li>
-                    <Link
-                      to="#"
-                      className="text-teal-700 hover:text-teal-500 transition-colors"
-                    >
-                      Terms of Service
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="#"
-                      className="text-teal-700 hover:text-teal-500 transition-colors"
-                    >
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="#"
-                      className="text-teal-700 hover:text-teal-500 transition-colors"
-                    >
-                      Cookie Policy
-                    </Link>
-                  </li>
-                </ul>
-              </div>
             </div>
             <div className="mt-8 pt-8 border-t border-teal-100 flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-sm text-teal-700">
