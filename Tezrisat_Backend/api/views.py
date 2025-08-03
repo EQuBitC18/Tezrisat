@@ -353,7 +353,7 @@ def get_agent_response(request):
     llm = ChatOpenAI(temperature=0.7, openai_api_key=openai_key)
     chain = LLMChain(llm=llm, prompt=prompt_template)
 
-    data = json.loads(request.body)
+    data = request.body #json.loads(request.body)
     question = data.get("question")
     data_id = data.get("id")
     try:
