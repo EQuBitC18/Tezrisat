@@ -158,14 +158,21 @@ def go_in_depth(request):
 
     estimated_tokens_needed = 2000
 
-    openai_key = request.data.get("openai_key")
-    if openai_key:
-        profile.encrypted_openai_key = encrypt_api_key(openai_key)
-        profile.save()
-    elif profile.encrypted_openai_key:
-        openai_key = decrypt_api_key(profile.encrypted_openai_key)
+    # Prefer backend-owned OpenAI API key if configured; otherwise fall back to
+    # a key provided in the request or the user's saved key.
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    if openai_api_key:
+        openai_key = openai_api_key
     else:
-        return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+        openai_key = request.data.get("openai_key")
+        if openai_key:
+            # Save provided key to user profile for convenience (encrypted)
+            profile.encrypted_openai_key = encrypt_api_key(openai_key)
+            profile.save()
+        elif profile.encrypted_openai_key:
+            openai_key = decrypt_api_key(profile.encrypted_openai_key)
+        else:
+            return JsonResponse({"error": "OpenAI API key is required."}, status=400)
 
     try:
         microcourse_section_data = generate_microcourse_section(
@@ -222,18 +229,16 @@ def go_in_depth(request):
 def add_microcourse(request):
     """
     Create a new microcourse using the provided data (including URLs and PDF files).
+    Uses the backend's OpenAI API key configured in environment variables.
     """
     logger.info("Received request to add microcourse")
     user = request.user
-    profile, _ = UserProfile.objects.get_or_create(user=user)
-    openai_key = request.data.get("openai_key")
-    if openai_key:
-        profile.encrypted_openai_key = encrypt_api_key(openai_key)
-        profile.save()
-    elif profile.encrypted_openai_key:
-        openai_key = decrypt_api_key(profile.encrypted_openai_key)
-    else:
-        return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+    
+    # Get OpenAI API key from environment (backend's key)
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    if not openai_api_key:
+        return JsonResponse({"error": "OpenAI API key not configured on backend."}, status=500)
+    
     title = request.data.get("title")
     topic = request.data.get("topic")
     complexity = request.data.get("complexity")
@@ -247,7 +252,7 @@ def add_microcourse(request):
         for pdf in pdf_files:
             try:
                 filename = fs.save(pdf.name, pdf)
-                saved_pdf_filenames.append(f"pdfs/{filename}")
+                saved_pdf_filenames.append(filename)  # Just store filename, not full path
                 logger.info("PDF file saved successfully: %s", filename)
             except Exception as e:
                 logger.error("Error saving PDF file: %s", e)
@@ -260,7 +265,7 @@ def add_microcourse(request):
             pdf_path=saved_pdf_filenames,
             website_url=urls_json,
             is_next_section=False,
-            openai_api_key=openai_key,
+            openai_api_key=openai_api_key,
         )
         logger.info("Generated section: %s", json.dumps(microcourse_section_data, indent=2))
     except Exception as e:

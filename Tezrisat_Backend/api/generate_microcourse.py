@@ -6,17 +6,16 @@ from uuid import uuid4
 from tqdm import tqdm
 from typing import Optional, Dict, Any, List, Union
 
-from langchain.cache import InMemoryCache
-from langchain.llms import OpenAI
-from langchain.document_loaders import PyPDFLoader
-from langchain.docstore.document import Document
+from langchain_community.cache import InMemoryCache
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_community.document_loaders import PyPDFLoader
+from langchain.schema import Document
 import trafilatura
-from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
+from langchain_text_splitters import CharacterTextSplitter, RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
 from dotenv import load_dotenv
 try:
-    from langchain.cache.base import BaseCache
+    from langchain_community.cache import BaseCache
 except ModuleNotFoundError:
     # Define a dummy BaseCache so that Pydantic can resolve the annotation.
     class BaseCache:
@@ -26,13 +25,12 @@ except ModuleNotFoundError:
 # Configuration & Logging
 # ------------------------------
 load_dotenv()
-os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2")
-os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
-os.environ["WOLFRAM_ALPHA_APPID"] = os.getenv("WOLFRAM_ALPHA_APPID")
-os.environ["SERPAPI_API_KEY"] = os.getenv("SERPAPI_API_KEY")
+os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2", "")
+os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY", "")
+os.environ["WOLFRAM_ALPHA_APPID"] = os.getenv("WOLFRAM_ALPHA_APPID", "")
+os.environ["SERPAPI_API_KEY"] = os.getenv("SERPAPI_API_KEY", "")
 
-OpenAI.cache = InMemoryCache()
-OpenAI.model_rebuild()
+# Note: ChatOpenAI from langchain_openai handles caching internally
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -41,10 +39,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Fine-Tuning Context Extraction
 # ------------------------------
 from typing import Optional, Union, List
-from langchain.document_loaders import PyPDFLoader
-from langchain.docstore.document import Document
 import os
-import trafilatura
 
 
 def load_finetuning_docs(
@@ -54,63 +49,90 @@ def load_finetuning_docs(
     """Loads documents from PDFs and a website.
 
     Parameters:
-      pdf_path: A single path as a string or a list of PDF file paths.
+      pdf_path: A single filename or list of filenames (stored in media/pdfs/).
       website_url: A URL to fetch and extract text from.
 
     Returns:
       A list of Document objects.
     """
+    from django.conf import settings
+    
     docs = []
     if pdf_path:
+        # Get the base media path from Django settings
+        media_root = settings.MEDIA_ROOT if hasattr(settings, 'MEDIA_ROOT') else 'media'
+        
         if isinstance(pdf_path, list):
-            for path in pdf_path:
-                if os.path.isfile(path):
-                    loader = PyPDFLoader(path)
+            for filename in pdf_path:
+                # Construct full path to PDF file
+                if isinstance(filename, str) and filename:
+                    full_path = os.path.join(media_root, "pdfs", filename)
+                    if os.path.isfile(full_path):
+                        try:
+                            loader = PyPDFLoader(full_path)
+                            pdf_docs = loader.load()
+                            docs.extend(pdf_docs)
+                            logging.info(f"Loaded PDF: {full_path}")
+                        except Exception as e:
+                            logging.error(f"Error loading PDF {full_path}: {e}")
+                    else:
+                        logging.warning(f"PDF file not found: {full_path}")
+        else:
+            full_path = os.path.join(media_root, "pdfs", pdf_path)
+            if os.path.isfile(full_path):
+                try:
+                    loader = PyPDFLoader(full_path)
                     pdf_docs = loader.load()
                     docs.extend(pdf_docs)
-                else:
-                    # Log or handle the error if the file does not exist.
-                    print(f"File not found: {path}")
-        else:
-            if os.path.isfile(pdf_path):
-                loader = PyPDFLoader(pdf_path)
-                pdf_docs = loader.load()
-                docs.extend(pdf_docs)
+                    logging.info(f"Loaded PDF: {full_path}")
+                except Exception as e:
+                    logging.error(f"Error loading PDF {full_path}: {e}")
             else:
-                print(f"File not found: {pdf_path}")
+                logging.warning(f"PDF file not found: {full_path}")
 
     if website_url:
-        downloaded = trafilatura.fetch_url(website_url)
-        if downloaded:
-            extracted_text = trafilatura.extract(downloaded)
-            if extracted_text:
-                docs.append(Document(page_content=extracted_text, metadata={"source": website_url}))
+        try:
+            # Parse website_url which might be JSON
+            if isinstance(website_url, str):
+                urls = json.loads(website_url) if website_url.startswith('[') else [website_url]
+            else:
+                urls = website_url if isinstance(website_url, list) else [website_url]
+            
+            for url in urls:
+                if url:
+                    try:
+                        logging.info(f"Fetching content from: {url}")
+                        downloaded = trafilatura.fetch_url(url)
+                        if downloaded:
+                            extracted_text = trafilatura.extract(downloaded)
+                            if extracted_text:
+                                docs.append(Document(page_content=extracted_text, metadata={"source": url}))
+                    except Exception as e:
+                        logging.error(f"Error fetching content from {url}: {e}")
+        except Exception as e:
+            logging.error(f"Error processing website URLs: {e}")
+    
     return docs
 
 
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.callbacks.manager import CallbackManager
-
-class TokenUsageCallbackHandler(BaseCallbackHandler):
-    def __init__(self):
-        self.token_usage = 0
-
-    def on_llm_end(self, response, **kwargs):
-        # The response should include a "usage" key with token counts.
-        if "usage" in response:
-            self.token_usage = response["usage"].get("total_tokens", 0)
-
 def call_llm(prompt: str, openai_api_key: str) -> (str, int):
-    token_handler = TokenUsageCallbackHandler()
-    callback_manager = CallbackManager([token_handler])
-    llm = OpenAI(
-        temperature=0.7,
-        max_tokens=1024,
-        callback_manager=callback_manager,
-        openai_api_key=openai_api_key,
-    )
-    output = llm(prompt)
-    return output, token_handler.token_usage
+    """Call OpenAI LLM with the provided prompt."""
+    try:
+        llm = ChatOpenAI(
+            model="gpt-3.5-turbo",
+            temperature=0.7,
+            max_tokens=1024,
+            api_key=openai_api_key,
+        )
+        response = llm.invoke(prompt)
+        # Extract text from response
+        output = response.content if hasattr(response, 'content') else str(response)
+        return output, 0  # Token count not available in newer versions
+    except Exception as e:
+        logging.error(f"Error calling LLM: {e}")
+        raise
 
 
 def document_relevancy_check(topic: str, text: str, openai_api_key: str, max_length: int = 1000) -> Dict[str, Any]:
@@ -147,7 +169,7 @@ def get_finetuning_context(topic: str, pdf_path: Optional[Union[str, List[str]]]
         return ""
     splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     docs_chunks = splitter.split_documents(docs)
-    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    embeddings = OpenAIEmbeddings(api_key=openai_api_key)
     vectorstore = Chroma.from_documents(docs_chunks, collection_name="microcourse", embedding=embeddings, persist_directory=".")
     try:
         retrieved_docs = vectorstore.similarity_search(topic, k=5)

@@ -52,21 +52,29 @@ const LoginPage: FC<FormProps> = ({ route = "/api/login/", method = "login" }) =
     setLoading(true);
 
     try {
-      // Validate password rules similar to ProfileEdit
-      if (password.length < 8) {
-        throw new Error("Password must be at least 8 characters.");
+      // For login, we don't need to validate password strength
+      // Password strength validation is only needed for registration/password changes
+      if (method === "login" && (!username || !password)) {
+        throw new Error("Username and password are required.");
       }
-      if (!/[A-Z]/.test(password)) {
-        throw new Error("Password must contain at least one uppercase letter.");
-      }
-      if (!/\d/.test(password)) {
-        throw new Error("Password must contain at least one digit.");
-      }
-      if (!/[^A-Za-z0-9]/.test(password)) {
-        throw new Error("Password must contain at least one special character.");
-      }
-      if (/\s/.test(password)) {
-        throw new Error("Password must not contain whitespace.");
+
+      // Validate password rules only for registration (not for login)
+      if (method === "register") {
+        if (password.length < 8) {
+          throw new Error("Password must be at least 8 characters.");
+        }
+        if (!/[A-Z]/.test(password)) {
+          throw new Error("Password must contain at least one uppercase letter.");
+        }
+        if (!/\d/.test(password)) {
+          throw new Error("Password must contain at least one digit.");
+        }
+        if (!/[^A-Za-z0-9]/.test(password)) {
+          throw new Error("Password must contain at least one special character.");
+        }
+        if (/\s/.test(password)) {
+          throw new Error("Password must not contain whitespace.");
+        }
       }
 
       const res = await api.post(route, { username, password });
