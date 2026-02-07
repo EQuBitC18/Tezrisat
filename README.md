@@ -145,7 +145,7 @@ Commercial features and enterprise offerings (planned) are available under separ
 ## Maintainer
 
 - GitHub: [EQuBitC18](https://github.com/EQuBitC18) 
-- LinkedIn: [Emre Ã‡amkerten](https://www.linkedin.com/in/emre-%C3%A7amkerten-5bb7aa27b/) 
+- LinkedIn: [Emre Çamkerten](https://www.linkedin.com/in/emre-%C3%A7amkerten-5bb7aa27b/) 
 
 ## Acknowledgments
 
