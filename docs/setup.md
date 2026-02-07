@@ -84,5 +84,5 @@ Frontend runs at `http://localhost:5173`.
 
 ## Next Steps
 
-- See `docs/api.md` for API overview.
-- See `CONTRIBUTING.md` for contribution guidelines.
+- See [docs/api.md](api.md) for API overview.
+- See [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines.

@@ -33,11 +33,13 @@ Tezrisat/
 
 ## Documentation
 
-- Setup guide: `docs/setup.md`
-- API overview: `docs/api.md`
-- Contributing guide: `CONTRIBUTING.md`
-- Code of conduct: `CODE_OF_CONDUCT.md`
-- Security policy: `SECURITY.md`
+- Setup guide: [docs/setup.md](docs/setup.md)
+- API overview: [docs/api.md](docs/api.md)
+- Contributing guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Security policy: [SECURITY.md](SECURITY.md)
+- Changelog: [CHANGELOG.md](CHANGELOG.md)
+- Licenses: [LICENSE](LICENSE), [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md)
 
 ## Key Technologies
 
