@@ -30,6 +30,12 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-key-change-in-producti
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+_local_hosts = {"localhost", "127.0.0.1", "0.0.0.0"}
+if DEBUG and any(host not in _local_hosts for host in ALLOWED_HOSTS):
+    raise RuntimeError(
+        "Refusing to start with DEBUG=true on non-local ALLOWED_HOSTS. "
+        "Set DEBUG=false for public deployments."
+    )
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],

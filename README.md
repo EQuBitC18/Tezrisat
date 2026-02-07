@@ -1,3 +1,7 @@
+﻿<p align="center">
+  <img src="Tezrisat_Frontend/tezrisat_frontend/public/Tezrisat_Logo_Transparent.png" alt="Tezrisat logo" width="220" />
+</p>
+
 # Tezrisat
 
 Tezrisat is an AI-powered microcourse generation platform that helps educators and learners create personalized, interactive learning experiences in minutes.
@@ -5,6 +9,8 @@ Tezrisat is an AI-powered microcourse generation platform that helps educators a
 ## Problem Statement
 
 Traditional course creation is time-consuming and requires extensive expertise. Educators spend weeks developing content, while learners struggle with generic materials that do not match their needs. Tezrisat uses AI to generate microcourses with interactive elements, quizzes, and recall notes.
+
+> **Local-only by design:** Tezrisat is intended for local/self-hosted use. If you plan to expose it publicly, you must add authentication, rate limiting, and server-side key management.
 
 ## How It Works
 
@@ -70,6 +76,7 @@ Tezrisat/
 |-- CONTRIBUTING.md           # Contribution guidelines
 |-- LICENSE                   # Business Source License 1.1
 |-- LICENSE-MIT               # Future MIT license (effective 2028-02-07)
+|-- TRADEMARKS.md             # Trademark and branding policy
 |-- README.md                 # This file
 ```
 
@@ -86,6 +93,7 @@ Tezrisat/
 | [LICENSE](LICENSE) | Business Source License 1.1 (changes to MIT on 2028-02-07) |
 | [LICENSE-MIT](LICENSE-MIT) | MIT license text (effective on 2028-02-07) |
 | [LICENSE-COMMERCIAL](LICENSE-COMMERCIAL.md) | Commercial license terms |
+| [TRADEMARKS](TRADEMARKS.md) | Trademark and branding policy |
 
 ## Key Technologies
 
@@ -119,7 +127,7 @@ We welcome contributions. See `CONTRIBUTING.md` for details.
 1. Stabilize API responses and add contract tests for core endpoints.
 2. Improve content quality controls and add more deterministic generation options.
 3. Expand documentation with usage examples and troubleshooting playbooks.
-4. Add optional authentication and rate limiting for public deployments.
+4. Address context length limits in the LLM pipeline.
 5. Build a simple hosting guide for self-hosted deployments.
 
 ## Security Note
@@ -130,13 +138,16 @@ Authentication is disabled by default and the API is intended for local/self-hos
 
 Tezrisat follows an open-core model. The core platform is licensed under the Business Source License 1.1 (BSL 1.1), which changes to MIT on 2028-02-07. See `LICENSE` for details.
 
+License note: Internal use is allowed for teams of any size. Public hosting or offering it as a service to third parties is not allowed without a separate commercial license.
+
 Commercial features and enterprise offerings (planned) are available under separate licensing.
 
 ## Maintainer
 
 - GitHub: [EQuBitC18](https://github.com/EQuBitC18) 
-- LinkedIn: [Emre Çamkerten](https://www.linkedin.com/in/emre-%C3%A7amkerten-5bb7aa27b/) 
+- LinkedIn: [Emre Ã‡amkerten](https://www.linkedin.com/in/emre-%C3%A7amkerten-5bb7aa27b/) 
 
 ## Acknowledgments
 
 Thanks to the open-source community and contributors who make projects like this possible.
+

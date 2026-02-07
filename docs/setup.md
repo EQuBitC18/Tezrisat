@@ -2,6 +2,8 @@
 
 This guide is optimized for a fast local setup so contributors can get productive quickly.
 
+> **Local‑only by design:** Tezrisat is intended for local/self‑hosted use. If you plan to expose it publicly, you must add authentication, rate limiting, and server‑side key management.
+
 ## Quick Start (Local)
 
 1. Clone and enter the repo:
