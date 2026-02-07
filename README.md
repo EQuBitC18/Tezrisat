@@ -14,17 +14,18 @@ Traditional course creation is time-consuming and requires extensive expertise. 
 
 ```
 Tezrisat/
+|-- .github/                  # CI workflows and GitHub templates
 |-- docs/                     # Documentation and setup guides
 |-- Tezrisat_Backend/         # Django REST API backend
 |   |-- api/                  # Main API app (models, views, serializers)
-|   |-- media/                # User uploaded files (local dev)
-|   |-- tzrst_db/             # Vector database for AI embeddings (local dev)
-|-- Tezrisat_Frontend/        # React TypeScript frontend
-|   |-- tezrisat_frontend/    # Vite React application
+|   |-- media/                # Uploaded files (local dev)
+|   |-- db.sqlite3            # Local dev database (created on first run)
+|-- Tezrisat_Frontend/        # React + Vite frontend
+|   |-- tezrisat_frontend/    # Frontend app workspace
 |       |-- components/       # Reusable UI components
 |       |-- src/              # Main application code
 |       |-- public/           # Static assets
-|-- Summaries/                # Quick reference guides
+|-- .env.example              # Environment variable template
 |-- CHANGELOG.md              # Version history
 |-- CONTRIBUTING.md           # Contribution guidelines
 |-- LICENSE                   # Business Source License 1.1
@@ -36,12 +37,12 @@ Tezrisat/
 
 | Resource | What it covers |
 | --- | --- |
-| [docs/setup.md](SETUP) | Quick start and local dev setup |
-| [docs/api.md](API) | API overview and key handling |
-| [CONTRIBUTING.md](CONTRIBUTING) | Contribution workflow and standards |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT) | Community expectations |
-| [SECURITY.md](SECURITY) | Vulnerability reporting |
-| [CHANGELOG.md](CHANGELOG) | Release history |
+| [SETUP](docs/setup.md) | Quick start and local dev setup |
+| [API](docs/api.md) | API overview and key handling |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution workflow and standards |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community expectations |
+| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
 | [LICENSE](LICENSE) | Business Source License 1.1 (changes to MIT on 2028-02-07) |
 | [LICENSE-MIT](LICENSE-MIT) | MIT license text (effective on 2028-02-07) |
 | [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) | Commercial license terms |
