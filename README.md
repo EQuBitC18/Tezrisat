@@ -10,7 +10,7 @@ Tezrisat is an AI-powered microcourse generation platform that helps educators a
 
 Traditional course creation is time-consuming and requires extensive expertise. Educators spend weeks developing content, while learners struggle with generic materials that do not match their needs. Tezrisat uses AI to generate microcourses with interactive elements, quizzes, and recall notes.
 
-> **Local-only by design:** Tezrisat is intended for local/self-hosted use. If you plan to expose it publicly, you must add authentication, rate limiting, and server-side key management.
+> **Local/self‑hosted only:** Public hosting or offering Tezrisat as a service to third parties is not allowed without a commercial license.
 
 ## How It Works
 

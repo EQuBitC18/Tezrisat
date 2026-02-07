@@ -2,7 +2,7 @@
 
 This is a lightweight, contributor-friendly overview of the Tezrisat API. For the full list of endpoints, use the Django REST Framework browsable API while the backend is running.
 
-> **Local‑only by design:** Tezrisat is intended for local/self‑hosted use. If you plan to expose it publicly, you must add authentication, rate limiting, and server‑side key management.
+> **Local/self‑hosted only:** Public hosting or offering Tezrisat as a service to third parties is not allowed without a commercial license.
 
 ## Base URL
 
