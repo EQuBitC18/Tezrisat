@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: Tezrisat_Backend/requirements.txt
+
+      - name: Install dependencies
+        working-directory: Tezrisat_Backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Django system checks
+        working-directory: Tezrisat_Backend
+        env:
+          DJANGO_SETTINGS_MODULE: Tezrisat_Backend.settings
+          SECRET_KEY: ci-secret
+          DEBUG: "false"
+          ALLOW_ANY: "false"
+        run: python manage.py check
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: Tezrisat_Frontend/tezrisat_frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: Tezrisat_Frontend/tezrisat_frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: Tezrisat_Frontend/tezrisat_frontend
+        run: npm run build

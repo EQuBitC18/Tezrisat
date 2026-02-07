@@ -1,15 +1,15 @@
 {
   "name": "tezrisat_frontend",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "1.0.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "preinstall": "npx npm-force-resolutions",
-    "start": "react-scripts start"
+    "preinstall": "npx npm-force-resolutions"
   },
   "resolutions": {
     "prismjs": "1.30.0"

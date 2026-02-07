@@ -1,0 +1,54 @@
+---
+name: General Issue
+description: For questions, documentation issues, or other general topics
+title: "[GENERAL] "
+labels: ["question", "triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For general questions, documentation issues, or topics that don't fit bug reports or feature requests.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Issue Type
+      description: What type of issue is this?
+      options:
+        - Question
+        - Documentation Issue
+        - Performance Issue
+        - Security Concern (see SECURITY.md)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please describe your issue or question in detail
+      placeholder: "I'm having trouble setting up the development environment..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any additional information that might help
+      placeholder: "Error messages, screenshots, environment details, etc."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: This is not a security vulnerability (see SECURITY.md)
+          required: true
