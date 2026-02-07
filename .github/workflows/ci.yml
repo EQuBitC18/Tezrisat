@@ -49,7 +49,9 @@ jobs:
 
       - name: Install dependencies
         working-directory: Tezrisat_Frontend/tezrisat_frontend
-        run: npm ci
+        env:
+          NPM_CONFIG_OPTIONAL: "true"
+        run: npm install
 
       - name: Build
         working-directory: Tezrisat_Frontend/tezrisat_frontend
