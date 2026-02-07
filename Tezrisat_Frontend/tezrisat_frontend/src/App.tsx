@@ -7,38 +7,24 @@ import NotFound from "./pages/NotFound.tsx";
 import MCBuilderBasisTwo from "./pages/MCBuilderBasisTwo.tsx";
 import Microcourse from "./pages/Microcourse.tsx";
 import AboutPage from "./pages/About.tsx";
+import AppLayout from "./components/AppLayout.tsx";
 
 function App() {
     return (
         <HashRouter>
-                <Routes>
-                    <Route path="/" element={
-                        <Home/>
-                    }/>
-                    <Route path="/about" element={
-                        <AboutPage/>
-                    }/>
-
-                    <Route path="/home" element={
-                        <Home/>
-                    }/>
-                    <Route path="/mc-builder-welcome" element={
-                        <MCBuilderWelcome/>
-                    }/>
-                    <Route path="/mc-builder-basis" element={
-                        <MCBuilderBasis/>
-                    }/>
-                    <Route path="/mc-builder-basis-two" element={
-                        <MCBuilderBasisTwo/>
-                    }/>
-                    <Route path="/loading-page" element={
-                        <LoadingPage/>
-                    }/>
-                    <Route path="/microcourse/:id" element={
-                        <Microcourse/>
-                    }/>
-                    <Route path="*" element={<NotFound/>}/>
-                </Routes>
+                <AppLayout>
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/about" element={<AboutPage/>}/>
+                        <Route path="/home" element={<Home/>}/>
+                        <Route path="/mc-builder-welcome" element={<MCBuilderWelcome/>}/>
+                        <Route path="/mc-builder-basis" element={<MCBuilderBasis/>}/>
+                        <Route path="/mc-builder-basis-two" element={<MCBuilderBasisTwo/>}/>
+                        <Route path="/loading-page" element={<LoadingPage/>}/>
+                        <Route path="/microcourse/:id" element={<Microcourse/>}/>
+                        <Route path="*" element={<NotFound/>}/>
+                    </Routes>
+                </AppLayout>
         </HashRouter>
     );
 }
