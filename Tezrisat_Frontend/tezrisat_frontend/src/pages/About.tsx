@@ -24,7 +24,7 @@ const AboutPage: FC = () => {
   }, []);
 
   const navigateToSignup = () => {
-    navigate("/register");
+    navigate("/home");
   };
 
   return (
@@ -59,7 +59,7 @@ const AboutPage: FC = () => {
             </nav>
             <div className="flex gap-4">
               <Button className="bg-teal-200 text-teal-900 hover:bg-teal-100" onClick={navigateToSignup}>
-                Get Started
+                Go to Home
               </Button>
             </div>
           </div>

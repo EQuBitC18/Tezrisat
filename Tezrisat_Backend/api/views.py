@@ -1,27 +1,19 @@
 import json
 import logging
 import os
-from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.http import JsonResponse
 
-from rest_framework import generics
 from rest_framework.decorators import (
     api_view,
     parser_classes,
-    permission_classes,
 )
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from langchain.chains.llm import LLMChain
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 # from serpapi import GoogleSearch
 from langchain_openai import ChatOpenAI
-
-# Local utilities
-from .utils import encrypt_api_key, decrypt_api_key
-#from serpapi import GoogleSearch
 
 # Local project imports
 from .generate_microcourse import generate_microcourse_section
@@ -31,55 +23,13 @@ from .models import (
     GlossaryTerm,
     QuizQuestion,
     RecallNote,
-    UserProfile,
 )
 from .serializers import (
-    UserSerializer,
     MicrocourseSerializer,
     MicrocourseSectionSerializer,
 )
 
 logger = logging.getLogger(__name__)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_current_user(request):
-    """
-    Retrieve the authenticated user's profile information.
-    """
-    user = request.user
-    data = {
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "username": user.username,
-        "email": user.email,
-    }
-    return JsonResponse(data)
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_profile(request):
-    """
-    Update the profile of the authenticated user.
-    Expects updated details in request.data["body"].
-    """
-    user = request.user
-    data = request.data.get("body", {})
-
-    user.first_name = data.get("firstname", "")
-    user.last_name = data.get("lastname", "")
-    user.username = data.get("username", "")
-    user.email = data.get("email", "")
-    if data.get("password"):
-        user.set_password(data["password"])
-
-    user.save()
-    profile, _ = UserProfile.objects.get_or_create(user=user)
-    if data.get("openai_key"):
-        profile.encrypted_openai_key = encrypt_api_key(data["openai_key"])
-        profile.save()
-    return JsonResponse({"detail": "Profile updated successfully"}, status=200)
 
 
 @api_view(['GET'])
@@ -99,14 +49,12 @@ def get_microcourses(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_microcourse(request, pk):
     """
-    Retrieve detailed information for a specific microcourse
-    belonging to the authenticated user.
+    Retrieve detailed information for a specific microcourse.
     """
     try:
-        microcourse = Microcourse.objects.get(id=pk, user=request.user)
+        microcourse = Microcourse.objects.get(id=pk)
         logger.info("Microcourse retrieved successfully")
         sections_data = []
         for section in microcourse.sections.all().order_by("id"):
@@ -135,6 +83,8 @@ def get_microcourse(request, pk):
             "sections": sections_data,
         }
         return JsonResponse(data, safe=False)
+    except Microcourse.DoesNotExist:
+        return JsonResponse({"error": "Microcourse not found"}, status=404)
     except Exception as e:
         logger.error("Error retrieving microcourse: %s", e)
         return JsonResponse({"error": "Failed to retrieve microcourse"}, status=500)
@@ -145,11 +95,8 @@ def go_in_depth(request):
     """
     Generate and add a new microcourse section using the provided previous section content.
     """
-    user = request.user
-    profile, _ = UserProfile.objects.get_or_create(user=user)
-
     try:
-        microcourse = Microcourse.objects.get(id=request.data.get("microcourseId"), user=user)
+        microcourse = Microcourse.objects.get(id=request.data.get("microcourseId"))
     except Microcourse.DoesNotExist:
         return JsonResponse({"error": "Microcourse not found"}, status=404)
 
@@ -159,19 +106,13 @@ def go_in_depth(request):
     estimated_tokens_needed = 2000
 
     # Prefer backend-owned OpenAI API key if configured; otherwise fall back to
-    # a key provided in the request or the user's saved key.
+    # a key provided in the request.
     openai_api_key = os.getenv("OPENAI_API_KEY")
     if openai_api_key:
         openai_key = openai_api_key
     else:
         openai_key = request.data.get("openai_key")
-        if openai_key:
-            # Save provided key to user profile for convenience (encrypted)
-            profile.encrypted_openai_key = encrypt_api_key(openai_key)
-            profile.save()
-        elif profile.encrypted_openai_key:
-            openai_key = decrypt_api_key(profile.encrypted_openai_key)
-        else:
+        if not openai_key:
             return JsonResponse({"error": "OpenAI API key is required."}, status=400)
 
     try:
@@ -232,7 +173,7 @@ def add_microcourse(request):
     Uses the backend's OpenAI API key configured in environment variables.
     """
     logger.info("Received request to add microcourse")
-    user = request.user
+    user = None
     
     # Get OpenAI API key from environment (backend's key)
     openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -345,19 +286,15 @@ def get_agent_response(request):
         MessagesPlaceholder(variable_name="messages"),
     ])
 
-    profile, _ = UserProfile.objects.get_or_create(user=request.user)
     try:
         payload = json.loads(request.body.decode("utf-8"))
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON payload."}, status=400)
 
     openai_key = payload.get("openai_key")
-    if openai_key:
-        profile.encrypted_openai_key = encrypt_api_key(openai_key)
-        profile.save()
-    elif profile.encrypted_openai_key:
-        openai_key = decrypt_api_key(profile.encrypted_openai_key)
-    else:
+    if not openai_key:
+        openai_key = os.getenv("OPENAI_API_KEY")
+    if not openai_key:
         return JsonResponse({"error": "OpenAI API key is required."}, status=400)
 
     llm = ChatOpenAI(temperature=0.7, openai_api_key=openai_key)
@@ -366,7 +303,7 @@ def get_agent_response(request):
     question = payload.get("question")
     data_id = payload.get("id")
     try:
-        microcourse = Microcourse.objects.get(id=data_id, user=request.user)
+        microcourse = Microcourse.objects.get(id=data_id)
     except Microcourse.DoesNotExist:
         return JsonResponse({"error": "Microcourse not found"}, status=404)
 
@@ -409,7 +346,6 @@ def get_agent_response(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def add_glossary_term(request):
     """
     Add a new glossary term to the latest section of the microcourse.
@@ -449,7 +385,6 @@ def add_glossary_term(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete_glossary_term(request, term_id):
     """
     Delete a glossary term by its ID.
@@ -463,7 +398,6 @@ def delete_glossary_term(request, term_id):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def add_note(request):
     """
     Add a new recall note to a specific section.
@@ -490,7 +424,6 @@ def add_note(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete_note(request, note_id):
     """
     Delete a recall note identified by its ID.
@@ -504,23 +437,13 @@ def delete_note(request, note_id):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete_microcourse(request, microcourse_id):
     """
-    Delete a microcourse ensuring that it belongs to the requesting user.
+    Delete a microcourse by ID.
     """
     try:
-        microcourse = Microcourse.objects.get(pk=microcourse_id, user=request.user)
+        microcourse = Microcourse.objects.get(pk=microcourse_id)
     except Microcourse.DoesNotExist:
         return JsonResponse({"detail": "Microcourse not found."}, status=404)
     microcourse.delete()
     return JsonResponse({"detail": "Microcourse deleted successfully."}, status=200)
-
-
-class CreateUserView(generics.CreateAPIView):
-    """
-    API endpoint for creating a new user.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]

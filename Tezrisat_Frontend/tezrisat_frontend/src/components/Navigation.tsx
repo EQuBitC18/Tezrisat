@@ -4,7 +4,6 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
-  LogOut,
   Moon,
   Sun,
 } from "lucide-react";
@@ -123,14 +122,6 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
           icon={isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           label={isDarkMode ? "Light Mode" : "Dark Mode"}
           onClick={toggleDarkMode}
-          isOpen={isSidebarOpen}
-        />
-      </Link>
-      <Link to="/logout">
-        <NavItem
-          icon={<LogOut className="w-5 h-5" />}
-          label="Logout"
-          onClick={() => {}}
           isOpen={isSidebarOpen}
         />
       </Link>

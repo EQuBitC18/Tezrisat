@@ -27,7 +27,7 @@ class Microcourse(models.Model):
     target_audience = models.CharField(max_length=1000)
     url = models.URLField(max_length=500, blank=True, null=True)
     pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="microcourses")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="microcourses", null=True, blank=True)
 
     def __str__(self):
         return self.title
