@@ -122,6 +122,7 @@ const Dashboard: FC = () => {
     fetchCourses();
   }, []);
 
+
   /**
    * Navigates to the specific microcourse detail page.
    *
@@ -155,6 +156,7 @@ const Dashboard: FC = () => {
   const handleAddNewMicrocourse = () => {
     navigate('/mc-builder-welcome');
   };
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-300 to-teal-500 dark:from-gray-800 dark:to-gray-900 text-gray-800 dark:text-white transition-colors duration-300">

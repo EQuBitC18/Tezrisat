@@ -122,6 +122,15 @@ const ResourceUpload: FC = () => {
     formData.append("code_examples", "");
     formData.append("math_expressions", "");
 
+    if (typeof window !== "undefined") {
+      const openaiKey = window.localStorage.getItem("tezrisat.openai_key");
+      const serpapiKey = window.localStorage.getItem("tezrisat.serpapi_key");
+      const wolframKey = window.localStorage.getItem("tezrisat.wolfram_key");
+      if (openaiKey) formData.append("openai_key", openaiKey);
+      if (serpapiKey) formData.append("serpapi_key", serpapiKey);
+      if (wolframKey) formData.append("wolfram_key", wolframKey);
+    }
+
     try {
       setIsLoading(true);
       console.log("hier 2");

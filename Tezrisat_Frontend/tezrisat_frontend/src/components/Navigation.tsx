@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
+  KeyRound,
   Moon,
   Sun,
 } from "lucide-react";
@@ -60,9 +61,13 @@ const NavItem = ({ icon, label, onClick, isOpen }: { icon: React.ReactNode; labe
  */
 
 const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolean; setIsSidebarOpen: (open: boolean) => void; }): JSX.Element => {
-  //const [isDarkMode, setIsDarkMode] = useState(false);
   const { isDarkMode, toggleDarkMode } = useDarkModeContext();
   const navigate = useNavigate();
+  const openApiKeysModal = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("tezrisat:open-api-keys"));
+    }
+  };
 
   useEffect(() => {
     if (isDarkMode) {
@@ -122,6 +127,14 @@ const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolea
           icon={isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           label={isDarkMode ? "Light Mode" : "Dark Mode"}
           onClick={toggleDarkMode}
+          isOpen={isSidebarOpen}
+        />
+      </Link>
+      <Link to="">
+        <NavItem
+          icon={<KeyRound className="w-5 h-5" />}
+          label="API Keys"
+          onClick={openApiKeysModal}
           isOpen={isSidebarOpen}
         />
       </Link>

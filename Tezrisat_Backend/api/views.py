@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from typing import Optional
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.http import JsonResponse
@@ -30,6 +31,38 @@ from .serializers import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _get_request_key(request, header_name: str, data_key: str) -> Optional[str]:
+    header_value = request.headers.get(header_name)
+    if header_value:
+        return header_value
+    try:
+        return request.data.get(data_key)
+    except Exception:
+        return None
+
+
+def _get_env_or_request_key(request, env_key: str, header_name: str, data_key: str) -> Optional[str]:
+    env_value = os.getenv(env_key)
+    return env_value or _get_request_key(request, header_name, data_key)
+
+
+@api_view(["GET"])
+def get_keys_status(request):
+    def is_set(value: Optional[str]) -> bool:
+        return bool(value and value.strip())
+
+    configured = {
+        "openai": is_set(os.getenv("OPENAI_API_KEY")),
+        "serpapi": is_set(os.getenv("SERPAPI_API_KEY")),
+        "wolfram": is_set(os.getenv("WOLFRAM_ALPHA_APPID")),
+    }
+    return JsonResponse({
+        "configured": configured,
+        "required": ["openai", "serpapi"],
+        "optional": ["wolfram"],
+    })
 
 
 @api_view(['GET'])
@@ -105,15 +138,26 @@ def go_in_depth(request):
 
     estimated_tokens_needed = 2000
 
-    # Prefer backend-owned OpenAI API key if configured; otherwise fall back to
-    # a key provided in the request.
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if openai_api_key:
-        openai_key = openai_api_key
-    else:
-        openai_key = request.data.get("openai_key")
-        if not openai_key:
-            return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+    openai_key = _get_env_or_request_key(
+        request,
+        "OPENAI_API_KEY",
+        "X-OpenAI-Key",
+        "openai_key",
+    )
+    if not openai_key:
+        return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+    serpapi_key = _get_env_or_request_key(
+        request,
+        "SERPAPI_API_KEY",
+        "X-SerpAPI-Key",
+        "serpapi_key",
+    )
+    wolfram_key = _get_env_or_request_key(
+        request,
+        "WOLFRAM_ALPHA_APPID",
+        "X-Wolfram-Key",
+        "wolfram_key",
+    )
 
     try:
         microcourse_section_data = generate_microcourse_section(
@@ -121,6 +165,8 @@ def go_in_depth(request):
             is_next_section=True,
             previous_section=previous_section,
             openai_api_key=openai_key,
+            serpapi_api_key=serpapi_key or "",
+            wolfram_alpha_appid=wolfram_key or "",
         )
     except Exception as e:
         logger.error("Error generating microcourse section: %s", e)
@@ -175,10 +221,26 @@ def add_microcourse(request):
     logger.info("Received request to add microcourse")
     user = None
     
-    # Get OpenAI API key from environment (backend's key)
-    openai_api_key = os.getenv("OPENAI_API_KEY")
+    openai_api_key = _get_env_or_request_key(
+        request,
+        "OPENAI_API_KEY",
+        "X-OpenAI-Key",
+        "openai_key",
+    )
     if not openai_api_key:
-        return JsonResponse({"error": "OpenAI API key not configured on backend."}, status=500)
+        return JsonResponse({"error": "OpenAI API key is required."}, status=400)
+    serpapi_key = _get_env_or_request_key(
+        request,
+        "SERPAPI_API_KEY",
+        "X-SerpAPI-Key",
+        "serpapi_key",
+    )
+    wolfram_key = _get_env_or_request_key(
+        request,
+        "WOLFRAM_ALPHA_APPID",
+        "X-Wolfram-Key",
+        "wolfram_key",
+    )
     
     title = request.data.get("title")
     topic = request.data.get("topic")
@@ -207,6 +269,8 @@ def add_microcourse(request):
             website_url=urls_json,
             is_next_section=False,
             openai_api_key=openai_api_key,
+            serpapi_api_key=serpapi_key or "",
+            wolfram_alpha_appid=wolfram_key or "",
         )
         logger.info("Generated section: %s", json.dumps(microcourse_section_data, indent=2))
     except Exception as e:
@@ -293,7 +357,12 @@ def get_agent_response(request):
 
     openai_key = payload.get("openai_key")
     if not openai_key:
-        openai_key = os.getenv("OPENAI_API_KEY")
+        openai_key = _get_env_or_request_key(
+            request,
+            "OPENAI_API_KEY",
+            "X-OpenAI-Key",
+            "openai_key",
+        )
     if not openai_key:
         return JsonResponse({"error": "OpenAI API key is required."}, status=400)
 

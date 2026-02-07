@@ -5,6 +5,7 @@ from . import views
 
 # URLConfiguration
 urlpatterns = [
+    path("config/keys-status/", views.get_keys_status, name="get_keys_status"),
     re_path(r'^microcourses/$', views.get_microcourses),
     path('microcourses/<int:pk>/', views.get_microcourse, name='get_microcourse'),
 

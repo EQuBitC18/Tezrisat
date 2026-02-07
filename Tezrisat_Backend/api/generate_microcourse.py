@@ -418,17 +418,23 @@ def generate_math_expressions_section(topic: str, content: str, openai_api_key: 
 
 import requests
 
-def perform_web_search(query: str) -> str:
-    api_key = os.getenv("SERPAPI_API_KEY")
+
+def perform_web_search(query: str, api_key: str) -> str:
+    if not api_key:
+        return ""
     params = {
         "engine": "google",
         "q": query,
         "api_key": api_key,
-        "num": "5"
+        "num": "5",
     }
     response = requests.get("https://serpapi.com/search", params=params)
     data = response.json()
-    snippets = [result.get("snippet", "") for result in data.get("organic_results", []) if result.get("snippet")]
+    snippets = [
+        result.get("snippet", "")
+        for result in data.get("organic_results", [])
+        if result.get("snippet")
+    ]
     return "\n".join(snippets) if snippets else ""
 
 
@@ -440,6 +446,8 @@ def generate_microcourse_section(
     is_next_section: bool = False,
     previous_section: Optional[Dict[str, Any]] = None,
     openai_api_key: str = "",
+    serpapi_api_key: str = "",
+    wolfram_alpha_appid: str = "",
 ) -> Dict[str, Any]:
     # Use locally processed finetuning context
     state = {}
@@ -455,7 +463,10 @@ def generate_microcourse_section(
         state["finetune_context"] = state["finetune_context"][:MAX_CONTEXT_LENGTH] + "..."
     finetune_context = state.get("finetune_context", "")
 
-    web_context = perform_web_search(topic)
+    serpapi_key = serpapi_api_key or os.getenv("SERPAPI_API_KEY", "")
+    if wolfram_alpha_appid:
+        os.environ["WOLFRAM_ALPHA_APPID"] = wolfram_alpha_appid
+    web_context = perform_web_search(topic, serpapi_key)
     extra_context = f"\n\nAdditional fine-tuning context extracted from provided documents:\n{finetune_context}\n\n" if finetune_context else ""
     if web_context:
         extra_context += f"Up-to-date information from web search:\n{web_context}\n\n"
