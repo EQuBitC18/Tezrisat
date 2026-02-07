@@ -1,12 +1,9 @@
 import React from "react";
-import { User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 /**
  * Header Component
  *
- * Displays a welcome message with the current user's name and a profile button.
- * The user's name is fetched from the API endpoint `/api/get_currentuser/`.
+ * Displays a welcome message.
  *
  * @returns {JSX.Element} The rendered Header component.
  */

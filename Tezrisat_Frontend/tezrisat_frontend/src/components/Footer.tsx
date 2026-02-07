@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 
 /**
  * Footer Component
@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
  * @param {boolean} props.isSidebarOpen - Determines whether the sidebar is open.
  * @returns {JSX.Element} The rendered Footer component.
  */
-// @ts-ignore
 const Footer = ({ isSidebarOpen }: { isSidebarOpen: boolean; }): JSX.Element => {
   return (
     <motion.footer

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef, FC } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,9 +6,7 @@ import { ArrowRight, Loader2, MessageCircle, X } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation, useNavigate } from "react-router-dom";
 
-// @ts-ignore
 import { Button } from "@/components/ui/button";
-// @ts-ignore
 import { Input } from "@/components/ui/input";
 
 import ScrollProgressBar from "../components/ScrollProgressBar";
@@ -24,7 +22,7 @@ import GlossaryModal from "./GlossaryModal";
 
 import Confetti from "react-confetti";
 import "katex/dist/katex.min.css";
-// @ts-ignore
+// @ts-expect-error
 import api from "../api";
 
 // -----------------------------------------------------------------------------
@@ -50,21 +48,52 @@ export interface GlossaryTerm {
   definition: string;
 }
 
+export interface CodeExample {
+  description: string;
+  code: string;
+  language?: string;
+}
+
+export interface MathExpression {
+  description: string;
+  expression: string;
+}
+
+type QuizOptionsMap = {
+  A?: string;
+  B?: string;
+  C?: string;
+  D?: string;
+};
+
+type RawQuizQuestion = {
+  id: string | number;
+  question?: string;
+  options?: string[] | QuizOptionsMap | string | null;
+  correct_answer?: number;
+};
+
 export interface MicrocourseSection {
   id: string;
   section_title?: string;
   content?: string;
-  code_examples?: any[]; // Adjust types if needed
-  math_expressions?: any[]; // Adjust types if needed
+  code_examples?: CodeExample[];
+  math_expressions?: MathExpression[];
   glossary_terms?: GlossaryTerm[];
-  quiz_questions?: QuizQuestion[];
+  quiz_questions?: RawQuizQuestion[];
   recall_notes?: RecallNote[];
+}
+
+export interface RawMicrocourseSection
+  extends Omit<MicrocourseSection, "code_examples" | "math_expressions"> {
+  code_examples?: CodeExample[] | string | null;
+  math_expressions?: MathExpression[] | string | null;
 }
 
 export interface MicrocourseData {
   id: string;
   title: string;
-  sections: MicrocourseSection[];
+  sections: RawMicrocourseSection[];
 }
 
 export interface ChatMessage {
@@ -80,75 +109,58 @@ interface ModalChapter {
   content: string;
 }
 
-// -----------------------------------------------------------------------------
-// Helper Parsing Functions
-// -----------------------------------------------------------------------------
-
-export const parseRecallNotes = (recallNotesString: string): RecallNote[] => {
-  try {
-    const notesArray = JSON.parse(recallNotesString);
-    if (Array.isArray(notesArray)) {
-      return notesArray.map((note: any) => ({
-        id: uuidv4(),
-        content: typeof note === "string" ? note.trim() : JSON.stringify(note),
-        timestamp: new Date().toLocaleString(),
-      }));
+const parseArray = <T,>(value: unknown): T[] => {
+  if (Array.isArray(value)) {
+    return value as T[];
+  }
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? (parsed as T[]) : [];
+    } catch {
+      return [];
     }
-  } catch (error) {
-    console.error("JSON parsing failed for recall notes, falling back to regex:", error);
   }
-  // Fallback: parse bullet points (e.g. lines starting with "-" or similar)
-  const bulletPoints = recallNotesString.match(/^-+\s*(.*)/gm);
-  if (!bulletPoints) return [];
-  return bulletPoints.map((line) => {
-    const contentMatch = line.match(/^-+\s*(.*)/);
-    const content = contentMatch ? contentMatch[1].trim() : "";
-    return {
-      id: uuidv4(),
-      content,
-      timestamp: new Date().toLocaleString(),
-    };
-  });
+  return [];
 };
 
-export const parseQuiz = (quizString: string): QuizQuestion[] => {
-  try {
-    const quizObj = JSON.parse(quizString);
-    const { question, options, correct_answer } = quizObj;
-    const letter = (correct_answer || "A").toUpperCase();
-    const correctIndex = letter.charCodeAt(0) - "A".charCodeAt(0);
-    const optionsArray = [
-      options["A"] || "Option A",
-      options["B"] || "Option B",
-      options["C"] || "Option C",
-      options["D"] || "Option D",
-    ];
+const isOptionsMap = (value: unknown): value is QuizOptionsMap =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const parseQuizOptions = (options: RawQuizQuestion["options"]): string[] => {
+  if (Array.isArray(options)) {
+    return options.map((opt) => String(opt));
+  }
+
+  if (isOptionsMap(options)) {
     return [
-      {
-        id: uuidv4(),
-        text: question || "No question provided.",
-        options: optionsArray,
-        correctAnswer: correctIndex,
-      },
+      options.A || "Option A",
+      options.B || "Option B",
+      options.C || "Option C",
+      options.D || "Option D",
     ];
-  } catch (error) {
-    console.error("Error parsing quiz JSON:", error);
-    return [];
   }
-};
 
-export const parseGlossary = (glossaryString: string): GlossaryTerm[] => {
-  try {
-    const glossaryObj = JSON.parse(glossaryString);
-    return Object.entries(glossaryObj).map(([key, value]) => ({
-      id: uuidv4(),
-      term: key,
-      definition: typeof value === "string" ? value : String(value),
-    }));
-  } catch (error) {
-    console.error("Error parsing glossary JSON:", error);
-    return [];
+  if (typeof options === "string") {
+    try {
+      const parsed = JSON.parse(options);
+      if (Array.isArray(parsed)) {
+        return parsed.map((opt) => String(opt));
+      }
+      if (isOptionsMap(parsed)) {
+        return [
+          parsed.A || "Option A",
+          parsed.B || "Option B",
+          parsed.C || "Option C",
+          parsed.D || "Option D",
+        ];
+      }
+    } catch {
+      return [];
+    }
   }
+
+  return [];
 };
 
 // -----------------------------------------------------------------------------
@@ -159,12 +171,8 @@ const Microcourse: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   // Get microcourse id from the router state (ensure it exists)
-  const { id } = location.state || {};
-  if (!id) {
-    console.error("No microcourse id provided in location state.");
-    navigate("/home");
-    return null;
-  }
+  const microcourseId =
+    (location.state as { id?: number } | null | undefined)?.id ?? null;
 
   // ---------------------------------------------------------------------------
   // Local UI State
@@ -174,8 +182,6 @@ const Microcourse: FC = () => {
   const [confettiRun, setConfettiRun] = useState<boolean>(true);
 
   const [microcourseTitle, setMicrocourseTitle] = useState<string>("Loading...");
-  //@ts-ignore
-  const [data, setData] = useState<MicrocourseData | null>(null);
   const [chapters, setChapters] = useState<MicrocourseSection[]>([]);
 
   // Modal and aggregated content states
@@ -204,6 +210,13 @@ const Microcourse: FC = () => {
   // Ref for scrolling to chapters
   const contentRef = useRef<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    if (!microcourseId) {
+      console.error("No microcourse id provided in location state.");
+      navigate("/home");
+    }
+  }, [microcourseId, navigate]);
+
   // ---------------------------------------------------------------------------
   // Confetti Effect (only once per microcourse per browser session)
   // ---------------------------------------------------------------------------
@@ -228,22 +241,22 @@ const Microcourse: FC = () => {
   // ---------------------------------------------------------------------------
   useEffect(() => {
     const fetchData = async () => {
+      if (!microcourseId) {
+        return;
+      }
       try {
-        const response = await api.get(`/api/microcourses/${id}/`);
+        const response = await api.get(`/api/microcourses/${microcourseId}/`);
         const mcData: MicrocourseData = response.data;
         console.log("Raw microcourse data from backend:", mcData);
         setMicrocourseTitle(mcData.title || "Untitled Microcourse");
-        setData(mcData);
 
         // Convert sections into chapters
         const sectionsArray = mcData.sections.map((sec) => ({
           id: sec.id,
           section_title: sec.section_title || "Untitled Section",
           content: sec.content || "No content provided.",
-          // @ts-ignore
-          code_examples: sec.code_examples ? JSON.parse(sec.code_examples) : [],
-          // @ts-ignore
-          math_expressions: sec.math_expressions ? JSON.parse(sec.math_expressions) : [],
+          code_examples: parseArray<CodeExample>(sec.code_examples),
+          math_expressions: parseArray<MathExpression>(sec.math_expressions),
           glossary_terms: sec.glossary_terms || [],
           quiz_questions: sec.quiz_questions || [],
           recall_notes: sec.recall_notes || [],
@@ -259,39 +272,13 @@ const Microcourse: FC = () => {
             aggregatedGlossaryTerms = aggregatedGlossaryTerms.concat(section.glossary_terms);
           }
           if (section.quiz_questions) {
-            const convertedQuizQuestions = section.quiz_questions.map((q: any) => {
-              let opts: string[] = [];
-              if (Array.isArray(q.options)) {
-                opts = q.options;
-              } else if (typeof q.options === "object" && q.options !== null) {
-                opts = [
-                  q.options.A || "Option A",
-                  q.options.B || "Option B",
-                  q.options.C || "Option C",
-                  q.options.D || "Option D",
-                ];
-              } else if (typeof q.options === "string") {
-                try {
-                  const parsed = JSON.parse(q.options);
-                  if (Array.isArray(parsed)) {
-                    opts = parsed;
-                  } else if (typeof parsed === "object" && parsed !== null) {
-                    opts = [
-                      parsed.A || "Option A",
-                      parsed.B || "Option B",
-                      parsed.C || "Option C",
-                      parsed.D || "Option D",
-                    ];
-                  }
-                } catch (e) {
-                  opts = [];
-                }
-              }
+            const convertedQuizQuestions = section.quiz_questions.map((q) => {
+              const opts = parseQuizOptions(q.options);
               return {
-                id: q.id,
-                text: q.question,
+                id: String(q.id),
+                text: q.question || "No question provided.",
                 options: opts,
-                correctAnswer: q.correct_answer,
+                correctAnswer: typeof q.correct_answer === "number" ? q.correct_answer : 0,
               };
             });
             aggregatedQuizQuestions = aggregatedQuizQuestions.concat(convertedQuizQuestions);
@@ -315,7 +302,7 @@ const Microcourse: FC = () => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [microcourseId]);
 
   // ---------------------------------------------------------------------------
   // Event Handlers
@@ -349,11 +336,12 @@ const Microcourse: FC = () => {
 
   const sendText = async () => {
     if (question.trim() === "") return;
+    if (!microcourseId) return;
     const currentQuestion = question;
     setQuestion("");
     setMessages((prev) => [...prev, { sender: "user", text: currentQuestion }]);
     try {
-      const response = await api.post("/api/agent_response/", { question: currentQuestion, id });
+      const response = await api.post("/api/agent_response/", { question: currentQuestion, id: microcourseId });
       const botResponse = response.data.answer;
       setMessages((prev) => [...prev, { sender: "bot", text: botResponse }]);
     } catch (error) {
@@ -374,16 +362,18 @@ const Microcourse: FC = () => {
 
   const handleGoInDepth = async (chapterIndex: number) => {
     try {
+      if (!microcourseId) return;
       const chapterContent = chapters[chapterIndex].content;
       setInDepthLoading(true);
       const response = await api.post("/api/generate_next_section/", {
         previousSection: chapterContent,
-        microcourseId: id,
+        microcourseId: microcourseId,
       });
       console.log("newSection ", response.data);
       window.location.reload();
-    } catch (error: any) {
-      console.error("Error generating next section:", error);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Error generating next section:", message);
     } finally {
       setInDepthLoading(false);
     }
@@ -392,8 +382,6 @@ const Microcourse: FC = () => {
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
-  // @ts-ignore
-  // @ts-ignore
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-300 to-teal-500 dark:from-gray-800 dark:to-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       {showConfetti && (
@@ -428,7 +416,7 @@ const Microcourse: FC = () => {
                 <div ref={contentRef} className="space-y-8">
                   {chapters.map((chapter, index) => (
                     <div key={chapter.id} className="mb-8">
-                      {/* @ts-ignore */}
+                      {/* @ts-expect-error */}
                       <ChapterTextField chapter={chapter.section_title || "Untitled Section"} content={chapter.content || ""} code_examples={chapter.code_examples}  math_expressions={chapter.math_expressions}/>
                       {index === chapters.length - 1 && (
                         <button
@@ -537,13 +525,13 @@ const Microcourse: FC = () => {
 
       {/* Modal Components */}
       {/* Quiz Modal */}
-      {/* @ts-ignore */}
+      {/* @ts-expect-error */}
       <QuizModal isOpen={isModalOpen && modalType === 'Quiz'} onClose={() => setIsModalOpen(false)} questions={quizQuestions} />
       {/* Recall Notes Modal */}
-      {/* @ts-ignore */}
+      {/* @ts-expect-error */}
       <RecallNotesModal isOpen={isModalOpen && modalType === 'Recall Notes'} onClose={() => setIsModalOpen(false)} sectionId={chapters.length > 0 ? chapters[chapters.length - 1].id : ""} notes={recallNotes} onAddNote={handleAddNote} onDeleteNote={handleDeleteNote} />
       {/* Glossary Modal */}
-      {/* @ts-ignore */}
+      {/* @ts-expect-error */}
       <GlossaryModal isOpen={isModalOpen && modalType === 'Glossary'} onClose={() => setIsModalOpen(false)} terms={glossaryTerms} onAddTerm={handleAddTerm} onDeleteTerm={handleDeleteTerm} />
     </div>
   );

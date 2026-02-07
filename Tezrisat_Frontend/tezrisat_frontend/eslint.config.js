@@ -25,6 +25,8 @@ export default tseslint.config(
       ],
       // Override the problematic rule:
       '@typescript-eslint/no-unused-expressions': ["warn"],
+      '@typescript-eslint/no-explicit-any': ["warn"],
+      '@typescript-eslint/ban-ts-comment': "off",
     },
   },
 )

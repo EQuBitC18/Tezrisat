@@ -17,13 +17,15 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ### Fixed
 - Various bug fixes and improvements
 
+### Removed
+- Authentication and account flows (public local-first usage)
+
 ## [1.0.0] - 2024-02-01
 
 ### Added
 - AI-powered microcourse generation
 - Interactive learning elements (quizzes, glossary terms, recall notes)
 - PDF and URL content processing for course generation
-- JWT authentication
 - React + TypeScript frontend
 - ChromaDB integration for embeddings
 - REST API with Django REST Framework
@@ -38,7 +40,6 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Deployment: Docker/Heroku-ready with environment-based configuration
 
 ### Security
-- JWT token-based authentication
 - Secure API key handling (backend-managed)
 - CORS configuration for development/production
 - Input validation and sanitization

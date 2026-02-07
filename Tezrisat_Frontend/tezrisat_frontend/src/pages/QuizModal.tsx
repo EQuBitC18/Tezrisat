@@ -1,15 +1,10 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
-// @ts-ignore
+import { useState, FC } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-// @ts-ignore
 import { Button } from "@/components/ui/button";
-// @ts-ignore
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-// @ts-ignore
 import { Label } from "@/components/ui/label";
-// @ts-ignore
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, XCircle } from "lucide-react";
 
@@ -26,7 +21,6 @@ export interface QuizModalProps {
   questions: Question[];
 }
 
-// @ts-ignore
 const QuizModal: FC<QuizModalProps> = ({ isOpen, onClose, questions }) => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -99,7 +93,7 @@ const QuizModal: FC<QuizModalProps> = ({ isOpen, onClose, questions }) => {
       try {
         const parsed = JSON.parse(rawOptions);
         return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
+      } catch {
         return [];
       }
     }

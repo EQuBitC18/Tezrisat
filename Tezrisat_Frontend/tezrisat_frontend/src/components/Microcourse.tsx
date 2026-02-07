@@ -1,5 +1,5 @@
-
-// @ts-ignore
+﻿
+// @ts-expect-error
 function Microcourse({ microcourse }) {
     return (
         <div className="microcourse-container">

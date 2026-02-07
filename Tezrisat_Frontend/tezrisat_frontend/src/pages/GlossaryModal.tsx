@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo, FC, ChangeEvent } from "react";
 import {
@@ -7,16 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 }
-// @ts-ignore
 from "@/components/ui/dialog";
-// @ts-ignore
 import { Input } from "@/components/ui/input";
-// @ts-ignore
 import { Button } from "@/components/ui/button";
-// @ts-ignore
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Book, Plus, Trash2 } from "lucide-react";
-// @ts-ignore
+// @ts-expect-error
 import api from "../api";
 import { useLocation } from "react-router-dom";
 
@@ -77,8 +73,9 @@ const GlossaryModal: FC<GlossaryModalProps> = ({
         // Optionally, trigger a state update callback:
         // onAddTerm({ id: "new-id", term: termData.term, definition: termData.definition });
         window.location.reload();
-      } catch (error: any) {
-        console.error("Error adding glossary term:", error.message || error);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("Error adding glossary term:", message);
       }
     }
   };
@@ -96,8 +93,9 @@ const GlossaryModal: FC<GlossaryModalProps> = ({
       }
       onDeleteTerm(termId);
       window.location.reload();
-    } catch (error: any) {
-      console.error("Error deleting glossary term:", error.message || error);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Error deleting glossary term:", message);
     }
   };
 

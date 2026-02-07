@@ -1,21 +1,6 @@
 "use client"; // Only if you're using Next.js, otherwise you can omit this
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-
-type DarkModeContextType = {
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
-};
-
-const DarkModeContext = createContext<DarkModeContextType>({
-  isDarkMode: false,
-  toggleDarkMode: () => {},
-});
+import { useState, useEffect, ReactNode } from "react";
+import { DarkModeContext } from "./darkModeContext";
 
 export function DarkModeProvider({ children }: { children: ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -54,13 +39,4 @@ export function DarkModeProvider({ children }: { children: ReactNode }) {
       {children}
     </DarkModeContext.Provider>
   );
-}
-
-/**
- * Custom hook to use the DarkModeContext.
- * Example usage:
- *   const { isDarkMode, toggleDarkMode } = useDarkModeContext();
- */
-export function useDarkModeContext() {
-  return useContext(DarkModeContext);
 }

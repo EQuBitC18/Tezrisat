@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,7 +8,7 @@ import {
   Sun,
 } from "lucide-react";
 import {Link, useNavigate} from "react-router-dom";
-import { useDarkModeContext } from "./DarkModeContext.tsx";
+import { useDarkModeContext } from "./darkModeContext";
 
 /**
  * NavItem Component
@@ -23,7 +23,7 @@ import { useDarkModeContext } from "./DarkModeContext.tsx";
  * @param {boolean} props.isOpen - Whether the sidebar is open.
  * @returns {JSX.Element} The rendered NavItem component.
  */
-// @ts-ignore
+
 const NavItem = ({ icon, label, onClick, isOpen }: { icon: React.ReactNode; label: string; onClick: () => void; isOpen: boolean; }): JSX.Element => (
   <motion.div
     whileHover={{ scale: 1.05 }}
@@ -58,7 +58,7 @@ const NavItem = ({ icon, label, onClick, isOpen }: { icon: React.ReactNode; labe
  * @param {(open: boolean) => void} props.setIsSidebarOpen - Function to update sidebar state.
  * @returns {JSX.Element} The rendered Navigation component.
  */
-// @ts-ignore
+
 const Navigation = ({ isSidebarOpen, setIsSidebarOpen }: { isSidebarOpen: boolean; setIsSidebarOpen: (open: boolean) => void; }): JSX.Element => {
   //const [isDarkMode, setIsDarkMode] = useState(false);
   const { isDarkMode, toggleDarkMode } = useDarkModeContext();

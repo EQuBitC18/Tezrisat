@@ -12,11 +12,9 @@ http://localhost:8000
 
 ## Authentication
 
-The API uses JWT authentication. Obtain a token and include it in the `Authorization` header:
+Authentication is disabled by default. This project is designed for local/self‑hosted use where each user runs their own instance and supplies their own API keys.
 
-```
-Authorization: Bearer <token>
-```
+If you plan to deploy this publicly, add authentication and rate limiting before exposing the API.
 
 ## Health Check
 

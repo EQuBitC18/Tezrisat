@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-// @ts-ignore
+// @ts-expect-error
 import api from '../api';
 import { useEffect, useState, FC } from 'react';
 import { motion } from 'framer-motion';
@@ -108,21 +108,17 @@ const Dashboard: FC = () => {
     }));
   };
 
-  /**
-   * Fetches microcourse data from the API.
-   */
-  const fetchCourses = async () => {
-    try {
-      const response = await api.get('/api/microcourses/');
-      const transformedDecks = transformData(response.data);
-      setDecks(transformedDecks);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   // Fetch courses once when the component mounts.
   useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await api.get('/api/microcourses/');
+        const transformedDecks = transformData(response.data);
+        setDecks(transformedDecks);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
     fetchCourses();
   }, []);
 
@@ -146,8 +142,9 @@ const Dashboard: FC = () => {
     try {
       await api.delete(`/api/delete_microcourse/${microcourseId}/`);
       setDecks((prevDecks) => prevDecks.filter((d) => d.cards[0].id !== microcourseId));
-    } catch (error: any) {
-      console.error('Error deleting microcourse:', error.message || error);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Error deleting microcourse:", message);
     }
   };
 

@@ -1,24 +1,28 @@
-import { useRef, useEffect, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal} from "react";
+import { useRef, useEffect, ReactNode } from "react";
 
-// @ts-ignore
-function ChatMessages({messages}) {
-    const chatContainerRef = useRef<HTMLDivElement | null>(null);
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+interface ChatMessage {
+  sender: "bot" | "user";
+  text: ReactNode;
+}
 
-    useEffect(() => {
-        // Whenever messages changes, scroll to the bottom
-        messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
-    }, [messages]);
+interface ChatMessagesProps {
+  messages: ChatMessage[];
+}
 
-    return (
-        <div
-            ref={chatContainerRef}
-            className="relative h-64 overflow-y-auto hide-scrollbar p-4 mb-4"
-        >
-            {messages.map((message: {
-                sender: string;
-                text: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined;
-            }, index: Key | null | undefined) => (
+function ChatMessages({ messages }: ChatMessagesProps) {
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  return (
+    <div
+      ref={chatContainerRef}
+      className="relative h-64 overflow-y-auto hide-scrollbar p-4 mb-4"
+    >
+      {messages.map((message, index) => (
         <div
           key={index}
           className={`mb-2 flex ${
@@ -37,7 +41,6 @@ function ChatMessages({messages}) {
         </div>
       ))}
 
-      {/* This div stays at the bottom of the messages list */}
       <div ref={messagesEndRef} />
     </div>
   );

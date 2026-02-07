@@ -29,12 +29,10 @@ Required variables:
 
 Common development variables:
 - `DEBUG=true`
-- `ALLOW_ANY=true` (allow unauthenticated API access in dev)
 - `CORS_ALLOW_ALL_ORIGINS=true`
 
 Production variables:
 - `SECRET_KEY` (required)
-- `ALLOW_ANY=false`
 - `CORS_ALLOW_ALL_ORIGINS=false`
 - `CORS_ALLOWED_ORIGINS` (comma-separated)
 - `CSRF_TRUSTED_ORIGINS` (comma-separated)
@@ -47,7 +45,6 @@ python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py createsuperuser
 python manage.py runserver
 ```
 
@@ -72,8 +69,7 @@ Frontend runs at `http://localhost:5173`.
 ## Verification
 
 1. Open `http://localhost:5173`.
-2. Sign in or create a user.
-3. Create a microcourse to verify end-to-end flow.
+2. Create a microcourse to verify end-to-end flow.
 
 ## Troubleshooting
 

@@ -1,10 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// @ts-ignore
 import { Button } from "@/components/ui/button";
-// @ts-ignore
 import { Card, CardContent } from "@/components/ui/card";
 import {AnimatedBlob} from "../components/animated-blob";
 import {FloatingShapes} from "../components/floating-shapes";
@@ -87,7 +85,7 @@ const AboutPage: FC = () => {
                 We noticed that traditional learning methods weren't adapting to the fast-paced, information-rich world we live in. People needed a way to quickly acquire specific knowledge without wading through hours of content or generic courses.
               </p>
               <p>
-                That's when we created our AI-powered microcourse generator—a platform that combines cutting-edge language models with educational best practices to create personalized, bite-sized learning experiences on any topic.
+                That's when we created our AI-powered microcourse generatorâ€”a platform that combines cutting-edge language models with educational best practices to create personalized, bite-sized learning experiences on any topic.
               </p>
               <p>
                 Today, we're proud to serve thousands of learners worldwide, from students and professionals to lifelong learners and organizations seeking to upskill their teams efficiently.
@@ -156,7 +154,7 @@ const AboutPage: FC = () => {
                   A world where anyone can learn anything, anytime, in a way that's perfectly tailored to their needs.
                 </p>
                 <p className="text-teal-800">
-                  We envision a future where AI-powered learning is the norm, not the exception—where personalized microcourses enable continuous learning throughout life, helping people adapt to an ever-changing world and unlock their full potential.
+                  We envision a future where AI-powered learning is the norm, not the exceptionâ€”where personalized microcourses enable continuous learning throughout life, helping people adapt to an ever-changing world and unlock their full potential.
                 </p>
               </CardContent>
             </Card>

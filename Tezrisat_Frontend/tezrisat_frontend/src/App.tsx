@@ -1,5 +1,4 @@
-// @ts-ignore
-import Home from "./pages/Home.tsx";
+﻿import Home from "./pages/Home.tsx";
 import MCBuilderWelcome from "./pages/MCBuilderWelcome.tsx";
 import MCBuilderBasis from "./pages/MCBuilderBasis.tsx";
 import {Routes, Route, HashRouter} from 'react-router-dom';

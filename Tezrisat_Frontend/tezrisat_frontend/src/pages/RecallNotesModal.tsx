@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, ChangeEvent, KeyboardEvent, FC } from "react";
 import {
@@ -7,16 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 }
-// @ts-ignore
 from "@/components/ui/dialog";
-// @ts-ignore
 import { Button } from "@/components/ui/button";
-// @ts-ignore
 import { ScrollArea } from "@/components/ui/scroll-area";
-// @ts-ignore
 import { Input } from "@/components/ui/input";
 import { Search, Plus, X } from "lucide-react";
-// @ts-ignore
+// @ts-expect-error
 import api from "../api";
 
 export interface RecallNote {
@@ -66,8 +62,9 @@ const RecallNotesModal: FC<RecallNotesModalProps> = ({
         // Optionally, update parent state via callback:
         // onAddNote({ id: "newly-created-id", content: noteData.content, timestamp: new Date().toLocaleString() });
         window.location.reload();
-      } catch (error: any) {
-        console.error("Error adding recall note:", error.message || error);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("Error adding recall note:", message);
       }
     }
   };
@@ -87,8 +84,9 @@ const RecallNotesModal: FC<RecallNotesModalProps> = ({
       }
       onDeleteNote(noteId);
       window.location.reload();
-    } catch (error: any) {
-      console.error("Error deleting note:", error.message || error);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Error deleting note:", message);
     }
   };
 

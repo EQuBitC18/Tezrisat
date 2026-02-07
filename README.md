@@ -66,6 +66,10 @@ Tezrisat/
 
 We welcome contributions. See `CONTRIBUTING.md` for details.
 
+## Security Note
+
+Authentication is disabled by default and the API is intended for local/self-hosted use. If you deploy this publicly, add authentication and rate limiting before exposing the API.
+
 ## License
 
 Tezrisat follows an open-core model. The core platform is licensed under the MIT License. See `LICENSE` for details.

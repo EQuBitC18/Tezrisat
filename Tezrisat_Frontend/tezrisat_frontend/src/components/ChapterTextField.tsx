@@ -1,4 +1,4 @@
-import {useState} from "react";
+﻿import {useState} from "react";
 import Latex from "react-latex-next";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
@@ -8,7 +8,7 @@ import {Copy} from "lucide-react";
 // (Your CodeSnippet component import here)
 
 
-// @ts-ignore
+// @ts-expect-error
 const CodeSnippet = ({ code, language = "" }) => {
   const [copied, setCopied] = useState(false)
 
@@ -41,9 +41,9 @@ const CodeSnippet = ({ code, language = "" }) => {
 
 
 const ChapterTextField = ({
-// @ts-ignore
+// @ts-expect-error
   chapter,
-// @ts-ignore
+// @ts-expect-error
   content,
   codeExamples = [],
   mathExpressions = [],
@@ -72,9 +72,9 @@ const ChapterTextField = ({
           </h4>
           {codeExamples.map((example, idx) => (
             <div key={idx} className="mb-4">
-                {/*@ts-ignore*/}
+                {/*@ts-expect-error*/}
               <p className="font-semibold">{example.description}</p>
-              {/*@ts-ignore*/}
+              {/*@ts-expect-error*/}
                 <CodeSnippet code={example.code} language="java" />
             </div>
           ))}
@@ -89,9 +89,9 @@ const ChapterTextField = ({
           </h4>
           {mathExpressions.map((expr, idx) => (
             <div key={idx} className="mb-4">
-              {/*@ts-ignore*/}
+              {/*@ts-expect-error*/}
                 <p className="font-semibold">{expr.description}</p>
-              {/*@ts-ignore*/}
+              {/*@ts-expect-error*/}
                 <Latex>{expr.expression}</Latex>
             </div>
           ))}

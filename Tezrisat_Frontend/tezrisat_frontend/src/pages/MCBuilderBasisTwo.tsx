@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
-// @ts-ignore
+// @ts-expect-error
 import api from "../api";
-import React, {useState, useCallback, FC} from "react";
+import React, {useState, useCallback, useEffect, FC} from "react";
 import { motion } from "framer-motion";
 import { Upload, Link as LinkIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
@@ -42,11 +42,12 @@ const ResourceUpload: FC = () => {
 
   // Assert and extract newMicrocourse from navigation state
   const newMicrocourse = (location.state as { newMicrocourse: NewMicrocourse } | undefined)?.newMicrocourse;
-  if (!newMicrocourse) {
-    // If there's no microcourse data, redirect to the appropriate start page.
-    navigate("/mc-builder-basis");
-    return null;
-  }
+
+  useEffect(() => {
+    if (!newMicrocourse) {
+      navigate("/mc-builder-basis");
+    }
+  }, [newMicrocourse, navigate]);
 
   /**
    * Adds a new empty URL field.
@@ -87,6 +88,9 @@ const ResourceUpload: FC = () => {
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!newMicrocourse) {
+      return;
+    }
     const formData = new FormData();
 
     // Map camelCase keys to API-expected snake_case keys:
@@ -135,6 +139,10 @@ const ResourceUpload: FC = () => {
       setIsLoading(false);
     }
   };
+
+  if (!newMicrocourse) {
+    return null;
+  }
 
   return isLoading ? (
     <div className="loading-page">
