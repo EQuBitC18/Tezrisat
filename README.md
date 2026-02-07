@@ -39,6 +39,16 @@ chmod +x ./scripts/dev.sh
 
 If you prefer a step-by-step manual setup, follow [docs/setup.md](docs/setup.md).
 
+To enable pre-commit and pre-push checks, run:
+
+```bash
+./scripts/install-githooks.sh
+```
+
+```powershell
+.\scripts\install-githooks.ps1
+```
+
 ## Project Structure
 
 ```
@@ -69,13 +79,13 @@ Tezrisat/
 | --- | --- |
 | [SETUP](docs/setup.md) | Quick start and local dev setup |
 | [API](docs/api.md) | API overview and key handling |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution workflow and standards |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community expectations |
-| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
-| [CHANGELOG.md](CHANGELOG.md) | Release history |
+| [CONTRIBUTING](CONTRIBUTING.md) | Contribution workflow and standards |
+| [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) | Community expectations |
+| [SECURITY](SECURITY.md) | Vulnerability reporting |
+| [CHANGELOG](CHANGELOG.md) | Release history |
 | [LICENSE](LICENSE) | Business Source License 1.1 (changes to MIT on 2028-02-07) |
 | [LICENSE-MIT](LICENSE-MIT) | MIT license text (effective on 2028-02-07) |
-| [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) | Commercial license terms |
+| [LICENSE-COMMERCIAL](LICENSE-COMMERCIAL.md) | Commercial license terms |
 
 ## Key Technologies
 
@@ -104,9 +114,17 @@ Tezrisat/
 
 We welcome contributions. See `CONTRIBUTING.md` for details.
 
+## Roadmap
+
+1. Stabilize API responses and add contract tests for core endpoints.
+2. Improve content quality controls and add more deterministic generation options.
+3. Expand documentation with usage examples and troubleshooting playbooks.
+4. Add optional authentication and rate limiting for public deployments.
+5. Build a simple hosting guide for self-hosted deployments.
+
 ## Security Note
 
-Authentication is disabled by default and the API is intended for local/self-hosted use. If you deploy this publicly, add authentication and rate limiting before exposing the API.
+Authentication is disabled by default and the API is intended for local/self-hosted use.
 
 ## License
 
@@ -116,8 +134,8 @@ Commercial features and enterprise offerings (planned) are available under separ
 
 ## Maintainer
 
-- GitHub: https://github.com/EQuBitC18
-- LinkedIn: https://www.linkedin.com/in/emre-%C3%A7amkerten-5bb7aa27b/
+- GitHub: [EQuBitC18](https://github.com/EQuBitC18) 
+- LinkedIn: [Emre Çamkerten](https://www.linkedin.com/in/emre-%C3%A7amkerten-5bb7aa27b/) 
 
 ## Acknowledgments
 

@@ -24,6 +24,24 @@ Contributions to core features are encouraged. Ideas for premium features are we
 
 See [docs/setup.md](docs/setup.md).
 
+### Optional: Git Hooks (Pre-commit/Pre-push Checks)
+
+To block commits and pushes when tests fail:
+
+```bash
+./scripts/install-githooks.sh
+```
+
+```powershell
+.\scripts\install-githooks.ps1
+```
+
+These hooks run:
+- Backend: `python manage.py test`
+- Frontend: `npm run lint` and `npm run build`
+
+To bypass checks temporarily, set `SKIP_CHECKS=1` for that command.
+
 ## Code Standards
 
 ### Backend (Django)

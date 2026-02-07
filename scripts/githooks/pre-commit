@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
+
+echo "Pre-commit: running basic checks..."
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$repo_root/scripts/run-checks.ps1"
+    ;;
+  *)
+    "$repo_root/scripts/run-checks.sh"
+    ;;
+esac

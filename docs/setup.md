@@ -65,6 +65,16 @@ chmod +x ./scripts/dev.sh
 ./scripts/dev.sh
 ```
 
+To enable pre-commit and pre-push checks, run:
+
+```bash
+./scripts/install-githooks.sh
+```
+
+```powershell
+.\scripts\install-githooks.ps1
+```
+
 ## macOS/Linux Notes
 
 Use this activation command instead of `venv\Scripts\activate`:
