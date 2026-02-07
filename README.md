@@ -27,7 +27,8 @@ Tezrisat/
 |-- Summaries/                # Quick reference guides
 |-- CHANGELOG.md              # Version history
 |-- CONTRIBUTING.md           # Contribution guidelines
-|-- LICENSE                   # MIT license
+|-- LICENSE                   # Business Source License 1.1
+|-- LICENSE-MIT               # Future MIT license (effective 2028-02-07)
 |-- README.md                 # This file
 ```
 
@@ -35,13 +36,14 @@ Tezrisat/
 
 | Resource | What it covers |
 | --- | --- |
-| [docs/setup.md](docs/setup.md) | Quick start and local dev setup |
-| [docs/api.md](docs/api.md) | API overview and key handling |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution workflow and standards |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community expectations |
-| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
-| [CHANGELOG.md](CHANGELOG.md) | Release history |
-| [LICENSE](LICENSE) | Open‑source license (MIT) |
+| [docs/setup.md](SETUP) | Quick start and local dev setup |
+| [docs/api.md](API) | API overview and key handling |
+| [CONTRIBUTING.md](CONTRIBUTING) | Contribution workflow and standards |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT) | Community expectations |
+| [SECURITY.md](SECURITY) | Vulnerability reporting |
+| [CHANGELOG.md](CHANGELOG) | Release history |
+| [LICENSE](LICENSE) | Business Source License 1.1 (changes to MIT on 2028-02-07) |
+| [LICENSE-MIT](LICENSE-MIT) | MIT license text (effective on 2028-02-07) |
 | [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) | Commercial license terms |
 
 ## Key Technologies
@@ -53,7 +55,7 @@ Tezrisat/
 
 ## Open Core Model
 
-### Open Source Features
+### Core Features (source-available)
 - Full microcourse generation with AI
 - Interactive quizzes and glossary
 - PDF and URL content integration
@@ -77,7 +79,7 @@ Authentication is disabled by default and the API is intended for local/self-hos
 
 ## License
 
-Tezrisat follows an open-core model. The core platform is licensed under the MIT License. See `LICENSE` for details.
+Tezrisat follows an open-core model. The core platform is licensed under the Business Source License 1.1 (BSL 1.1), which changes to MIT on 2028-02-07. See `LICENSE` for details.
 
 Commercial features and enterprise offerings (planned) are available under separate licensing.
 

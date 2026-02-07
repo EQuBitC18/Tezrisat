@@ -2,7 +2,7 @@
   "name": "tezrisat_frontend",
   "private": false,
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "BUSL-1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

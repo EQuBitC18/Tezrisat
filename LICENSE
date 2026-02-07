@@ -1,21 +1,34 @@
-MIT License
+Business Source License 1.1
 
-Copyright (c) 2026 Emre Camkerten
+Licensor: Emre Camkerten
+Licensed Work: Tezrisat
+The Licensed Work is (c) 2026 Emre Camkerten
+Change Date: 2028-02-07
+Change License: MIT
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Additional Use Grant:
+You may use, modify, and self-host the Licensed Work for personal use,
+research, or internal business purposes. You may not make the Licensed Work
+available to third parties as a hosted or managed service without a separate
+commercial license from the Licensor.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Use Limitation:
+You may not use the Licensed Work to provide a public, hosted, or managed
+service to third parties (including offering it as a SaaS), whether free or
+paid, without a separate commercial license from the Licensor.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+Terms
+
+The Licensor hereby grants you the right to copy, modify, create derivative
+works, redistribute, and make use of the Licensed Work, provided that you do
+not use the Licensed Work in violation of the Use Limitation.
+
+On the Change Date, the Licensed Work will become available under the Change
+License.
+
+THE LICENSED WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE LICENSED WORK OR THE USE OR OTHER DEALINGS IN THE LICENSED WORK.

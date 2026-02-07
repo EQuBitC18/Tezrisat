@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Tezrisat.
 
 Tezrisat follows an open-core business model:
 
-- Core features (free and open source): microcourse generation, AI content creation, interactive quizzes, and self-hosted deployment under the MIT License.
+- Core features (source-available): microcourse generation, AI content creation, interactive quizzes, and self-hosted deployment under the Business Source License 1.1. The license changes to MIT on 2028-02-07.
 - Premium features (planned): cloud hosting, enterprise integrations, custom AI model training, and priority support.
 
 Contributions to core open-source features are encouraged. Ideas for premium features are welcome but may be implemented by maintainers under separate licensing.
@@ -100,7 +100,7 @@ We follow a code of conduct to ensure a welcoming environment for all contributo
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the same license as the project (MIT for core features). Premium features may be subject to different licensing terms.
+By contributing, you agree that your contributions will be licensed under the same license as the project (Business Source License 1.1, changing to MIT on 2028-02-07). Premium features may be subject to different licensing terms.
 
 ## Recognition
 
