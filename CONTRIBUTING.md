@@ -1,6 +1,6 @@
 # Contributing to Tezrisat
 
-Thank you for your interest in contributing to Tezrisat.
+Thank you for your interest in contributing to Tezrisat. Your time and ideas are welcome here.
 
 ## Open Core Model
 
@@ -9,7 +9,7 @@ Tezrisat follows an open-core business model:
 - Core features (source-available): microcourse generation, AI content creation, interactive quizzes, and self-hosted deployment under the Business Source License 1.1. The license changes to MIT on 2028-02-07.
 - Premium features (planned): cloud hosting, enterprise integrations, custom AI model training, and priority support.
 
-Contributions to core open-source features are encouraged. Ideas for premium features are welcome but may be implemented by maintainers under separate licensing.
+Contributions to core features are encouraged. Ideas for premium features are welcome but may be implemented by maintainers under separate licensing.
 
 ## How to Contribute
 
@@ -22,7 +22,7 @@ Contributions to core open-source features are encouraged. Ideas for premium fea
 
 ### Development Setup
 
-See `docs/setup.md`.
+See [docs/setup.md](docs/setup.md).
 
 ## Code Standards
 
@@ -68,6 +68,8 @@ See `docs/setup.md`.
 
 5. Push and open a pull request on GitHub.
 
+If you are new here, feel free to start with documentation or small fixes.
+
 ### PR Requirements
 - Clear description of changes
 - Reference related issues or discussions
@@ -96,7 +98,7 @@ When reporting bugs or requesting features:
 
 ## Code of Conduct
 
-We follow a code of conduct to ensure a welcoming environment for all contributors. See `CODE_OF_CONDUCT.md`.
+We follow a code of conduct to ensure a welcoming environment for all contributors. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ## License
 

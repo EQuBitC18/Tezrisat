@@ -1,6 +1,6 @@
 # API Overview
 
-This document provides a lightweight overview of the Tezrisat API. For detailed endpoints, use the Django REST Framework browsable API when the backend is running.
+This is a lightweight, contributor-friendly overview of the Tezrisat API. For the full list of endpoints, use the Django REST Framework browsable API while the backend is running.
 
 ## Base URL
 
@@ -12,7 +12,7 @@ http://localhost:8000
 
 ## Authentication
 
-Authentication is disabled by default. This project is designed for local/self-hosted use where each user runs their own instance and supplies their own API keys.
+Authentication is disabled by default. The project is designed for local/self-hosted use where each user runs their own instance and supplies their own API keys.
 
 ## API Keys
 
@@ -23,4 +23,13 @@ Keys can be provided via backend environment variables or via request headers:
 - `X-Wolfram-Key` (optional)
 
 When using the UI, keys are stored locally in the browser and attached to requests.
+
+## Health Check
+
+If you need a health check endpoint for deployment, add a simple route in the backend and document it here.
+
+## Notes
+
+- This file is intentionally minimal to keep it easy to maintain.
+- As endpoints stabilize, add concrete request/response examples.
 

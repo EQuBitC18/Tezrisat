@@ -2,11 +2,11 @@
 
 ## Reporting Security Vulnerabilities
 
-At Tezrisat, we take security seriously. If you discover a security vulnerability in our codebase, please help us by reporting it responsibly.
+Security matters. If you find a vulnerability, thank you for reporting it responsibly.
 
 ### How to Report
 
-**Please DO NOT report security vulnerabilities through public GitHub issues.**
+**Please do not report security vulnerabilities through public GitHub issues.**
 
 Instead, please report security vulnerabilities by emailing:
 - **Email**: equbit18@gmail.com
@@ -14,7 +14,7 @@ Instead, please report security vulnerabilities by emailing:
 
 ### What to Include
 
-When reporting a vulnerability, please include:
+When reporting a vulnerability, include:
 
 1. **Description**: A clear description of the vulnerability
 2. **Steps to Reproduce**: Detailed steps to reproduce the issue

@@ -10,6 +10,35 @@ Traditional course creation is time-consuming and requires extensive expertise. 
 
 ![Tezrisat Flowchart](./tezrisat_flowchart.svg)
 
+## One-click Local Setup
+
+Use the one-liner for a fast start. It clones the repo, creates the virtual environment, installs dependencies, runs migrations, starts the backend, and launches the frontend.
+
+Windows (PowerShell):
+
+```powershell
+irm https://raw.githubusercontent.com/EQuBitC18/Tezrisat/main/scripts/bootstrap.ps1 | iex
+```
+
+macOS/Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/EQuBitC18/Tezrisat/main/scripts/bootstrap.sh | bash
+```
+
+If you already cloned the repo and want to run locally:
+
+```powershell
+.\scripts\dev.ps1
+```
+
+```bash
+chmod +x ./scripts/dev.sh
+./scripts/dev.sh
+```
+
+If you prefer a step-by-step manual setup, follow [docs/setup.md](docs/setup.md).
+
 ## Project Structure
 
 ```
@@ -25,6 +54,7 @@ Tezrisat/
 |       |-- components/       # Reusable UI components
 |       |-- src/              # Main application code
 |       |-- public/           # Static assets
+|-- scripts/                  # Local dev helper scripts
 |-- .env.example              # Environment variable template
 |-- CHANGELOG.md              # Version history
 |-- CONTRIBUTING.md           # Contribution guidelines

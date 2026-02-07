@@ -38,6 +38,33 @@ npm run dev
 
 5. Open `http://localhost:5173` and create a microcourse.
 
+## One-click Local Setup
+
+If you want a single command that clones the repo, sets up dependencies, and runs both servers:
+
+Windows (PowerShell):
+
+```powershell
+irm https://raw.githubusercontent.com/EQuBitC18/Tezrisat/main/scripts/bootstrap.ps1 | iex
+```
+
+macOS/Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/EQuBitC18/Tezrisat/main/scripts/bootstrap.sh | bash
+```
+
+If you already cloned the repo:
+
+```powershell
+.\scripts\dev.ps1
+```
+
+```bash
+chmod +x ./scripts/dev.sh
+./scripts/dev.sh
+```
+
 ## macOS/Linux Notes
 
 Use this activation command instead of `venv\Scripts\activate`:
