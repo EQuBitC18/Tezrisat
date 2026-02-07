@@ -1,43 +1,23 @@
 # Setup Guide
 
-This guide walks you through local development setup and configuration.
+This guide is optimized for a fast local setup so contributors can get productive quickly.
 
-## Prerequisites
+## Quick Start (Local)
 
-- Python 3.8+
-- Node.js 16+
-- Git
-- OpenAI API key
-
-## Clone the Repository
+1. Clone and enter the repo:
 
 ```bash
 git clone <REPO_URL>
 cd Tezrisat
 ```
 
-## Environment Variables
-
-Copy the example file and update values:
+2. Create a local `.env` from the example:
 
 ```bash
 cp .env.example .env
 ```
 
-Required variables:
-- `OPENAI_API_KEY`
-
-Common development variables:
-- `DEBUG=true`
-- `CORS_ALLOW_ALL_ORIGINS=true`
-
-Production variables:
-- `SECRET_KEY` (required)
-- `CORS_ALLOW_ALL_ORIGINS=false`
-- `CORS_ALLOWED_ORIGINS` (comma-separated)
-- `CSRF_TRUSTED_ORIGINS` (comma-separated)
-
-## Backend Setup
+3. Start the backend:
 
 ```bash
 cd Tezrisat_Backend
@@ -48,39 +28,54 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-On macOS/Linux:
+4. Start the frontend:
+
+```bash
+cd ../Tezrisat_Frontend/tezrisat_frontend
+npm install
+npm run dev
+```
+
+5. Open `http://localhost:5173` and create a microcourse.
+
+## macOS/Linux Notes
+
+Use this activation command instead of `venv\Scripts\activate`:
 
 ```bash
 source venv/bin/activate
 ```
 
-Backend runs at `http://localhost:8000`.
+## API Keys (Fast Path)
 
-## Frontend Setup
+You can either set keys in `.env` or use the in-app modal:
 
-```bash
-cd Tezrisat_Frontend/tezrisat_frontend
-npm install
-npm run dev
-```
+- `.env`: set `OPENAI_API_KEY` (and optionally `SERPAPI_API_KEY`, `WOLFRAM_ALPHA_APPID`)
+- UI modal: the app will prompt for missing keys and store them locally in the browser
 
-Frontend runs at `http://localhost:5173`.
+## Environment Variables
 
-## Verification
+Required for local generation:
+- `OPENAI_API_KEY`
+- `SERPAPI_API_KEY`
 
-1. Open `http://localhost:5173`.
-2. Create a microcourse to verify end-to-end flow.
+Recommended for richer output:
+- `WOLFRAM_ALPHA_APPID` (optional)
+
+Common dev flags:
+- `DEBUG=true`
+- `CORS_ALLOW_ALL_ORIGINS=true`
 
 ## Troubleshooting
 
-### Backend
-- Port 8000 already in use: `python manage.py runserver 8001`
+Backend:
+- Port 8000 in use: `python manage.py runserver 8001`
 - Database errors: re-run `python manage.py migrate`
-- OpenAI API errors: verify `OPENAI_API_KEY` in `.env`
+- API key errors: check `.env` or use the in-app modal
 
-### Frontend
-- Port 5173 already in use: `npm run dev -- --port 5174`
-- API connection errors: verify backend is running and CORS config
+Frontend:
+- Port 5173 in use: `npm run dev -- --port 5174`
+- API connection errors: ensure backend is running and CORS is enabled
 
 ## Next Steps
 

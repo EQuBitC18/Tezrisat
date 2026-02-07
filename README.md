@@ -33,13 +33,16 @@ Tezrisat/
 
 ## Documentation
 
-- Setup guide: [docs/setup.md](docs/setup.md)
-- API overview: [docs/api.md](docs/api.md)
-- Contributing guide: [CONTRIBUTING.md](CONTRIBUTING.md)
-- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-- Security policy: [SECURITY.md](SECURITY.md)
-- Changelog: [CHANGELOG.md](CHANGELOG.md)
-- Licenses: [LICENSE](LICENSE), [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md)
+| Resource | What it covers |
+| --- | --- |
+| [docs/setup.md](docs/setup.md) | Quick start and local dev setup |
+| [docs/api.md](docs/api.md) | API overview and key handling |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution workflow and standards |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community expectations |
+| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
+| [LICENSE](LICENSE) | Open‑source license (MIT) |
+| [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md) | Commercial license terms |
 
 ## Key Technologies
 
