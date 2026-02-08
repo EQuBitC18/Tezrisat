@@ -18,7 +18,7 @@ Traditional course creation is time-consuming and requires extensive expertise. 
 
 ## One-click Local Setup
 
-Use the one-liner for a fast start. It clones the repo, creates the virtual environment, installs dependencies, runs migrations, starts the backend, and launches the frontend.
+Use the one-liner for a fast start. It clones the repo, creates the virtual environment, installs dependencies, runs migrations, starts the backend, and launches the frontend. Make sure you are in a python environment (e.g conda).
 
 Windows (PowerShell):
 
