@@ -7,15 +7,25 @@ $frontend = Join-Path $root "Tezrisat_Frontend\tezrisat_frontend"
 Write-Host "Starting Tezrisat (Windows)..." -ForegroundColor Cyan
 
 if (-not (Test-Path (Join-Path $backend "venv"))) {
-  Write-Host "Creating virtual environment..." -ForegroundColor Cyan
+Write-Host "Creating virtual environment..." -ForegroundColor Cyan
+if (Get-Command python -ErrorAction SilentlyContinue) {
   python -m venv (Join-Path $backend "venv")
+} elseif (Get-Command py -ErrorAction SilentlyContinue) {
+  py -3 -m venv (Join-Path $backend "venv")
+} else {
+  throw "Python not found. Install Python 3.x or ensure it is on PATH."
+}
 }
 
 Write-Host "Activating virtual environment..." -ForegroundColor Cyan
 & (Join-Path $backend "venv\Scripts\Activate.ps1")
 
 Write-Host "Installing backend dependencies..." -ForegroundColor Cyan
-pip install -r (Join-Path $backend "requirements.txt")
+if (Get-Command pip -ErrorAction SilentlyContinue) {
+  pip install -r (Join-Path $backend "requirements.txt")
+} else {
+  python -m pip install -r (Join-Path $backend "requirements.txt")
+}
 
 Write-Host "Running migrations..." -ForegroundColor Cyan
 python (Join-Path $backend "manage.py") migrate
