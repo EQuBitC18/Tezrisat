@@ -39,6 +39,15 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error("Error checking API key status:", error);
+        const localOpenai = window.localStorage.getItem("tezrisat.openai_key");
+        const localSerpapi = window.localStorage.getItem("tezrisat.serpapi_key");
+        if (!localOpenai || !localSerpapi) {
+          setRequiredMissing({
+            openai: !localOpenai,
+            serpapi: !localSerpapi,
+          });
+          setIsKeysModalOpen(true);
+        }
       }
     };
 

@@ -116,6 +116,25 @@ Frontend:
 - Port 5173 in use: `npm run dev -- --port 5174`
 - API connection errors: ensure backend is running and CORS is enabled
 
+## Django Admin Panel
+
+1. Create an admin user:
+
+```bash
+cd Tezrisat_Backend
+python manage.py createsuperuser
+```
+
+2. Start the backend:
+
+```bash
+python manage.py runserver
+```
+
+3. Open `http://localhost:8000/admin` and sign in.
+
+From there you can inspect microcourses, sections, glossary terms, quizzes, and recall notes.
+
 ## Next Steps
 
 - See [docs/api.md](api.md) for API overview.
