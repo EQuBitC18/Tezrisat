@@ -256,8 +256,8 @@ Desktop.ini
 secrets.json
 config/secrets.json
 
-# Stripe keys
-stripe_keys.json
+# Local issue draft files
+issue-drafts/
 
 # OpenAI keys
 openai_keys.json
