@@ -117,8 +117,8 @@ def load_finetuning_docs(
 
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.callbacks.manager import CallbackManager
-def call_llm(prompt: str, openai_api_key: str) -> (str, int):
-    """Call OpenAI LLM with the provided prompt."""
+def call_llm(prompt: str, openai_api_key: str) -> str:
+    """Call OpenAI LLM with the provided prompt and return the text output."""
     try:
         llm = ChatOpenAI(
             model="gpt-3.5-turbo",
@@ -127,9 +127,8 @@ def call_llm(prompt: str, openai_api_key: str) -> (str, int):
             api_key=openai_api_key,
         )
         response = llm.invoke(prompt)
-        # Extract text from response
         output = response.content if hasattr(response, 'content') else str(response)
-        return output, 0  # Token count not available in newer versions
+        return output
     except Exception as e:
         logging.error(f"Error calling LLM: {e}")
         raise
@@ -186,10 +185,10 @@ def get_finetuning_context(topic: str, pdf_path: Optional[Union[str, List[str]]]
 # Generation Retry Mechanism
 # ------------------------------
 def _generate_main_section(prompt: str, openai_api_key: str):
-    output, token_usage = call_llm(prompt, openai_api_key)
+    output = call_llm(prompt, openai_api_key)
     try:
         data = json.loads(output)
-        data["token_usage"] = token_usage
+        data["token_usage"] = 0
         return data, None
     except Exception as e:
         return None, f"Error parsing main section JSON. Raw output:\n{output}\nException: {e}"
