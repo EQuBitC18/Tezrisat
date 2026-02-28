@@ -4,11 +4,13 @@
 
 # Tezrisat
 
-Tezrisat is an AI-powered microcourse generation platform that helps educators and learners create personalized, interactive learning experiences in minutes.
+Tezrisat is an AI-assisted microlearning authoring tool that helps educators generate short, task-oriented microcourses and assessments in minutes.
 
 ## Problem Statement
 
-Traditional course creation is time-consuming and requires extensive expertise. Educators spend weeks developing content, while learners struggle with generic materials that do not match their needs. Tezrisat uses AI to generate microcourses with interactive elements, quizzes, and recall notes.
+Traditional course planning is slow, and it does not fit well with the way many people learn today. Learners often need short, focused lessons they can complete between meetings, during study breaks, or while picking up a specific skill on demand. Educators, on the other hand, still spend days or weeks planning, structuring, and writing material for those lessons.
+
+Tezrisat focuses on that gap. It is built around microlearning: short, practical learning segments that are easy to consume and quick to produce. With AI-assisted generation, Tezrisat helps educators turn a topic, a few source materials, and a target audience into a usable microcourse with quiz content and recall notes, cutting planning time from weeks to minutes.
 
 > **Local/self‑hosted only:** Public hosting or offering Tezrisat as a service to third parties is not allowed without a commercial license.
 
@@ -124,11 +126,56 @@ We welcome contributions. See `CONTRIBUTING.md` for details.
 
 ## Roadmap
 
-1. Stabilize API responses and add contract tests for core endpoints.
-2. Improve content quality controls and add more deterministic generation options.
-3. Expand documentation with usage examples and troubleshooting playbooks.
-4. Address context length limits in the LLM pipeline.
-5. Build a simple hosting guide for self-hosted deployments.
+Tezrisat is aiming to become more than a microcourse generator. The long-term vision is an open, self-hostable learning platform that helps educators create faster and helps learners understand deeper.
+
+If you want to contribute, this roadmap is the best place to orient yourself. Each milestone represents a meaningful leap in product quality, and every improvement here moves Tezrisat closer to being a serious alternative in AI-native education. We want contributors to help shape not just features, but the future of open learning infrastructure.
+
+### 🚀 Milestone 1 - Core Reliability
+
+Build the foundation that makes everything else trustworthy, reproducible, and contributor-friendly.
+
+- 🐳 Docker setup
+- ⚙️ User customization
+- 🔌 Stable backend/frontend API contracts
+
+### 🧑‍🏫 Milestone 2 - Educator Experience
+
+Make Tezrisat genuinely useful for educators who want control after generation, not just a one-click output.
+
+- ✍️ Course editing after generation
+- 📚 More source ingestion
+- 🗂️ Versioning and drafts
+- 📤 Export capabilities
+
+### 🎓 Milestone 3 - Learner Experience
+
+Turn generated content into an experience that feels interactive, adaptive, and worth coming back to.
+
+- 📈 Progress tracking
+- 🧠 Interactive mindmaps
+- 📝 Exam mode
+- 🤖 More complex AI outputs, not just plain text outputs
+- 🧮 Interactive code and math executions
+
+### 🛡️ Milestone 4 - Quality Layer
+
+Raise trust in the generated content so Tezrisat can support serious educational use cases.
+
+- 📎 A dedicated citations section
+- ✅ Factuality checks
+- 🧩 Course-level consistency checks
+
+### 💡 Why This Matters
+
+Most learning platforms are either closed, slow to customize, or not truly built around AI-native course creation. Tezrisat can be different:
+
+- Open to contributors
+- Self-hostable for privacy and control
+- Fast for educators
+- Interactive for learners
+- Extensible for the next generation of learning tools
+
+If this vision excites you, there is room to contribute across backend, frontend, AI pipelines, testing, documentation, and product design.
 
 ## Security Note
 
