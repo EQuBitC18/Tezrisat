@@ -9,15 +9,26 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-from pathlib import Path
-from dotenv import load_dotenv
-from corsheaders.defaults import default_headers
-import os
 
-load_dotenv()
+import os
+from pathlib import Path
+
+import dj_database_url
+from corsheaders.defaults import default_headers
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+ENV_FILE = BASE_DIR.parent / ".env"
+
+load_dotenv(dotenv_path=ENV_FILE)
+
+
+def env_bool(name: str, default: bool) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,9 +39,13 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-key-change-in-producti
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Local-only by design: default to DEBUG on for contributor setups.
-DEBUG = True
+DEBUG = env_bool("DEBUG", True)
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost,0.0.0.0").split(",")
+    if host.strip()
+]
 _local_hosts = {"localhost", "127.0.0.1", "0.0.0.0"}
 if DEBUG and any(host not in _local_hosts for host in ALLOWED_HOSTS):
     raise RuntimeError(
@@ -92,11 +107,11 @@ WSGI_APPLICATION = 'Tezrisat_Backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+default_database_url = f"sqlite:///{(BASE_DIR / 'db.sqlite3').as_posix()}"
+database_url = os.getenv("DATABASE_URL") or default_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(database_url, conn_max_age=0),
 }
 
 # Password validation
@@ -151,8 +166,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS / CSRF
 # Local-only by design: allow all origins by default for contributor setups.
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "true").lower() == "true"
+CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL_ORIGINS", True)
+CORS_ALLOW_CREDENTIALS = env_bool("CORS_ALLOW_CREDENTIALS", True)
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "x-openai-key",
     "x-serpapi-key",

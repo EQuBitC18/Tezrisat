@@ -4,6 +4,8 @@ This guide is optimized for a fast local setup so contributors can get productiv
 
 > **Local/self‑hosted only:** Public hosting or offering Tezrisat as a service to third parties is not allowed without a commercial license.
 
+Prefer Docker? Use the Compose workflow in [docs/docker.md](docker.md).
+
 ## Quick Start (Local)
 
 1. Clone and enter the repo:

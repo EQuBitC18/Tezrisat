@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: ./Tezrisat_Backend
+    working_dir: /workspace/Tezrisat_Backend
+    env_file:
+      - ./.env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////data/db.sqlite3}
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/workspace
+      - backend_sqlite:/data
+      - backend_media:/workspace/Tezrisat_Backend/media
+
+  frontend:
+    build:
+      context: ./Tezrisat_Frontend/tezrisat_frontend
+    working_dir: /workspace/Tezrisat_Frontend/tezrisat_frontend
+    env_file:
+      - ./.env
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/workspace
+      - frontend_node_modules:/workspace/Tezrisat_Frontend/tezrisat_frontend/node_modules
+
+volumes:
+  backend_sqlite:
+  backend_media:
+  frontend_node_modules:

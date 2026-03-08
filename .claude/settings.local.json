@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose build)",
+      "Bash(docker compose up -d)",
+      "Bash(docker compose logs backend)",
+      "Bash(docker compose logs frontend)",
+      "Bash(curl -s -o /dev/null -w \"Backend /admin/: %{http_code}\\\\n\" http://localhost:8000/admin/)",
+      "Bash(curl -s -o /dev/null -w \"Frontend /: %{http_code}\\\\n\" http://localhost:5173/)",
+      "Bash(docker compose down)"
+    ]
+  }
+}

@@ -13,7 +13,6 @@ from langchain.schema import Document
 import trafilatura
 from langchain_text_splitters import CharacterTextSplitter, RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from dotenv import load_dotenv
 try:
     from langchain_community.cache import BaseCache
 except ModuleNotFoundError:
@@ -24,7 +23,6 @@ except ModuleNotFoundError:
 # ------------------------------
 # Configuration & Logging
 # ------------------------------
-load_dotenv()
 os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2", "")
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY", "")
 os.environ["WOLFRAM_ALPHA_APPID"] = os.getenv("WOLFRAM_ALPHA_APPID", "")

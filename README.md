@@ -47,6 +47,22 @@ chmod +x ./scripts/dev.sh
 
 If you prefer a step-by-step manual setup, follow [docs/setup.md](docs/setup.md).
 
+If you prefer Docker Compose for local development (no Python or Node installation required):
+
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) running.
+
+```bash
+cp .env.example .env        # one-time setup
+docker compose up --build
+```
+
+Once both services are up, open **http://localhost:5173** in your browser.
+The backend API is available at **http://localhost:8000**.
+
+To stop: `docker compose down` (data is preserved in Docker volumes).
+
+See [docs/docker.md](docs/docker.md) for the full workflow.
+
 To enable pre-commit and pre-push checks, run:
 
 ```bash
@@ -87,6 +103,7 @@ Tezrisat/
 | Resource | What it covers |
 | --- | --- |
 | [SETUP](docs/setup.md) | Quick start and local dev setup |
+| [DOCKER](docs/docker.md) | Docker Compose local development workflow |
 | [API](docs/api.md) | API overview and key handling |
 | [CONTRIBUTING](CONTRIBUTING.md) | Contribution workflow and standards |
 | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) | Community expectations |
